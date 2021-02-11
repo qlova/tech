@@ -1,3 +1,4 @@
+//Package rgb provides a simple color package for dealing with rgb colors.
 package rgb
 
 import "image/color"
