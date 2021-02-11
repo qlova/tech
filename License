@@ -27,9 +27,10 @@ and otherwise exploit this software for any purpose subject to the following con
    your responsibilities from term 1 of this license through obfuscation and/or omission 
    (adding any additional subdirectories or files to the corresponding source-code is a 
    modification and must be included). If you extract any file or subdirectory from this 
-   software and you embed it modified inside of a larger work so that this software depends
-   on the larger work then the larger work that this software has been modified to depend on 
-   must also be included in the corresponding source-code under the terms of this licence.
+   software and you embed it inside of a larger work and make modifications so that this 
+   software depends on that larger work then the corresponding source-code of this larger 
+   is the corresponding source-code of this software and must be available under the terms 
+   of this licence.
 
 3. You may not modify this license except to add (and/or remove but only if you are the 
    rightful copyright holder) copyright notices and (optional) comma-separated trademark 
@@ -47,13 +48,13 @@ and otherwise exploit this software for any purpose subject to the following con
 
 4. You may not use the names of any copyright holders, nor any of their declared trademarks 
    (as declared in this license and Contributors/Authors file), to title, endorse, or promote 
-   products, projects and/or services derived from this software without prior written consent 
-   from (or unless you are) the associated copyright holder. This has one exception, you may 
-   publicly fork this software as-is without changing the title of this software as long as: 
-   it is clear to the public that it is your fork, you have not added any copyright notices 
+   projects, products and/or services derived from this software without prior written consent 
+   from (or unless you are) the associated copyright holder. This condition has one exception, 
+   you may publicly fork this software as-is without changing the title of this software as long 
+   as: it is clear to the public that it is your fork, you have not added any copyright notices 
    to this license, and you do not publicly promote this fork (except optionally to the listed 
    copyright holders so that they can merge your changes). This condition doesn't prevent you 
-   from using any standard dictionary words to promote your products, projects and/or services 
+   from using any standard dictionary words to promote your projects, products and/or services 
    as long as you do not mean for those words to refer to a declared trademark. Additionally,
    this condition does not prevent you from using the names of copyright holders and/or declared 
    trademarks to make factual statements in any non-promotional setting such as: credit or
