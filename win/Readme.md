@@ -1,6 +1,6 @@
 # Win
 
-A Go module for creating surfaces/windows for GPU rendering.
+A Go package for creating surfaces/windows for GPU rendering.
 
 ## Wishlist:
 Things that we would love to see in the future with this module:  
@@ -53,10 +53,3 @@ func main() {
 	}
 }
 ```
-
-**License**  
-This work is subject to the terms of the Qlova Public
-License, Version 2.0. If a copy of the QPL was not distributed with this
-work, You can obtain one at https://license.qlova.org/v2
-
-The QPL is compatible with the AGPL which is why both licenses are provided within this repository.
