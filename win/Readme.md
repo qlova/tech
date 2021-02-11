@@ -1,6 +1,6 @@
 # Win
 
-A Go module for creating surfaces/windows for GPU rendering.
+A Go package for creating surfaces/windows for GPU rendering.
 
 ## Wishlist:
 Things that we would love to see in the future with this module:  
