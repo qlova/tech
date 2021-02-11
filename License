@@ -1,0 +1,75 @@
+Qlovatech™, Qlovaseed™ Copyright 2021 Qlova Limited
+Realm of Order™ Copyright 2021 Quentin Quaadgras
+
+Everyone has the universal right to modify, run and copy this software for personal use.
+Additionally, anyone may reproduce, make available, modify, display, perform, distribute, 
+and otherwise exploit this software for any purpose subject to the following conditions:
+
+1. You must provide either on request or through public documentation, anybody 'receiving', 
+   'interacting with', or 'observing the public display, performance or availability of' 
+   your copies of this software with the reasonable means to acquire the corresponding 
+   source-code, disclaimers & copyright notices of these copies (including any modifications 
+   you have made) under the terms of this license. The "corresponding source-code" is the 
+   preferred form of making changes to this software and includes basic documentation 
+   and any readme instructions. However, the corresponding source-code need not include any 
+   separable larger work that this software is embedded in (and not dependant on), nor any 
+   generally available open-source software, nor any compiler and/or platform-specific 
+   software that only serves to implement a low-level general interface so that this software 
+   can be ported, run and/or distributed on a particular distribution platform, product, 
+   software interpreter, or operating system.
+
+2. You may not attempt to restrict the rights and/or grants this license gives to others.
+   This means you agree not to sue, litigate against or otherwise seek damages in order
+   to prevent or punish anyone for exercising their rights to this software (including to
+   any modifications you have made). Additionally, you agree to indemnify the copyright 
+   holders of this software against any litigation of copyright or patent infringement 
+   arising because of modifications you made to this software. You agree to not circumvent 
+   your responsibilities from term 1 of this license through obfuscation and/or omission 
+   (you must include any new subdirectories or files you added when modifying the 
+   corresponding source-code). If you extract any file or folder from this software and 
+   embed it inside of a larger work and you modify those files or folders to depend on this 
+   larger work then the larger work that this software has been modified to depend on must 
+   also be included in the corresponding source-code under the terms of this licence.
+
+3. You may not modify this license except to add (and/or remove but only if you are the 
+   rightful copyright holder) copyright notices and (optional) comma-separated trademark 
+   declarations subject to the condition that there are no conflicting trademark notices. 
+   Each trademark must be declared by exactly one copyright holder. Additionally, any new 
+   trademark notices should be easily distinguishable (by a reasonable person) from any 
+   trademark notices by other copyright holders. If you do not add a copyright notice along 
+   with your modifications to this software then you must agree to assign the copyright of 
+   your modifications to the named copyright holders. If the list is too large for you, you 
+   may create a Contributors/Authors file to record your additions to these license terms.
+   There must be at least one copyright notice at the top of this license and if you remove
+   your copyright notice then you agree to assign any copyrighted work in this software 
+   to the remaining copyright holders. Any trademarks you declare must be in good faith and
+   represent genuine marks that you are using for a product, project, software or service.
+
+4. You may not use the names of any copyright holders, nor any of their declared trademarks 
+   (as declared in this license and Contributors/Authors file), to title, endorse, or promote 
+   products, projects and/or services derived from this software without prior written consent 
+   from (or unless you are) the associated copyright holder. This has one exception, you may 
+   publicly fork this software as-is without changing the title of this software as long as: 
+   it is clear to the public that it is your fork, you have not added any copyright notices 
+   to this license, and you do not publicly promote this fork (except optionally to the current 
+   copyright holders so that they can merge your changes). This condition does not prevent you 
+   from using the names of copyright holders and declared trademarks to make factual statements 
+   in any non-promotional credits, about sections, blog posts, articles etc. Example:
+   '[product] was derived/built from/with [this software] created by [the copyright holder]'
+
+Any single (or party of) copyright holder(s) of this software, to ensure that 
+you comply with the terms and conditions of this license may contact, sue, litigate against or 
+otherwise seek damages against you (on behalf of all the copyright holders) if you breach 
+the terms and conditions of this license. If any part of this license is declared unenforceable 
+or invalid, the remainder will continue to be valid and enforceable.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ARE DISCLAIMED. IN NO EVENT SHALL ANY COPYRIGHT HOLDER BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
