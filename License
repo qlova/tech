@@ -52,9 +52,12 @@ and otherwise exploit this software for any purpose subject to the following con
    publicly fork this software as-is without changing the title of this software as long as: 
    it is clear to the public that it is your fork, you have not added any copyright notices 
    to this license, and you do not publicly promote this fork (except optionally to the current 
-   copyright holders so that they can merge your changes). This condition does not prevent you 
-   from using the names of copyright holders and declared trademarks to make factual statements 
-   in any non-promotional credits, about sections, blog posts, articles etc. Example:
+   copyright holders so that they can merge your changes). This condition doesn't prevent you 
+   from using any standard dictionary words to promote your products, projects and/or services 
+   as long as you do not mean for those words to refer to a declared trademark. Additionally,
+   this condition does not prevent you from using the names of copyright holders and declared 
+   trademarks to make factual statements in any non-promotional setting such as: credits, 
+   about sections, documentation, blog posts, reports, interviews etc. For example:
    '[product] was derived/built from/with [this software] created by [the copyright holder]'
 
 Any single (or party of) copyright holder(s) of this software, to ensure that 
