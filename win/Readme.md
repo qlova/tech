@@ -53,10 +53,3 @@ func main() {
 	}
 }
 ```
-
-**License**  
-This work is subject to the terms of the Qlova Public
-License, Version 2.0. If a copy of the QPL was not distributed with this
-work, You can obtain one at https://license.qlova.org/v2
-
-The QPL is compatible with the AGPL which is why both licenses are provided within this repository.
