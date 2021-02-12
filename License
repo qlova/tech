@@ -61,7 +61,7 @@ for any purpose subject to the following conditions:
           copyright holder's Trademark Notices.
 
       (d) each trademark is clearly distinguishable (by a reasonable person) from any 
-          other trademarks listed by any other copyright holders.
+          other trademarks listed by any of the other copyright holders.
 
       (e) the trademark was added in good faith and represents a genuine mark that is being 
           used by the copyright holder for a product, project, software and/or service.
@@ -72,9 +72,9 @@ for any purpose subject to the following conditions:
    then you agree that this software may be relicensed at any time under the terms of a license 
    approved by the Open Source Initiative (https://opensource.org/) and with the written agreement 
    between each listed copyright holder in this license (if there are no copyright holders listed
-   in this license, no written agreement is required).
+   in this license, no written agreement is required for this relicensing).
 
-4. You may not use the names of any copyright holders or any of the listed trademark in this license 
+4. You may not use the names of any copyright holders or any of their listed trademarks in this license 
    to title, endorse or promote, any products, projects and/or services derived from this software 
    unless you have prior written consent from (or you are) the copyright holder who added the relevant 
    trademark to this license.
@@ -83,14 +83,14 @@ for any purpose subject to the following conditions:
 
       (a) using any standard dictionary words to promote your products, projects and/or services 
           as long as these words are used sensibly for their natural meanings in the language 
-          and do not function as a trademark or referring to a trademark listed in this license.
+          and do not function as a trademark or are referring to a trademark listed in this license.
 
       (b) using the names of copyright holders and/or any trademarks listed in this license
-          to make factual statements in a non-promotional setting such as: credit or about 
+          to make factual statements in a non-promotional setting such as: credits, about 
           sections, documentation, blog posts, reports, interviews etc. For example:
           '[product] was derived/built from/with [this software] developed by [copyright holder]'
 
-      (c) "Making Contributions" which means that you can publicly display, distribute and modify the 
+      (c) "Making Contributions", which means that you can publicly display, distribute and modify the 
           Corresponding Source of this software without changing the title as long as it is clear 
           to the public who owns this copy and you otherwise comply with section 4.
 
