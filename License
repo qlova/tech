@@ -21,7 +21,7 @@ for any purpose subject to the following conditions:
    "Corresponding Source" means the preferred form of making changes to this software 
    and includes this license, any disclaimers, copyright notices and readme instructions. 
    However, the Corresponding Source need not include any separable larger work that this 
-   software is embedded in (and not dependant on), nor any generally available open source 
+   software is embedded in (and not dependent on), nor any generally available open source 
    software, nor any compiler and/or platform-specific software that only serves to implement a 
    low-level general interface so that this software can be ported, run and/or distributed on a 
    particular distribution platform, product, software interpreter, or operating system.
@@ -34,7 +34,7 @@ for any purpose subject to the following conditions:
       
       (b) copyright infringement (if you extract any file or subdirectory from this software 
           and you embed it inside of a larger work modified in such a way that this software 
-          now depends on the larger work and cannot be meaningfully seperated from it without 
+          now depends on the larger work and cannot be meaningfully separated from it without 
           modification, then the Corresponding Source of this software must also include the 
           Corresponding Source of the larger work under the terms of this license).
 
@@ -52,7 +52,7 @@ for any purpose subject to the following conditions:
    rightful copyright holder) valid Trademark Notices to the list at the top of this license. 
 
    "Trademark Notices" means a copyright notice in this license preceded by zero or more 
-   comma-seperated trademarks and is only valid when:
+   comma-separated trademarks and is only valid when:
 
       (a) each trademark is followed by a unicode trademark symbol, '(TM)', '(R)' or is 
           otherwise an appropriate legal representation for a trademark.
@@ -83,7 +83,7 @@ for any purpose subject to the following conditions:
 
       (a) using any standard dictionary words to promote your products, projects and/or services 
           as long as these words are used sensibly for their natural meanings in the language 
-          and do not function as a trademark or refering to a trademark listed in this license.
+          and do not function as a trademark or referring to a trademark listed in this license.
 
       (b) using the names of copyright holders and/or any trademarks listed in this license
           to make factual statements in a non-promotional setting such as: credit or about 
