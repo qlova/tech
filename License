@@ -7,7 +7,7 @@ to the following conditions:
 
 1. You must provide, on Request, clearly attached to Your copy and/or clearly discoverable
    by any interested party, the reasonable means for anyone receiving, interacting with, 
-   or observing, the public display, performance or otherwise availability of Your copies 
+   or observing the public display, performance or otherwise availability of Your copies 
    of This Project, to acquire the Corresponding Source (including any Modifications You 
    may have made) of these copies under the terms of this license. 
 
@@ -81,7 +81,7 @@ entity.
 "Modifications" means any modifications made to the Corresponding Source including but not 
 limited to any additional subdirectories and/or files.
 
-"Corresponding Source" means any file, directory or other standard format of distribution 
+"Corresponding Source" means any file, directory or another standard format of distribution 
 containing the preferred form of making changes to This Project and includes this license in a 
 clearly discoverable location and basic instructions of use, the Corresponding Source need not 
 include any Larger Work, nor any generally available software under an Open Source License, nor 
@@ -92,7 +92,7 @@ system.
 
 "Larger Work" means any larger work that This Project has been embedded inside in such a way 
 that the larger work is not a dependency of This Project and as such, This Project 
-can be meaningfully seperated from and continue to operate and perform its purpose without 
+can be meaningfully separated from and continue to operate and perform its purpose without 
 the larger work.
 
 "Distribution Channel" means any platform, store, market, website, outlet and/or other location 
