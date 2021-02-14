@@ -7,7 +7,7 @@ to the following conditions:
 
 1. You must provide, on Request, clearly attached to Your copy and/or clearly discoverable
    by any interested party, the reasonable means for any legal person receiving, interacting 
-   with, or observing the public display, feature, performance and/or otherwise availability 
+   with, or observing, the public display, feature, performance and/or otherwise availability 
    of, Your copies of This Project, to acquire the Corresponding Source (including any 
    Modifications You have made) of these copies under the terms of This License. 
 
@@ -18,13 +18,13 @@ to the following conditions:
    punish any legal person for exercising their rights to This Project (including to any 
    Modifications You have made).
 
-   (b) to irrevocably grant each Contributor and user of This Project with the necessary 
-   licenses (including any patent licenses) required (because of Your Modifications) to 
-   exercise their rights to This Project at no fee, charge nor royalty.
+   (b) to irrevocably and automatically grant each Contributor and user of This Project with 
+   the necessary licenses (including any patent licenses) required (because of Your 
+   Modifications) to exercise their rights to This Project at no fee, charge nor royalty.
    
-   (c) to indemnify each Contributor and user of This Project against any litigation 
-   of trademark, copyright and/or patent infringement directly arising due to any 
-   of the Modifications You have made to This Project.
+   (c) to indemnify each Contributor and user of This Project against any litigation, 
+   damages or penalties from trademark, copyright and/or patent infringement directly 
+   arising due to any of the Modifications You have made to This Project.
 
    (d) not to obfuscate, omit, or obstruct in any way the Corresponding Source either
    in bad faith and/or to circumvent the conditions of This License.
@@ -37,7 +37,7 @@ to the following conditions:
    Contributor.
 
 4. You may not use the names of any Contributor nor any trademarks listed in This License,
-   to title, endorse or promote, any products, projects, work, performances and/or services 
+   to title, endorse or promote, any products, projects, works, performances and/or services 
    derived from or otherwise featuring This Project unless You have the prior written consent 
    from, or the publicly-documented permission from, or You are, the Contributor who added 
    the relevant trademark to This License.
@@ -57,12 +57,12 @@ to the following conditions:
           '[product] was derived from/with [this project] developed by [contributor]'
 
       (c) "Making Contributions", which means that You may exercise your rights to This
-          software granted under the conditions of This License without any obligation 
-          to change the title of This Project as long as it is clear to the public that 
-          this is Your copy of This Project and as long as the existence of Your copy on a 
-          particular Distribution Channel would not prevent or restrict any (other) 
-          Contributors from distributing This Project on that Distribution Channel titled 
-          as any of the trademarks listed in This License by that Contributor.
+          software granted by, and subject to the conditions of, This License except 
+          without any obligation to change the title of This Project as long as it is clear 
+          to the public that this is Your copy of This Project and as long as the existence of 
+          Your copy on a particular Distribution Channel would not prevent or restrict any 
+          (other) Contributors from distributing This Project on that Distribution Channel 
+          titled as any of the trademarks listed in This License by that Contributor.
 
 In the event that You breach any of the conditions in This License, You must take immediate steps
 to resolve this breach, if You fail to resolve this breach within a reasonable timeframe, and until
@@ -92,23 +92,34 @@ entity.
 "Modifications" means any modifications made to the Corresponding Source including but not 
 limited to any additional subdirectories and/or files.
 
+"Platform" means any product, Distribution Channel, software interpreter, environment, and/or 
+operating system.
+
+"Operated" means ported, performed, featured, run, displayed and/or distributed.
+
+"Platform Provided" means any work that is provided by a third-party Platform (including but 
+not limited to a Software Development Kit or Application Programming Interface) in order allow 
+third-party works to be Operated on that Platform.
+
+"Platform Protected" means any work that is protected from disclosure under an agreement with
+the owner of a third-party Platform and only serves to implement a low-level general 
+and/or otherwise standard interface in order to allow third-party works to be Operated on that 
+Platform.
+
 "Corresponding Source" means any file, directory or any other standard format for distribution 
-containing the preferred form of making changes to This Project and includes This License in a 
+that contains the preferred form of making changes to This Project and includes This License in a 
 clearly discoverable location and basic instructions for use, the Corresponding Source need not 
-include any Largely Separate Work, nor any generally available software under an Open Source 
-License, nor any compiler and/or platform-specific software that only serves to implement a 
-low-level general interface so that This Project can be ported to, performed on, run on, 
-displayed and/or distributed on a particular product, Distribution Channel, platform, software 
-interpreter, and/or operating system.
+include any Largely Separate Work, nor any generally available work under an Open Source License, 
+nor any Platform Provided or Platform Protected work.
 
 "Largely Separate Work" means any larger work where This Project is embedded in, in such a way 
 that this larger work is not a dependency of This Project and as such, This Project can be 
 meaningfully separated from, and continue to operate and perform its purpose without, this larger 
 work.
 
-"Distribution Channel" means any platform, store, market, service, website, outlet and/or other 
-location where This Project could be distributed, performed, displayed and/or otherwise be made
-available.
+"Distribution Channel" means any store, machine, market, service, website, outlet and/or other 
+location wher Your copy OF This Project could be used, reproduced, featured, distributed, performed, 
+displayed and/or otherwise be made available on.
 
 "Request" means any appropriate and/or standard method to ask, request and/or otherwise query 
 You for the Requestable Source of a product, project, service, work, distribution, display and/or 
