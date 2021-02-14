@@ -19,11 +19,11 @@ to the following conditions:
 
       (b) to irrevocably grant each Contributor and user of This Project with the necessary 
       licenses (including any patent licenses) required (due to Your Modifications) 
-      to exercise their rights to This Project at no fee, charge and/or royalty.
+      to exercise their rights to This Project at no fee, charge nor royalty.
       
       (c) to indemnify each Contributor and user of This Project against any litigation 
-      of trademark, copyright and/or patent infringement directly due to any of the 
-      Modifications You made to This Project.
+      of trademark, copyright and/or patent infringement directly due to any of your 
+      Modifications to This Project.
 
       (d) not to obfuscate, omit, or obstruct in any way the Corresponding Source either
       in bad faith and/or to circumvent the conditions of this license.
@@ -59,13 +59,13 @@ to the following conditions:
           prevent any (other) Contributor from distributing This Project on the same 
           Distribution Channel titled as any of their trademarks listed in this license.
 
-In the event that You breach the conditions of this license, You must immediately take steps
+In the event that You breach the conditions of this license, You must take steps immediately
 to resolve this breach, if You fail to resolve this breach within a reasonable timeframe, any 
 single (or party of) copyright holder(s) of This Project can on behalf of every other copyright 
 holder and only to ensure the integrity, precedent and/or compliance of this license, contact, 
 sue, litigate against and/or otherwise seek and collect damages from You. If any part of this 
 license is declared unenforceable or invalid, the remainder will continue to be valid and 
-enforceable.
+enforceable. If anything in this license is unclear to You, consult the definitions below:
 
 "This Project" means the work covered by this license.
 
@@ -82,7 +82,7 @@ entity.
 "Modifications" means any modifications made to the Corresponding Source including but not 
 limited to any additional subdirectories and/or files.
 
-"Corresponding Source" means any file, directory or other standard format for distribution 
+"Corresponding Source" means any file, directory or any other standard format for distribution 
 containing the preferred form of making changes to This Project and includes this license in a 
 clearly discoverable location and basic instructions for use, the Corresponding Source need not 
 include any Separate Larger Work, nor any generally available software under an Open Source 
