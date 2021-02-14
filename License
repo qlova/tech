@@ -1,78 +1,88 @@
 Qlovatech™, Qlovaseed™ Copyright 2021 Qlova Limited
 Realm of Order™ Copyright 2021 Quentin Quaadgras
 
-Everyone has the universal non-exclusive right to use, reproduce, make available, modify,
+You have the universal non-exclusive right to use, reproduce, make available, feature, modify,
 display, perform, distribute, and/or otherwise exploit This Project for any purpose subject 
 to the following conditions:
 
 1. You must provide, on Request, clearly attached to Your copy and/or clearly discoverable
-   by any interested party, the reasonable means for anyone receiving, interacting with, 
-   or observing the public display, performance or otherwise availability of Your copies 
-   of This Project, to acquire the Corresponding Source (including any Modifications You 
-   may have made) of these copies under the terms of this license. 
+   by any interested party, the reasonable means for any legal person receiving, interacting 
+   with, or observing the public display, feature, performance and/or otherwise availability 
+   of, Your copies of This Project, to acquire the Corresponding Source (including any 
+   Modifications You have made) of these copies under the terms of This License. 
 
-2. You may not restrict in any way, any rights that this license grants. You agree:
+2. You may not restrict in any way, any rights that This License grants to any legal persons  
+   unless they have breached the terms of This License. You agree:
    
-      (a) not to sue, litigate against or otherwise seek damages in order to prevent or 
-      punish anyone for exercising their rights to This Project (including to any 
-      Modifications you have made) unless they have breached the terms of this license.
+   (a) not to sue, litigate against or otherwise seek damages in order to prevent or 
+   punish any legal person for exercising their rights to This Project (including to any 
+   Modifications You have made).
 
-      (b) to irrevocably grant each Contributor and user of This Project with the necessary 
-      licenses (including any patent licenses) required (due to Your Modifications) 
-      to exercise their rights to This Project at no fee, charge nor royalty.
-      
-      (c) to indemnify each Contributor and user of This Project against any litigation 
-      of trademark, copyright and/or patent infringement directly due to any of your 
-      Modifications to This Project.
+   (b) to irrevocably grant each Contributor and user of This Project with the necessary 
+   licenses (including any patent licenses) required (because of Your Modifications) to 
+   exercise their rights to This Project at no fee, charge nor royalty.
+   
+   (c) to indemnify each Contributor and user of This Project against any litigation 
+   of trademark, copyright and/or patent infringement directly arising due to any 
+   of the Modifications You have made to This Project.
 
-      (d) not to obfuscate, omit, or obstruct in any way the Corresponding Source either
-      in bad faith and/or to circumvent the conditions of this license.
+   (d) not to obfuscate, omit, or obstruct in any way the Corresponding Source either
+   in bad faith and/or to circumvent the conditions of This License.
 
-3. You may not modify this license except to add (and/or remove but only if You are the 
-   rightful copyright holder) valid Trademark Notices to the list at the top of this 
-   license. If you do not add any Trademark Notices to this license or You remove Your 
-   Trademark Notices from this license then You agree that This Project can be relicensed 
-   under the terms of an Open Source License upon the agreement between each Contributor.
+3. You may not modify This License except to add (and/or remove but only if You are 
+   the Contributor who added them) valid Trademark Notices to the list at the beginning 
+   of This License. If You do not add any Trademark Notices to This License or You remove 
+   Your Trademark Notices from This License then You agree that This Project can be 
+   relicensed under the terms of an Open Source License upon the agreement between each
+   Contributor.
 
-4. You may not use the names of any copyright holders nor any of their listed trademarks
-   in this license to title, endorse or promote, any products, projects, work, performances 
-   and/or services derived from This Project unless You have the prior written consent from,
-   the publicly-documented permission from, or You are the copyright holder who added the 
-   relevant trademark to this license.
+4. You may not use the names of any Contributor nor any trademarks listed in This License,
+   to title, endorse or promote, any products, projects, work, performances and/or services 
+   derived from or otherwise featuring This Project unless You have the prior written consent 
+   from, or the publicly-documented permission from, or You are, the Contributor who added 
+   the relevant trademark to This License.
 
-   However, this condition cannot prevent You from:
+   However this condition alone, does not (and cannot) prevent You from:
 
-      (a) using any standard dictionary words to promote Your products, projects, work, 
-          performances and/or services derived from This Project as long as these words 
-          are used sensibly for their natural language meaning and do not function as a 
-          trademark nor refer to another copyright holder's trademark listed in this license.
+      (a) using any standard dictionary words to promote Your products, projects, works, 
+          performances and/or services derived from or otherwise featuring This Project 
+          as long as these words are used sensibly for their natural language meanings 
+          and do not function as a trademark nor refer to any trademark listed in this 
+          license by another Contributor.
 
-      (b) using the names of any copyright holders and/or any trademarks listed in this 
-          license to make factual statements in non-promotional settings such as: credits, 
-          about sections, documentation, blog posts, reports, interviews etc. For example:
-          '[product] was derived from/with [this project] developed by [copyright holder]'
+      (b) using the names of any Contributors and/or any trademarks listed in this 
+          license, to make factual statements in any non-promotional setting including 
+          but not limited to: credits, about sections, documentation, blog posts, 
+          reports, interviews etc. For example:
+          '[product] was derived from/with [this project] developed by [contributor]'
 
-      (c) "Making Contributions", which means that You may use, reproduce, make available, 
-          modify, display, perform and/or distribute This Project without any obligation to 
-          change the title as long as it is clear to the public that it is Your copy and as 
-          long as the existence of Your copy on a particular Distribution Channel would not 
-          prevent any (other) Contributor from distributing This Project on the same 
-          Distribution Channel titled as any of their trademarks listed in this license.
+      (c) "Making Contributions", which means that You may exercise your rights to This
+          software granted under the conditions of This License without any obligation 
+          to change the title of This Project as long as it is clear to the public that 
+          this is Your copy of This Project and as long as the existence of Your copy on a 
+          particular Distribution Channel would not prevent or restrict any (other) 
+          Contributors from distributing This Project on that Distribution Channel titled 
+          as any of the trademarks listed in This License by that Contributor.
 
-In the event that You breach the conditions of this license, You must take steps immediately
-to resolve this breach, if You fail to resolve this breach within a reasonable timeframe, any 
-single (or party of) copyright holder(s) of This Project can on behalf of every other copyright 
-holder and only to ensure the integrity, precedent and/or compliance of this license, contact, 
-sue, litigate against and/or otherwise seek and collect damages from You. If any part of this 
-license is declared unenforceable or invalid, the remainder will continue to be valid and 
-enforceable. If anything in this license is unclear to You, consult the definitions below:
+In the event that You breach any of the conditions in This License, You must take immediate steps
+to resolve this breach, if You fail to resolve this breach within a reasonable timeframe, and until
+You resolve this breach, all rights granted to You by This License (except for Corresponding Source 
+distribution rights) are automatically terminated (however the conditions of This License will 
+continue to apply to You) and any single (or party of) copyright holder(s) of This Project may on 
+behalf of every other copyright holder and only to ensure the integrity, precedent and/or compliance 
+of This License, contact, sue, litigate against and/or otherwise seek and collect damages from You. 
+If any part of This License is declared unenforceable and/or invalid, the remainder will continue to 
+be enforceable and valid.
 
-"This Project" means the work covered by this license.
+"This License" means the Trademark Notices (including any valid modifications), terms and conditions, 
+definitions and disclaimers of this text.
 
-"Contributor" means any copyright holder listed at the top of this license.
+"This Project" means the work covered by This License.
+
+"Contributor" means any copyright holder listed at the beginning of This License.
 
 "You" (or "Your")
-means an individual or a legal entity exercising rights under this license. For legal entities, 
+means an individual or a legal entity exercising rights under This License. For legal entities, 
 "You" includes any entity that controls, is controlled by, or is under common control with You.
 For purposes of this definition, “control” means (a) the power, direct or indirect, to cause 
 the direction or management of such entity, whether by contract or otherwise, or (b) ownership 
@@ -83,17 +93,17 @@ entity.
 limited to any additional subdirectories and/or files.
 
 "Corresponding Source" means any file, directory or any other standard format for distribution 
-containing the preferred form of making changes to This Project and includes this license in a 
+containing the preferred form of making changes to This Project and includes This License in a 
 clearly discoverable location and basic instructions for use, the Corresponding Source need not 
-include any Separate Larger Work, nor any generally available software under an Open Source 
+include any Largely Separate Work, nor any generally available software under an Open Source 
 License, nor any compiler and/or platform-specific software that only serves to implement a 
 low-level general interface so that This Project can be ported to, performed on, run on, 
 displayed and/or distributed on a particular product, Distribution Channel, platform, software 
 interpreter, and/or operating system.
 
-"Separate Larger Work" means any larger work where This Project has been embedded in such a way 
+"Largely Separate Work" means any larger work where This Project is embedded in, in such a way 
 that this larger work is not a dependency of This Project and as such, This Project can be 
-meaningfully separated from and continue to operate and perform its purpose without this larger 
+meaningfully separated from, and continue to operate and perform its purpose without, this larger 
 work.
 
 "Distribution Channel" means any platform, store, market, service, website, outlet and/or other 
@@ -101,32 +111,33 @@ location where This Project could be distributed, performed, displayed and/or ot
 available.
 
 "Request" means any appropriate and/or standard method to ask, request and/or otherwise query 
-you for the Requestable Source of any product, service, distribution, display and/or 
+You for the Requestable Source of a product, project, service, work, distribution, display and/or 
 performance derived from or otherwise featuring This Project.
 
 "Requestable Source" means any formal, legal or colloquially understood term to either describe 
-Corresponding Source or 'work available under an Open Source License' including but not limited 
+Corresponding Source or work available under an Open Source License including but not limited 
 to the terms 'open source', 'free software' and 'source available'.
 
 "Open Source License" means any license approved by the Open Source Initiative and can be
 found on https://opensource.org/
 
-"Trademark Notices" means a copyright notice listed at the top of this license that is preceded 
-by zero or more comma-separated trademarks, such Trademark Notice is only considered valid when:
+"Trademark Notices" means a copyright notice listed at the beginning of This License that is 
+preceded by zero or more comma-separated trademarks, these Trademark Notices are only considered 
+valid when each trademark:
 
-   (a) each trademark is followed by a unicode trademark symbol, '(TM)', '(R)' or is 
-       otherwise an appropriate legal representation for a trademark.
+   (a) is either the appropriate legal representation for a trademark or is a term or 
+       phrase followed by a unicode trademark symbol, '(TM)' or '(R)'.
 
-   (b) each trademark is unique inside this license, it does not appear within any other 
-       copyright holder's Trademark Notices.
+   (b) is unique inside of This License, it does not appear within any other Contributor's 
+       Trademark Notices.
 
-   (c) each trademark is clearly distinguishable (by a reasonable person) from any 
-       other listed trademarks by any of the other copyright holders.
+   (c) is clearly distinguishable (by a reasonable person) from any other listed trademarks 
+       by any of the other Contributors.
 
-   (d) the trademark was added in good faith and represents a genuine mark that is being 
-       used by the copyright holder for a product, project, software and/or service.
+   (d) was added in good faith and represents a genuine mark that is being used by the 
+       Contributor to title products, projects, works, performances and/or services.
 
-   (e) each trademark was added by the copyright holder specified in the copyright notice.
+   (e) was added by the copyright holder specified in the following copyright notice.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
