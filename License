@@ -31,17 +31,17 @@ to the following conditions:
    conditions of This License.
 
 3. You may not modify This License except to add/reorder (and/or remove but only if You 
-   are the Contributor who added them) valid Trademark Notices at the beginning of This 
-   License. If You do not add any Trademark Notices to This License and/or You remove Your 
-   Trademark Notices from This License, then You explicitly agree for This Project to be 
-   relicensed at any time and under the terms of a chosen Open Source License, upon the 
-   written agreement between each Contributor (or without any kind of agreement if there 
-   are zero Contributors).
+   are the Contributor who is associated with them) valid Trademark Notices at the 
+   beginning of This License. If You do not add any Trademark Notices to This License 
+   and/or You remove Your Trademark Notices from This License, then You explicitly agree 
+   for This Project to be relicensed at any time and under the terms of a chosen Open 
+   Source License, upon the written agreement between each Contributor (or without any 
+   kind of agreement if there are zero Contributors).
 
 4. You may not use the names of any Contributor nor any of the Projected Trademarks they
-   added to This License, to title, endorse or promote, any products, projects, works, 
-   performances and/or services derived from or otherwise featuring This Project unless You 
-   have the prior written consent from, or the publicly-documented permission from, or You 
+   are associated with in This License, to title, endorse or promote, any products, projects, 
+   works, performances and/or services derived from or otherwise featuring This Project unless 
+   You have the prior written consent from, or the publicly-documented permission from, or You 
    are, that Contributor.
 
    However this condition does not (and cannot) prevent You from:
@@ -63,7 +63,7 @@ to the following conditions:
           the public that this is Your copy of This Project and as long as the existence of 
           Your copy on a particular Distribution Channel would not prevent or restrict any 
           (other) Contributors from distributing This Project on that Distribution Channel 
-          titled as a Projected Trademark that was added by that Contributor.
+          titled as a Projected Trademark that is associated in This License to that Contributor.
 
 In the event that You breach any of the conditions of This License, You must take immediate steps
 to resolve this breach and until You resolve this breach, any rights granted to You by This License 
@@ -120,8 +120,8 @@ Dependencies do not include any:
    (c) Generally available, unmodified work under an Open Source License.
 
 "Distribution Channel" means any store, machine, market, service, website, outlet and/or other 
-location wher Your copy of This Project could be used, reproduced, featured, distributed, performed, 
-displayed and/or otherwise be made available on.
+location wher Your copy of This Project could be used, reproduced, featured, distributed, 
+performed, displayed and/or otherwise be made available on.
 
 "Request" means any appropriate and/or standard method to ask, request and/or otherwise query 
 You for the Requestable Source of a product, project, service, work, distribution, display and/or 
@@ -151,7 +151,8 @@ copyright holder documented in that copyright notice and is only considered to b
    (d) was added in good faith and represents a genuine mark that is being used by the 
        Contributor to title products, projects, works, performances and/or services, and
 
-   (e) was added to This License by the associated copyright holder.
+   (e) was added to This License and/or to a modified version of This License by the 
+       associated copyright holder.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
