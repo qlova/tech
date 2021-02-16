@@ -47,8 +47,8 @@ func (s *Size5) Set(val interface{}) {
 
 	if size < bits.UintSize*5 {
 		memcpy(unsafe.Pointer(&s.words), unsafe.Pointer(V.Pointer()), size)
-		s.Shader = reflect.NewAt(T.Elem(), unsafe.Pointer(&s.words)).Interface()
+		s.Value = reflect.NewAt(T.Elem(), unsafe.Pointer(&s.words)).Interface()
 	} else {
-		s.Shader = val
+		s.Value = val
 	}
 }
