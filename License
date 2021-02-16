@@ -103,17 +103,17 @@ and/or distributed.
 Programming Interface) in order to allow third-party works to be Operated on that Platform.
 
 "Platform Protected Work" means any part of This Project that is protected from disclosure 
-under an agreement between You and the owner of a third-party Platform, such that this part 
-of the work only serves to implement a low-level, general and/or otherwise standard interface, 
-in order to allow This Project to be Operated on that Platform.
+or distribution because of an agreement between You and the owner of a third-party Platform, 
+such that this part of the work only serves to implement a low-level, general and/or otherwise 
+standard interface, in order to allow This Project to be Operated on that Platform.
 
 "Corresponding Source" means a file, directory and/or any other standard format of distribution 
 that includes the preferred form of making changes to This Project including This License 
 in a clearly discoverable location, Dependencies and basic instructions for use.
 
-"Dependencies" means any work, that any part of This Project has been modified to depend upon,
-and when missing, would prevent This Project from being Operated in the way that You 
-Operated This Project, Dependencies do not include any:
+"Dependencies" means any work, that any part of This Project depends upon, and if missing, 
+would prevent This Project from being Operated in the way that You Operated This Project, 
+Dependencies do not include any:
 
    (a) Platform Provided Work. 
    (b) Platform Protected Work.
