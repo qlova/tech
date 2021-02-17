@@ -8,17 +8,16 @@ purpose subject to the following conditions:
 1. You must provide, on Request and/or clearly discoverable by any interested party, 
    the reasonable means for any party, who receives, interacts with, or observes, the 
    public display, feature, performance and/or otherwise availability, of Your copies 
-   of This Project, to acquire the Source of these copies licensed under the terms of
-   This License.  
+   of This Project, to acquire the Source of these copies.  
 
-2. You may not restrict in any way, the rights that This License grants to any other 
-   party unless that party has breached the conditions of This License. You agree:
+2. You may not restrict in any way, the rights that This License grants to any party 
+   unless that party has breached the conditions of This License. You agree:
    
    (a) not to sue, litigate against and/or otherwise seek damages from, in order to 
        prevent or punish, any party, for exercising their rights to This Project 
        (including to any of the Modifications You have made).
 
-   (b) to, at no cost, fee nor royalty, irrevocably and automatically grant any 
+   (b) to at no cost, fee, nor royalty, irrevocably and automatically grant any 
        required licenses (including patent licenses) to each Contributor and/or party 
        so that they may exercise their rights to any Modifications you have made).
    
@@ -30,44 +29,43 @@ purpose subject to the following conditions:
        ability for people to Request it, either in bad faith and/or to circumvent the 
        conditions of This License.
 
-3. You may not modify This License except to add/reorder (and/or modify/remove but only if 
-   You are the associated Contributor) valid Trademark Notices at the beginning of 
+3. You may not modify This License except to add/reorder (and/or modify/remove but only 
+   if You are the associated Contributor) valid Trademark Notices at the beginning of 
    This License. If You do not add any Trademark Notices to This License and/or You 
    remove Your Trademark Notices from This License, then You explicitly agree for This 
    Project to be relicensed at any time and under the terms of any chosen Open Source 
    License, upon the written agreement between each Contributor (or without any kind of
    agreement if there are zero Contributors).
 
-4. You may not use the names of any Contributor nor any of the Community Trademarks 
-   that are associated to that Contributor in This License, to title, endorse or promote, 
-   any products, projects, works, performances and/or services derived from, or otherwise 
-   featuring This Project unless You have the prior written consent from, or the 
-   publicly documented permission from, or You are, that Contributor.
+4. You may not use the names of any Contributor nor any of their Community Trademarks to 
+   title, endorse or promote, any products, projects, works, performances and/or services 
+   derived from, or otherwise featuring This Project unless You have the prior written 
+   consent from, or the publicly documented permission from, or You are, that Contributor.
 
    However this condition does not (and cannot) prevent You from:
 
       (a) using any standard dictionary words to promote Your products, projects, works, 
           performances and/or services, derived from, or otherwise featuring This 
           Project as long as these words are used sensibly for their natural language 
-          meanings and do not function as a trademark, nor refer to any of the Community 
-          Trademarks listed in this license by any (other) Contributor.
+          meanings and do not function as a trademark, nor refer to any other 
+          Contributor's Community Trademark.
 
-      (b) using the names of any Contributors and/or any Community Trademarks listed in 
-          this license, to make strictly factual statements in any non-promotional 
-          settings including but not limited to: credits, documents, blog posts, 
-          documentation, reports, interviews etc. For example:
+      (b) using the names of any Contributors and/or any of their Community Trademarks, 
+          to make strictly factual statements in any non-promotional settings including 
+          but not limited to: credits, documents, blog posts, documentation, reports, 
+          interviews etc. For example:
           '[product] was derived from/with [this project] developed by [contributor]'
 
       (c) "Making Contributions", which means that there will never be an obligation for 
           You to change the title of the Corresponding Source (as you recieved it) as 
-          long as it is clear to the public that, this is Your copy of the Corresponding
-          Source and as long as the existence of Your copy on a particular Distribution 
+          long as it is clear to the public that it is Your copy of the Corresponding
+          Source and as long as the existence of Your copies on a particular Distribution 
           Channel would not prevent or restrict any (other) Contributors from distributing 
-          This Project on that Distribution Channel titled under a Community Trademark that 
-          is associated to that Contributor in This License.
+          This Project on that Distribution Channel titled under any of their Community 
+          Trademarks.
 
-In the event that You breach any of the conditions in This License, You must take 
-immediate steps to resolve this breach and until You resolve this breach, any rights 
+In the event that You breach any of the conditions of This License, You must take 
+immediate steps to resolve this breach, and until You resolve this breach, any rights 
 granted to You by This License (except for Corresponding Source distribution rights) 
 are automatically terminated, however, the conditions of This License will continue to 
 apply to You and any party may, on behalf of each and every copyright holder, and only in 
@@ -76,8 +74,8 @@ sue, litigate against and/or otherwise seek and collect damages from You. If any
 This License is declared unenforceable and/or invalid, the remainder will continue to be 
 enforceable and valid.
 
-"This License" means this document (and any permitted changes to the listed 
-Trademark Notices).
+"This License" means this document (and any permitted changes that have been made
+to the listed Trademark Notices).
 
 "This Project" means the work covered by This License.
 
@@ -98,8 +96,8 @@ not limited to any additional Dependencies, files and/or subdirectories.
 interpreter, engine, environment, and/or operating system which is designed and/or 
 intended for third-party works to be Operated and/or otherwise created on.
 
-"Operated" means ported, performed, embedded, featured, operated, used, ran, displayed 
-and/or distributed.
+"Operated" means reproduced, ported, performed, embedded, featured, operated, used, ran, 
+displayed and/or distributed.
 
 "Platform Provided" means any work that is provided by a third-party Platform or its 
 owner (including but not limited to, the Platform itself, a Software Development Kit or an 
@@ -112,18 +110,19 @@ Platform, such that this part of the work only serves to implement a low-level, 
 and/or otherwise standard interface, in order to allow This Project to be Operated on that 
 Platform.
 
-"Source" means the Corresponding Source and/or also means, (but only if You have not made 
-any Modifications) the Community Trademark that This Project was titled, promoted or 
-endorsed as, when an associated Contributor has distributed This Project to You.
+"Source" means the Corresponding Source licensed under the terms of This License 
+and/or also means, (but only if You have not made any Modifications) a Community 
+Trademark that This Project was titled, promoted and/or endorsed as, when an associated 
+Contributor distributed This Project to You.
 
 "Corresponding Source" means a file, directory and/or another standard format of 
 distribution that includes the preferred form of making changes to This Project including 
 This License in a clearly discoverable location, Dependencies, and basic instructions for 
 use.
 
-"Dependencies" means any work that any part of This Project depends upon and if missing, 
-would prevent This Project from being Operated in the way that You have Operated This 
-Project, Dependencies do not include any:
+"Dependencies" means any work that any part of This Project depends upon or embeds, and if 
+missing, would prevent This Project from being Operated in the same way that You have 
+Operated This Project, Dependencies need not include any:
 
    (a) Platform Provided works. 
    (b) Platform Protected works.
@@ -138,31 +137,28 @@ query You for the Requestable Source of a product, project, service, work, distr
 display and/or performance derived from, or otherwise featuring, This Project.
 
 "Requestable Source" means any formal, legal or colloquially understood term to either 
-describe the Corresponding Source or work available under an Open Source License, 
+describe the Corresponding Source, or work available under an Open Source License, 
 including but not limited to the terms, 'open source', 'free software' and 
-'source available'.
+'available source'.
 
 "Open Source License" means any license approved by the Open Source Initiative that can 
 be found on https://opensource.org/
 
 "Trademark Notices" means a copyright notice listed at the beginning of This License that 
 is preceded by zero or more comma-separated trademarks, each trademark is associated with 
-the copyright holder documented in that copyright notice and is only considered to be a 
-"Community Trademark" when this trademark:
+the copyright holder documented in that copyright notice (it is theirs) and is only 
+considered to be a "Community Trademark" when this trademark:
 
    (a) is either the appropriate legal representation for a trademark, or is a term or 
        phrase followed by a unicode trademark symbol, '(TM)' or '(R)', and
 
-   (b) is unique inside This License, and
+   (b) is clearly distinguishable (by a reasonable person) from any of the other
+       previously added Community Trademarks by any other Contributor, and
 
-   (c) is clearly distinguishable (by a reasonable person) from any of the other
-       previously added trademarks in This License that are associated to any other 
-       Contributor, and
-
-   (d) was added in good faith and represents a genuine mark that is being used by the 
+   (c) was added in good faith and represents a genuine mark that is being used by the 
        Contributor to title products, projects, works, performances and/or services, and
 
-   (e) was added to This License and/or to any modified version of This License by the 
+   (d) was added to This License and/or to any modified version of This License by the 
        associated copyright holder.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
