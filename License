@@ -17,13 +17,13 @@ purpose subject to the following conditions:
        prevent or punish, any party, for exercising their rights to This Project 
        (including to any of the Modifications You have made).
 
-   (b) to at no cost, fee, nor royalty, irrevocably and automatically grant any 
-       required licenses (including patent licenses) to each Contributor and/or party 
-       so that they may exercise their rights to any Modifications you have made).
+   (b) to irrevocably and automatically grant any required licenses (including patent 
+       licenses), at no cost, fee, nor royalty to each Contributor and/or party so 
+       that they may exercise their rights to any Modifications You have made).
    
    (c) to indemnify each Contributor and/or any party, against any litigation, damages 
        and/or penalties, arising from, trademark, copyright and/or patent infringement, 
-       directly because of any Modifications You have made.
+       directly because of any Modifications You may have made.
 
    (d) not to obfuscate, omit, or obstruct in any way the Source of This Project or the 
        ability for people to Request it, either in bad faith and/or to circumvent the 
@@ -57,22 +57,21 @@ purpose subject to the following conditions:
           '[product] was derived from/with [this project] developed by [contributor]'
 
       (c) "Making Contributions", which means that there will never be an obligation for 
-          You to change the title of the Corresponding Source (as you recieved it) as 
-          long as it is clear to the public that it is Your copy of the Corresponding
-          Source and as long as the existence of Your copies on a particular Distribution 
-          Channel would not prevent or restrict any (other) Contributors from distributing 
-          This Project on that Distribution Channel titled under any of their Community 
-          Trademarks.
+          You to change the title of This Project (as you recieved it) as long as it is 
+          clear to the public that it is Your copy of This Project and as long as the 
+          existence of Your copies on a particular Distribution Channel would not prevent 
+          or restrict any (other) Contributors from distributing This Project on that 
+          Distribution Channel titled under any of their Community Trademarks.
 
 In the event that You breach any of the conditions of This License, You must take 
 immediate steps to resolve this breach, and until You resolve this breach, any rights 
 granted to You by This License (except for Corresponding Source distribution rights) 
 are automatically terminated, however, the conditions of This License will continue to 
-apply to You and any party may, on behalf of each and every copyright holder, and only in 
-good faith, to ensure the integrity, precedent and/or compliance of This License, contact, 
-sue, litigate against and/or otherwise seek and collect damages from You. If any part of 
-This License is declared unenforceable and/or invalid, the remainder will continue to be 
-enforceable and valid.
+apply to You and any other party may, on behalf of each and every copyright holder, and 
+only in good faith, to ensure the integrity, precedent and/or compliance of This License, 
+contact, sue, litigate against and/or otherwise seek and collect damages from You. If any 
+part of This License is declared unenforceable and/or invalid, the remainder will continue 
+to be enforceable and valid.
 
 "This License" means this document (and any permitted changes that have been made
 to the listed Trademark Notices).
