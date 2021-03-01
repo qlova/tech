@@ -1,6 +1,9 @@
 package api
 
-import "reflect"
+import (
+	"io"
+	"reflect"
+)
 
 //Function is a function provided by an API.
 type Function struct {
@@ -10,10 +13,16 @@ type Function struct {
 	Value reflect.Value
 }
 
+//Protocol determines the protocol of an API.
+type Protocol interface {
+	DecodeValue(io.Reader, interface{}) error
+	EncodeValue(io.Writer, interface{}) error
+}
+
 //Interface implements API.
 //Embed it inside of a struct to create a new API.
 type Interface interface {
-	ConnectAPI(host string, functions []Function) error
+	ConnectAPI(host string, protocol Protocol, functions []Function) error
 }
 
 //Tags is a set of API tags.
@@ -29,10 +38,17 @@ func Connect(api Interface) {
 
 	var host string
 	var functions []Function
+
+	var protocol Protocol
+
 	for i := 0; i < rtype.NumField(); i++ {
 		field := rtype.Field(i)
 		if field.Name == "Interface" {
 			host = field.Tag.Get("api")
+		}
+
+		if field.Name == "Protocol" {
+			protocol = rvalue.Field(i).Interface().(Protocol)
 		}
 
 		if field.Type.Kind() == reflect.Func {
@@ -44,5 +60,5 @@ func Connect(api Interface) {
 		}
 	}
 
-	api.ConnectAPI(host, functions)
+	api.ConnectAPI(host, protocol, functions)
 }

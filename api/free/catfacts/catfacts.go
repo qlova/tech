@@ -32,6 +32,10 @@ type Fact struct {
 	Used   bool   `json:"used"`
 }
 
+func (f Fact) String() string {
+	return f.Text
+}
+
 //Animal type for random animal facts.
 type Animal string
 
@@ -54,7 +58,7 @@ var API struct {
 	RandomAnimal func(animal Animal) (Fact, error) `api:"/facts/random?animal_type=%v"`
 
 	//RandomSlice is shorthand for RandomAnimalSlice(Cat, amount).
-	RandomSlice func(amount int) ([]Fact, error) `api:"/facts/random?amount=%v"`
+	RandomSlice func(amount uint) ([]Fact, error) `api:"/facts/random?amount=%v"`
 
 	//RandomCat returns a random fact about cats.
 	RandomAnimalSlice func(animal Animal) (Fact, error) `api:"/facts/random?animal_type=%v&amount=%v"`

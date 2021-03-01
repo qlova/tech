@@ -3,15 +3,33 @@ package rest
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"reflect"
 
 	"qlova.tech/api"
 )
 
+//Protocol implements a JSON api.Protocol.
+type Protocol struct{}
+
+//EncodeValue implements api.protocol.EncodeValue
+func (p Protocol) EncodeValue(writer io.Writer, value interface{}) error {
+	return json.NewEncoder(writer).Encode(value)
+}
+
+//DecodeValue implements api.protocol.DecodeValue
+func (p Protocol) DecodeValue(reader io.Reader, value interface{}) error {
+	return json.NewDecoder(reader).Decode(value)
+}
+
 type Interface struct{}
 
-func (*Interface) ConnectAPI(host string, functions []api.Function) error {
+func (*Interface) ConnectAPI(host string, protocol api.Protocol, functions []api.Function) error {
+	if protocol == nil {
+		protocol = Protocol{}
+	}
+
 	for i := range functions {
 		fn := functions[i]
 		fn.Value.Set(reflect.MakeFunc(fn.Type, func(args []reflect.Value) (results []reflect.Value) {
@@ -54,7 +72,7 @@ func (*Interface) ConnectAPI(host string, functions []api.Function) error {
 					ptr = reflect.New(T)
 				}
 
-				if err := json.NewDecoder(resp.Body).Decode(ptr.Interface()); err != nil {
+				if err := protocol.DecodeValue(resp.Body, ptr.Interface()); err != nil {
 					handle(err)
 					return
 				}

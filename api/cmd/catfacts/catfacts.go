@@ -1,17 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"log"
-
+	"qlova.tech/api/cmd"
 	"qlova.tech/api/free/catfacts"
 )
 
 func main() {
-	fact, err := catfacts.API.Random()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	fmt.Println(fact.Text)
+	cmd.Main(&catfacts.API, catfacts.API.Random)
 }
