@@ -83,6 +83,9 @@ var API struct {
 	//RandomImageURL returns a random image url of a dog.
 	RandomImageURL func() (string, error) `api:"/breeds/image/random"`
 
+	//RandomImage returns a random image of a dog.
+	RandomImage func() (rest.Image, error) `api:"/breeds/image/random"`
+
 	//RandomImageURLs returns random image urls of dogs.
 	//Max number returned is 50.
 	RandomImageURLs func(amount uint) ([]string, error) `api:"/breeds/image/random/%v"`
@@ -90,10 +93,13 @@ var API struct {
 	//ImagesByBreed returns an array of all the images from a breed, e.g. hound
 	ImageURLsByBreed func(breed Breed) ([]string, error) `api:"/breed/%v/images"`
 
-	//RandomImageURLByBreed returns a random dog image from a breed, e.g. hound
+	//RandomImageURLByBreed returns a random dog image url from a breed, e.g. hound
 	RandomImageURLByBreed func(breed Breed) ([]string, error) `api:"/breed/%v/images/random"`
 
-	//RandomImageURLByBreed returns multiple random dog images from a breed, e.g. hound
+	//RandomImageByBreed returns a random dog image from a breed, e.g. hound
+	RandomImageByBreed func(breed Breed) (rest.Image, error) `api:"/breed/%v/images/random"`
+
+	//RandomImageURLByBreed returns multiple random dog image urls from a breed, e.g. hound
 	RandomImageURLsByBreed func(breed Breed, amount uint) ([]string, error) `api:"/breed/%v/images/random/%v"`
 }
 

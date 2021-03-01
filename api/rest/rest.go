@@ -3,12 +3,40 @@ package rest
 import (
 	"encoding/json"
 	"fmt"
+	"image"
 	"io"
 	"net/http"
 	"reflect"
 
 	"qlova.tech/api"
 )
+
+//Image of an HTTP status.
+type Image struct {
+	image.Image
+}
+
+//UnmarshalJSON unmarshals the image from the given data url.
+func (i *Image) UnmarshalJSON(data []byte) error {
+	var url string
+	if err := json.Unmarshal(data, &url); err != nil {
+		return err
+	}
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+
+	img, _, err := image.Decode(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	i.Image = img
+
+	return nil
+}
 
 //Protocol implements a JSON api.Protocol.
 type Protocol struct{}
@@ -72,9 +100,15 @@ func (*Interface) ConnectAPI(host string, protocol api.Protocol, functions []api
 					ptr = reflect.New(T)
 				}
 
-				if err := protocol.DecodeValue(resp.Body, ptr.Interface()); err != nil {
-					handle(err)
-					return
+				val := ptr.Interface()
+
+				if decoder, ok := val.(interface{ Decode(io.Reader) error }); ok {
+					decoder.Decode(resp.Body)
+				} else {
+					if err := protocol.DecodeValue(resp.Body, val); err != nil {
+						handle(err)
+						return
+					}
 				}
 
 				if T.Kind() != reflect.Ptr {
