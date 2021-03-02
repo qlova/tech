@@ -1,4 +1,4 @@
-//Package dux provides a data-oriented universal component system.
+//Package dux provides a data-oriented unified component system.
 package dux
 
 import (
