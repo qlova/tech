@@ -19,10 +19,14 @@ type Protocol interface {
 	EncodeValue(io.Writer, interface{}) error
 }
 
-//Interface implements API.
-//Embed it inside of a struct to create a new API.
-type Interface interface {
+//Importer is an API that can be imported.
+type Importer interface {
 	Import(host string, protocol Protocol, functions []Function) error
+}
+
+//Exporter is an API that can be exported.
+type Exporter interface {
+	Export(port string, protocol Protocol, functions []Function) error
 }
 
 //Tags is a set of API tags.
@@ -33,15 +37,19 @@ type Tag struct{}
 
 /* (When Go gets generics)
 
-func Import[type T Interface](api T) T {
-	Connect(api)
+func Import[type T Importer](api T) T {
+	if err := Connect(api); err != nil {
+		//create wrappers that attempt to reconnect and/or
+		//return an error.
+	}
+
 	return api
 }
 
 */
 
-//Connect connects to, and enables the API so that it can be used.
-func Connect(api Interface) {
+//Export exports the API and serves it.
+func Export(api Exporter) error {
 	rtype := reflect.TypeOf(api).Elem()
 	rvalue := reflect.ValueOf(api).Elem()
 
@@ -69,5 +77,37 @@ func Connect(api Interface) {
 		}
 	}
 
-	api.Import(host, protocol, functions)
+	return api.Export(host, protocol, functions)
+}
+
+//Connect connects to, and enables the API so that it can be used.
+func Connect(api Importer) error {
+	rtype := reflect.TypeOf(api).Elem()
+	rvalue := reflect.ValueOf(api).Elem()
+
+	var host string
+	var functions []Function
+
+	var protocol Protocol
+
+	for i := 0; i < rtype.NumField(); i++ {
+		field := rtype.Field(i)
+		if field.Name == "API" {
+			host = field.Tag.Get("api")
+		}
+
+		if field.Name == "Protocol" {
+			protocol = rvalue.Field(i).Interface().(Protocol)
+		}
+
+		if field.Type.Kind() == reflect.Func {
+			functions = append(functions, Function{
+				Endpoint:    field.Tag.Get("api"),
+				StructField: field,
+				Value:       rvalue.Field(i),
+			})
+		}
+	}
+
+	return api.Import(host, protocol, functions)
 }
