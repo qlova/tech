@@ -70,7 +70,7 @@ func (breed Breed) WithSubBreed(subbreed SubBreed) Breed {
 
 //API implements api.Interface
 var API struct {
-	rest.Interface `api:"https://dog.ceo/api"`
+	rest.API `api:"https://dog.ceo/api"`
 
 	Protocol Protocol
 

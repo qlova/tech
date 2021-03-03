@@ -29,7 +29,7 @@ func (i *Image) Decode(reader io.Reader) error {
 
 //API implements api.Interface
 var API struct {
-	rest.Interface `api:"https://http.cat"`
+	rest.API `api:"https://http.cat"`
 
 	//Image returns a cat-themed image for
 	//the given HTTP status.

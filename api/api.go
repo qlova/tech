@@ -22,7 +22,7 @@ type Protocol interface {
 //Interface implements API.
 //Embed it inside of a struct to create a new API.
 type Interface interface {
-	ConnectAPI(host string, protocol Protocol, functions []Function) error
+	Import(host string, protocol Protocol, functions []Function) error
 }
 
 //Tags is a set of API tags.
@@ -30,6 +30,15 @@ type Tags map[string]string
 
 //Tag is a field that represents an API tag.
 type Tag struct{}
+
+/* (When Go gets generics)
+
+func Import[type T Interface](api T) T {
+	Connect(api)
+	return api
+}
+
+*/
 
 //Connect connects to, and enables the API so that it can be used.
 func Connect(api Interface) {
@@ -43,7 +52,7 @@ func Connect(api Interface) {
 
 	for i := 0; i < rtype.NumField(); i++ {
 		field := rtype.Field(i)
-		if field.Name == "Interface" {
+		if field.Name == "API" {
 			host = field.Tag.Get("api")
 		}
 
@@ -60,5 +69,5 @@ func Connect(api Interface) {
 		}
 	}
 
-	api.ConnectAPI(host, protocol, functions)
+	api.Import(host, protocol, functions)
 }

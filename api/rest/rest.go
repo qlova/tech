@@ -51,9 +51,11 @@ func (p Protocol) DecodeValue(reader io.Reader, value interface{}) error {
 	return json.NewDecoder(reader).Decode(value)
 }
 
-type Interface struct{}
+//API is a REST api.Interface
+type API struct{}
 
-func (*Interface) ConnectAPI(host string, protocol api.Protocol, functions []api.Function) error {
+//Import implements api.Interface.Import
+func (*API) Import(host string, protocol api.Protocol, functions []api.Function) error {
 	if protocol == nil {
 		protocol = Protocol{}
 	}

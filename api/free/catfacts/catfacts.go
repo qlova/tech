@@ -49,7 +49,7 @@ const (
 
 //API that returns cat facts.
 var API struct {
-	rest.Interface `api:"https://cat-fact.herokuapp.com"`
+	rest.API `api:"https://cat-fact.herokuapp.com"`
 
 	//Random is shorthand for RandomAnimal(Cat).
 	Random func() (Fact, error) `api:"/facts/random"`
