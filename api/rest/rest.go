@@ -11,12 +11,12 @@ import (
 	"qlova.tech/api"
 )
 
-//Image of an HTTP status.
+//Image is an image that can unmarshal itself from a json URL string.
 type Image struct {
 	image.Image
 }
 
-//UnmarshalJSON unmarshals the image from the given data url.
+//UnmarshalJSON unmarshals the image from the given image url.
 func (i *Image) UnmarshalJSON(data []byte) error {
 	var url string
 	if err := json.Unmarshal(data, &url); err != nil {
