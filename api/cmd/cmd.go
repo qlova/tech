@@ -40,7 +40,7 @@ func call(fn interface{}) {
 
 //Main runs a main function for the given command, if
 //no arguments are provided, it runs the entrypoint.
-func Main(API api.Interface, entrypoint interface{}) {
+func Main(API api.Importer, entrypoint interface{}) {
 	if len(os.Args) < 2 {
 		call(entrypoint)
 		return
