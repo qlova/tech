@@ -1,11 +1,12 @@
 package api
 
 import (
+	"context"
 	"io"
 	"reflect"
 )
 
-//Function is a function provided by an API.
+//Function is a API-provided function.
 type Function struct {
 	Endpoint string
 
@@ -29,11 +30,30 @@ type Exporter interface {
 	Export(port string, protocol Protocol, functions []Function) error
 }
 
-//Tags is a set of API tags.
-type Tags map[string]string
+//Handler is a type that can handle api requests.
+//The type will be evaluated in response to a request and
+//the evaluated value will be returned to clients.
+type Handler interface {
+	Handle(Request) error
+}
 
-//Tag is a field that represents an API tag.
-type Tag struct{}
+//Request is a raw api request, used for identity, verification and authentication.
+//If Target == Origin then this is a local request from within the same Go process.
+type Request interface {
+	context.Context
+
+	//Getenv returns a named environmental variable, option, context or cookie
+	//that exists to authenticate, identify or verify a request.
+	Getenv(key string) string
+
+	//Target is the request's target endpoint. Either an IP address, a URL or
+	//another string that represents the location that this request was sent to.
+	Target() string
+
+	//Origin is the origin of the request, either an IP address or another string
+	//that represents the location that this request was sent from.
+	Origin() string
+}
 
 /* (When Go gets generics)
 
