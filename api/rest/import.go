@@ -1,55 +1,14 @@
+//Package rest provides a REST API for use with qlova.tech/api
 package rest
 
 import (
-	"encoding/json"
 	"fmt"
-	"image"
 	"io"
 	"net/http"
 	"reflect"
 
 	"qlova.tech/api"
 )
-
-//Image is an image that can unmarshal itself from a json URL string.
-type Image struct {
-	image.Image
-}
-
-//UnmarshalJSON unmarshals the image from the given image url.
-func (i *Image) UnmarshalJSON(data []byte) error {
-	var url string
-	if err := json.Unmarshal(data, &url); err != nil {
-		return err
-	}
-
-	resp, err := http.Get(url)
-	if err != nil {
-		return err
-	}
-
-	img, _, err := image.Decode(resp.Body)
-	if err != nil {
-		return err
-	}
-
-	i.Image = img
-
-	return nil
-}
-
-//Protocol implements a JSON api.Protocol.
-type Protocol struct{}
-
-//EncodeValue implements api.protocol.EncodeValue
-func (p Protocol) EncodeValue(writer io.Writer, value interface{}) error {
-	return json.NewEncoder(writer).Encode(value)
-}
-
-//DecodeValue implements api.protocol.DecodeValue
-func (p Protocol) DecodeValue(reader io.Reader, value interface{}) error {
-	return json.NewDecoder(reader).Decode(value)
-}
 
 //API is a REST api.Interface
 type API struct{}
