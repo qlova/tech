@@ -13,7 +13,7 @@ import (
 //API is a REST api.Interface
 type API struct{}
 
-//Import implements api.Interface.Import
+//Import implements a naive REST api.Importer
 func (*API) Import(host string, protocol api.Protocol, functions []api.Function) error {
 	if protocol == nil {
 		protocol = Protocol{}
