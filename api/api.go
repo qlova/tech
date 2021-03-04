@@ -22,7 +22,7 @@ type Protocol interface {
 
 //Importer is an API that can be imported.
 type Importer interface {
-	Setenv(key, value string)
+	Setenv(key, value string) error
 
 	Import(host string, protocol Protocol, functions []Function) error
 }
