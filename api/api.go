@@ -7,8 +7,14 @@ import (
 )
 
 //Key is an API key, embed this in an API definition when some kind
-//of key is requried in order to authenticate with the API.
+//of key is required in order to authenticate with the API.
 type Key string
+
+//Tagger types can provide a fallback struct-tag. For packages that
+//use reflection and check for a Tagger.
+type Tagger interface {
+	Tag() string
+}
 
 //Definition is a definition of an API.
 type Definition struct {
@@ -30,7 +36,7 @@ type Definition struct {
 
 //Function is a API-provided function.
 type Function struct {
-	Tag string
+	Name, Tag string
 
 	Type  reflect.Type
 	Value reflect.Value
@@ -92,6 +98,20 @@ func Import[type T Importer](api T) T {
 
 */
 
+func tagOf(field reflect.StructField, value reflect.Value) string {
+	tag := field.Tag.Get("api")
+
+	if tag == "" {
+		tag = string(field.Tag)
+	}
+
+	if tag == "" && field.Type.Implements(reflect.TypeOf([0]Tagger{}).Elem()) {
+		tag = value.MethodByName("Tag").Interface().(func() string)()
+	}
+
+	return tag
+}
+
 func definitionOf(api interface{}) Definition {
 	rtype := reflect.TypeOf(api).Elem()
 	rvalue := reflect.ValueOf(api).Elem()
@@ -102,12 +122,10 @@ func definitionOf(api interface{}) Definition {
 
 	for i := 0; i < rtype.NumField(); i++ {
 		field := rtype.Field(i)
+		tag := tagOf(field, rvalue.Field(i))
 
 		if field.Name == "API" {
-			def.Tag = field.Tag.Get("api")
-			if def.Tag == "" {
-				def.Tag = string(field.Tag)
-			}
+			def.Tag = tag
 		}
 
 		if field.Name == "Protocol" && field.Type.Implements(reflect.TypeOf([0]Protocol{}).Elem()) {
@@ -116,20 +134,13 @@ func definitionOf(api interface{}) Definition {
 
 		if field.Name == "Key" && field.Type == reflect.TypeOf(Key("")) {
 			def.Key.Pointer = rvalue.Field(i).Addr().Interface().(*Key)
-			def.Key.Tag = rtype.Field(i).Tag.Get("api")
-			if def.Key.Tag == "" {
-				def.Key.Tag = string(field.Tag)
-			}
+			def.Key.Tag = tag
 		}
 
 		if field.Type.Kind() == reflect.Func {
-			tag := field.Tag.Get("api")
-			if tag == "" {
-				tag = string(field.Tag)
-			}
-
 			def.Functions = append(def.Functions, Function{
-				Tag:   field.Tag.Get("api"),
+				Name:  field.Name,
+				Tag:   tag,
 				Type:  field.Type,
 				Value: rvalue.Field(i),
 			})

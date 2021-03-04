@@ -1,4 +1,3 @@
-//Package rest provides a REST API for use with qlova.tech/api
 package rest
 
 import (
@@ -6,12 +5,12 @@ import (
 	"io"
 	"net/http"
 	"reflect"
+	"regexp"
 
 	"qlova.tech/api"
 )
 
-//API is a REST api.Interface
-type API struct{}
+var pathReplacer = regexp.MustCompile(`{.*?=%v}`)
 
 //Import implements a naive REST api.Importer
 func (*API) Import(def api.Definition) error {
@@ -21,6 +20,11 @@ func (*API) Import(def api.Definition) error {
 
 	for i := range def.Functions {
 		fn := def.Functions[i]
+
+		pattern := fn.Tag
+
+		pattern = pathReplacer.ReplaceAllLiteralString(pattern, "%v")
+
 		fn.Value.Set(reflect.MakeFunc(fn.Type, func(args []reflect.Value) (results []reflect.Value) {
 			results = make([]reflect.Value, fn.Type.NumOut())
 
@@ -39,7 +43,7 @@ func (*API) Import(def api.Definition) error {
 				converted[i] = args[i].Interface()
 			}
 
-			resp, err := http.Get(def.Tag + fmt.Sprintf(fn.Tag, converted...))
+			resp, err := http.Get(def.Tag + fmt.Sprintf(pattern, converted...))
 			if err != nil {
 				handle(err)
 				return
