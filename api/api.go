@@ -22,6 +22,8 @@ type Protocol interface {
 
 //Importer is an API that can be imported.
 type Importer interface {
+	Setenv(key, value string)
+
 	Import(host string, protocol Protocol, functions []Function) error
 }
 
@@ -30,11 +32,9 @@ type Exporter interface {
 	Export(port string, protocol Protocol, functions []Function) error
 }
 
-//Handler is a type that can handle api requests.
-//The type will be evaluated in response to a request and
-//the evaluated value will be returned to clients.
-type Handler interface {
-	Handle(Request) error
+//Authenticator is a type that can Authenticate itself from a Request.
+type Authenticator interface {
+	Authenticate(Request) error
 }
 
 //Request is a raw api request, used for identity, verification and authentication.
@@ -56,6 +56,10 @@ type Request interface {
 }
 
 /* (When Go gets generics)
+
+type Handler[type T Authenticator] interface{
+	Handle(T)
+}
 
 func Import[type T Importer](api T) T {
 	if err := Connect(api); err != nil {
