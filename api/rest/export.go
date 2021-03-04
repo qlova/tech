@@ -28,6 +28,7 @@ type argument struct {
 }
 
 var inPathRegex = regexp.MustCompile("{(.*?)=%v}")
+var inQueryRegex = regexp.MustCompile(`[?&](.*?)=%v`)
 
 //Export implements a naive REST api.Exporter
 func (*API) Export(def api.Definition) error {
@@ -66,9 +67,29 @@ func (*API) Export(def api.Definition) error {
 				i++
 			}
 
-			//Naively cleanup the pattern.
+			//Cleanup the pattern.
 			pattern = strings.Replace(pattern, "=%v}", "}", -1)
-			pattern = strings.Split(pattern, "?")[0]
+
+			split := strings.Split(pattern, "?")
+
+			pattern = split[0]
+
+			//Process the query.
+			if len(split) > 1 {
+				query := "?" + split[1]
+
+				matches = inQueryRegex.FindAllStringSubmatch(query, -1)
+
+				for _, match := range matches {
+					for _, submatch := range match {
+						locations[i] = argument{
+							name:     submatch,
+							location: inQuery,
+						}
+					}
+					i++
+				}
+			}
 		}
 
 		router.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
@@ -80,6 +101,10 @@ func (*API) Export(def api.Definition) error {
 				switch arg.location {
 				case inPath:
 					in[i] = reflect.ValueOf(vars[arg.name])
+				case inQuery:
+					in[i] = reflect.ValueOf(r.URL.Query().Get(arg.name))
+				default:
+					panic("not implemented")
 				}
 			}
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"reflect"
 	"regexp"
 
@@ -25,6 +26,8 @@ func (*API) Import(def api.Definition) error {
 
 		pattern = pathReplacer.ReplaceAllLiteralString(pattern, "%v")
 
+		//TODO prebuild with regex like in Export.
+
 		fn.Value.Set(reflect.MakeFunc(fn.Type, func(args []reflect.Value) (results []reflect.Value) {
 			results = make([]reflect.Value, fn.Type.NumOut())
 
@@ -40,7 +43,7 @@ func (*API) Import(def api.Definition) error {
 
 			var converted = make([]interface{}, len(args))
 			for i := range args {
-				converted[i] = args[i].Interface()
+				converted[i] = url.QueryEscape(fmt.Sprint(args[i].Interface()))
 			}
 
 			resp, err := http.Get(def.Tag + fmt.Sprintf(pattern, converted...))

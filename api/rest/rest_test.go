@@ -16,11 +16,14 @@ var API struct {
 	Print func() `api:"/print"`
 
 	Echo func(string) string `api:"/echo/{message=%v}"`
+
+	Concat func(a, b string) string `api:"/concat?a=%v&b=%v"`
 }
 
 func init() {
 	API.Print = Print
 	API.Echo = Echo
+	API.Concat = Concat
 }
 
 func Print() {
@@ -29,6 +32,10 @@ func Print() {
 
 func Echo(message string) string {
 	return message
+}
+
+func Concat(a, b string) string {
+	return a + b
 }
 
 func Test_Rest(t *testing.T) {
@@ -42,10 +49,13 @@ func Test_Rest(t *testing.T) {
 	//called locally.
 	local.Print = nil
 	local.Echo = nil
+	local.Concat = nil
 
 	local.Host = "http://localhost" + os.Getenv("PORT")
 	api.Connect(&local)
 
 	local.Print()
-	should.Be("Hello Server")(local.Echo("Hello Server")).Test(t)
+	should.Be("HelloServer")(local.Echo("HelloServer")).Test(t)
+
+	should.Be("This string is concatenated")(local.Concat("This string", " is concatenated")).Test(t)
 }
