@@ -105,6 +105,9 @@ func definitionOf(api interface{}) Definition {
 
 		if field.Name == "API" {
 			def.Tag = field.Tag.Get("api")
+			if def.Tag == "" {
+				def.Tag = string(field.Tag)
+			}
 		}
 
 		if field.Name == "Protocol" && field.Type.Implements(reflect.TypeOf([0]Protocol{}).Elem()) {
@@ -114,9 +117,17 @@ func definitionOf(api interface{}) Definition {
 		if field.Name == "Key" && field.Type == reflect.TypeOf(Key("")) {
 			def.Key.Pointer = rvalue.Field(i).Addr().Interface().(*string)
 			def.Key.Tag = rtype.Field(i).Tag.Get("api")
+			if def.Key.Tag == "" {
+				def.Key.Tag = string(field.Tag)
+			}
 		}
 
 		if field.Type.Kind() == reflect.Func {
+			tag := field.Tag.Get("api")
+			if tag == "" {
+				tag = string(field.Tag)
+			}
+
 			def.Functions = append(def.Functions, Function{
 				Tag:   field.Tag.Get("api"),
 				Type:  field.Type,
