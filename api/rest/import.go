@@ -14,13 +14,13 @@ import (
 type API struct{}
 
 //Import implements a naive REST api.Importer
-func (*API) Import(host string, protocol api.Protocol, functions []api.Function) error {
-	if protocol == nil {
-		protocol = Protocol{}
+func (*API) Import(def api.Definition) error {
+	if def.Protocol == nil {
+		def.Protocol = Protocol{}
 	}
 
-	for i := range functions {
-		fn := functions[i]
+	for i := range def.Functions {
+		fn := def.Functions[i]
 		fn.Value.Set(reflect.MakeFunc(fn.Type, func(args []reflect.Value) (results []reflect.Value) {
 			results = make([]reflect.Value, fn.Type.NumOut())
 
@@ -39,7 +39,7 @@ func (*API) Import(host string, protocol api.Protocol, functions []api.Function)
 				converted[i] = args[i].Interface()
 			}
 
-			resp, err := http.Get(host + fmt.Sprintf(fn.Endpoint, converted...))
+			resp, err := http.Get(def.Tag + fmt.Sprintf(fn.Tag, converted...))
 			if err != nil {
 				handle(err)
 				return
@@ -66,7 +66,7 @@ func (*API) Import(host string, protocol api.Protocol, functions []api.Function)
 				if decoder, ok := val.(interface{ Decode(io.Reader) error }); ok {
 					decoder.Decode(resp.Body)
 				} else {
-					if err := protocol.DecodeValue(resp.Body, val); err != nil {
+					if err := def.Protocol.DecodeValue(resp.Body, val); err != nil {
 						handle(err)
 						return
 					}

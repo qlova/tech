@@ -6,11 +6,33 @@ import (
 	"reflect"
 )
 
+//Key is an API key, embed this in an API definition when some kind
+//of key is requried in order to authenticate with the API.
+type Key string
+
+//Definition is a definition of an API.
+type Definition struct {
+	//Tag is the tag of the API field.
+	Tag string
+
+	//Key is the API Key for this API.
+	Key struct {
+		Pointer *string
+		Tag     string
+	}
+
+	//Protocol is the protocol that the API encodes information in.
+	Protocol Protocol
+
+	//Functions is a list of functions this API provides.
+	Functions []Function
+}
+
 //Function is a API-provided function.
 type Function struct {
-	Endpoint string
+	Tag string
 
-	reflect.StructField
+	Type  reflect.Type
 	Value reflect.Value
 }
 
@@ -22,14 +44,12 @@ type Protocol interface {
 
 //Importer is an API that can be imported.
 type Importer interface {
-	Setenv(key, value string) error
-
-	Import(host string, protocol Protocol, functions []Function) error
+	Import(Definition) error
 }
 
 //Exporter is an API that can be exported.
 type Exporter interface {
-	Export(port string, protocol Protocol, functions []Function) error
+	Export(Definition) error
 }
 
 //Authenticator is a type that can Authenticate itself from a Request.
@@ -42,9 +62,9 @@ type Authenticator interface {
 type Request interface {
 	context.Context
 
-	//Getenv returns a named environmental variable, option, context or cookie
-	//that exists to authenticate, identify or verify a request.
-	Getenv(key string) string
+	//Key returns the named environmental variable, option, context or cookie
+	//that exists to authenticate, identify or verify the request.
+	Key(key string) string
 
 	//Target is the request's target endpoint. Either an IP address, a URL or
 	//another string that represents the location that this request was sent to.
@@ -72,66 +92,48 @@ func Import[type T Importer](api T) T {
 
 */
 
-//Export exports the API and serves it.
-func Export(api Exporter) error {
+func definitionOf(api interface{}) Definition {
 	rtype := reflect.TypeOf(api).Elem()
 	rvalue := reflect.ValueOf(api).Elem()
 
-	var host string
-	var functions []Function
+	var def Definition
 
-	var protocol Protocol
+	//TODO support embedded APIs.
 
 	for i := 0; i < rtype.NumField(); i++ {
 		field := rtype.Field(i)
+
 		if field.Name == "API" {
-			host = field.Tag.Get("api")
+			def.Tag = field.Tag.Get("api")
 		}
 
-		if field.Name == "Protocol" {
-			protocol = rvalue.Field(i).Interface().(Protocol)
+		if field.Name == "Protocol" && field.Type.Implements(reflect.TypeOf([0]Protocol{}).Elem()) {
+			def.Protocol = rvalue.Field(i).Interface().(Protocol)
+		}
+
+		if field.Name == "Key" && field.Type == reflect.TypeOf(Key("")) {
+			def.Key.Pointer = rvalue.Field(i).Addr().Interface().(*string)
+			def.Key.Tag = rtype.Field(i).Tag.Get("api")
 		}
 
 		if field.Type.Kind() == reflect.Func {
-			functions = append(functions, Function{
-				Endpoint:    field.Tag.Get("api"),
-				StructField: field,
-				Value:       rvalue.Field(i),
+			def.Functions = append(def.Functions, Function{
+				Tag:   field.Tag.Get("api"),
+				Type:  field.Type,
+				Value: rvalue.Field(i),
 			})
 		}
 	}
 
-	return api.Export(host, protocol, functions)
+	return def
+}
+
+//Export exports the API and serves it.
+func Export(api Exporter) error {
+	return api.Export(definitionOf(api))
 }
 
 //Connect connects to, and enables the API so that it can be used.
 func Connect(api Importer) error {
-	rtype := reflect.TypeOf(api).Elem()
-	rvalue := reflect.ValueOf(api).Elem()
-
-	var host string
-	var functions []Function
-
-	var protocol Protocol
-
-	for i := 0; i < rtype.NumField(); i++ {
-		field := rtype.Field(i)
-		if field.Name == "API" {
-			host = field.Tag.Get("api")
-		}
-
-		if field.Name == "Protocol" {
-			protocol = rvalue.Field(i).Interface().(Protocol)
-		}
-
-		if field.Type.Kind() == reflect.Func {
-			functions = append(functions, Function{
-				Endpoint:    field.Tag.Get("api"),
-				StructField: field,
-				Value:       rvalue.Field(i),
-			})
-		}
-	}
-
-	return api.Import(host, protocol, functions)
+	return api.Import(definitionOf(api))
 }
