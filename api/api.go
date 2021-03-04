@@ -17,7 +17,7 @@ type Definition struct {
 
 	//Key is the API Key for this API.
 	Key struct {
-		Pointer *string
+		Pointer *Key
 		Tag     string
 	}
 
@@ -62,9 +62,9 @@ type Authenticator interface {
 type Request interface {
 	context.Context
 
-	//Key returns the named environmental variable, option, context or cookie
-	//that exists to authenticate, identify or verify the request.
-	Key(key string) string
+	//Key returns the value of the environmental variable, option, context
+	//or cookie Key that exists to authenticate, identify or verify the request.
+	Key(key Key) string
 
 	//Target is the request's target endpoint. Either an IP address, a URL or
 	//another string that represents the location that this request was sent to.
