@@ -115,7 +115,7 @@ func definitionOf(api interface{}) Definition {
 		}
 
 		if field.Name == "Key" && field.Type == reflect.TypeOf(Key("")) {
-			def.Key.Pointer = rvalue.Field(i).Addr().Interface().(*string)
+			def.Key.Pointer = rvalue.Field(i).Addr().Interface().(*Key)
 			def.Key.Tag = rtype.Field(i).Tag.Get("api")
 			if def.Key.Tag == "" {
 				def.Key.Tag = string(field.Tag)
