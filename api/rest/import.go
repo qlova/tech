@@ -9,6 +9,7 @@ import (
 	"regexp"
 
 	"qlova.tech/api"
+	"qlova.tech/enc"
 )
 
 var pathReplacer = regexp.MustCompile(`{.*?=%v}`)
@@ -16,7 +17,7 @@ var pathReplacer = regexp.MustCompile(`{.*?=%v}`)
 //Import implements a naive REST api.Importer
 func (*API) Import(def api.Definition) error {
 	if def.Protocol == nil {
-		def.Protocol = Protocol{}
+		def.Protocol = enc.JSON
 	}
 
 	for i := range def.Functions {
@@ -73,7 +74,7 @@ func (*API) Import(def api.Definition) error {
 				if decoder, ok := val.(interface{ Decode(io.Reader) error }); ok {
 					decoder.Decode(resp.Body)
 				} else {
-					if err := def.Protocol.DecodeValue(resp.Body, val); err != nil {
+					if err := def.Protocol.Decode(val, resp.Body); err != nil {
 						handle(err)
 						return
 					}

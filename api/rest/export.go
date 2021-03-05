@@ -12,6 +12,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"qlova.tech/api"
+	"qlova.tech/enc"
 )
 
 type argLocation byte
@@ -33,7 +34,7 @@ var inQueryRegex = regexp.MustCompile(`[?&](.*?)=%v`)
 //Export implements a naive REST api.Exporter
 func (*API) Export(def api.Definition) error {
 	if def.Protocol == nil {
-		def.Protocol = Protocol{}
+		def.Protocol = enc.JSON
 	}
 
 	var router = mux.NewRouter()

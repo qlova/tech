@@ -1,22 +1,61 @@
+/*
+Package api contains a standard interface for an API.
+This allows Go code to easily import an API and use it
+without a bloated wrapper and without the need to care
+about the transport or protocol layer. These API functions
+are called like native funtions.
+
+By convention, API's are global anonymous struct variables:
+
+	var API struct {
+		rest.API `https://example.com`
+
+		Echo func(message string) string `/echo?message=%v`
+	}
+
+This rest API can be imported by calling api.Connect(&API),
+and then API.Echo("Hello World") will be called over
+HTTPS/REST to 'https://example.com/echo' with the given string
+and return the result (or panic if there is an error).
+
+Documentation on how different tags are handled can be found
+in the included rest package.
+
+The package can also export the API instead of importing it,
+By calling api.Export(&API), a local HTTP/REST server will
+listen on PORT and return the response of the Echo call to
+any clients that call the '/echo' endpoint with a message
+string (you do need to provide an implementation of course).
+
+	API.Echo = func(message string) string { return message }
+
+Exactly how things are imported/exported is implementation
+defined, if the implementation does not support an argument
+or tag, it should return an error, either on Connect or Export.
+*/
 package api
 
 import (
 	"context"
-	"io"
 	"reflect"
+
+	"qlova.tech/enc"
 )
 
 //Key is an API key, embed this in an API definition when some kind
-//of key is required in order to authenticate with the API.
+//of authentication key is required in order to authenticate with the
+//API, the value of this key will be used to authenticate with an API.
+//The exact method and supported tags are implementation specific.
 type Key string
 
-//Tagger types can provide a fallback struct-tag. For packages that
-//use reflection and check for a Tagger.
+//Tagger types can provide a fallback to a missing api tag for a
+//field of the implementing type.
 type Tagger interface {
 	Tag() string
 }
 
-//Definition is a definition of an API.
+//Definition is a definition of an API. It can be constructed manually but
+//should normally be handled by this package.
 type Definition struct {
 	//Tag is the tag of the API field.
 	Tag string
@@ -27,8 +66,8 @@ type Definition struct {
 		Tag     string
 	}
 
-	//Protocol is the protocol that the API encodes information in.
-	Protocol Protocol
+	//Protocol is the protocol that the API should encodes information in.
+	Protocol enc.Format
 
 	//Functions is a list of functions this API provides.
 	Functions []Function
@@ -40,12 +79,6 @@ type Function struct {
 
 	Type  reflect.Type
 	Value reflect.Value
-}
-
-//Protocol determines the protocol of an API.
-type Protocol interface {
-	DecodeValue(io.Reader, interface{}) error
-	EncodeValue(io.Writer, interface{}) error
 }
 
 //Importer is an API that can be imported.
@@ -79,6 +112,9 @@ type Request interface {
 	//Origin is the origin of the request, either an IP address or another string
 	//that represents the location that this request was sent from.
 	Origin() string
+
+	//Body reads the request data so that it can be signature verified.
+	Data() []byte
 }
 
 /* (When Go gets generics)
@@ -128,8 +164,8 @@ func definitionOf(api interface{}) Definition {
 			def.Tag = tag
 		}
 
-		if field.Name == "Protocol" && field.Type.Implements(reflect.TypeOf([0]Protocol{}).Elem()) {
-			def.Protocol = rvalue.Field(i).Interface().(Protocol)
+		if field.Name == "Protocol" && field.Type.Implements(reflect.TypeOf([0]enc.Format{}).Elem()) {
+			def.Protocol = rvalue.Field(i).Interface().(enc.Format)
 		}
 
 		if field.Name == "Key" && field.Type == reflect.TypeOf(Key("")) {
