@@ -33,12 +33,17 @@ func (*API) Import(def api.Definition) error {
 			results = make([]reflect.Value, fn.Type.NumOut())
 
 			handle := func(err error) {
+				var returned bool
 				for i := 0; i < fn.Type.NumOut(); i++ {
 					if fn.Type.Out(i) == reflect.TypeOf([0]error{}).Elem() {
 						results[i] = reflect.ValueOf(err)
+						returned = true
 						continue
 					}
 					results[i] = reflect.Zero(fn.Type.Out(i))
+				}
+				if !returned {
+					panic(err)
 				}
 			}
 

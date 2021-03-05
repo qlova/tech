@@ -113,7 +113,7 @@ type Request interface {
 	//that represents the location that this request was sent from.
 	Origin() string
 
-	//Body reads the request data so that it can be signature verified.
+	//Body reads in the request data so that it can be signature verified.
 	Data() []byte
 }
 

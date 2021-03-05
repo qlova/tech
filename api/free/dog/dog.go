@@ -9,21 +9,22 @@ import (
 
 	"qlova.tech/api"
 	"qlova.tech/api/rest"
+	"qlova.tech/enc"
 )
 
 //Protocol implements the Dog api.Protocol.
 type Protocol struct {
-	rest.Protocol
+	enc.TextFormat
 }
 
-//DecodeValue implements api.Protocol.DecodeValue.
-func (message Protocol) DecodeValue(reader io.Reader, value interface{}) error {
+//Decode implements api.Protocol.Decode.
+func (message Protocol) Decode(value interface{}, reader io.Reader) error {
 	var Message struct {
 		Message json.RawMessage `json:"message"`
 		Status  string          `json:"status"`
 	}
 
-	if err := message.Protocol.DecodeValue(reader, &Message); err != nil {
+	if err := message.TextFormat.Decode(&Message, reader); err != nil {
 		return err
 	}
 
@@ -104,5 +105,6 @@ var API struct {
 }
 
 func init() {
+	API.Protocol.TextFormat = enc.JSON
 	api.Connect(&API)
 }
