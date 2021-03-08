@@ -49,22 +49,22 @@ const (
 
 //API that returns cat facts.
 var API struct {
-	rest.API `api:"https://cat-fact.herokuapp.com"`
+	rest.API `rest:"https://cat-fact.herokuapp.com"`
 
 	//Random is shorthand for RandomAnimal(Cat).
-	Random func() (Fact, error) `api:"/facts/random"`
+	Random func() (Fact, error) `rest:"/facts/random"`
 
 	//RandomAnimal returns a random fact about the animal you provided.
-	RandomAnimal func(animal Animal) (Fact, error) `api:"/facts/random?animal_type=%v"`
+	RandomAnimal func(animal Animal) (Fact, error) `rest:"/facts/random?animal_type=%v"`
 
 	//RandomSlice is shorthand for RandomAnimalSlice(Cat, amount).
-	RandomSlice func(amount uint) ([]Fact, error) `api:"/facts/random?amount=%v"`
+	RandomSlice func(amount uint) ([]Fact, error) `rest:"/facts/random?amount=%v"`
 
 	//RandomCat returns a random fact about cats.
-	RandomAnimalSlice func(animal Animal) (Fact, error) `api:"/facts/random?animal_type=%v&amount=%v"`
+	RandomAnimalSlice func(animal Animal) (Fact, error) `rest:"/facts/random?animal_type=%v&amount=%v"`
 
 	//Get returns the fact with the given ID.
-	Get func(id string) (Fact, error) `api:"/facts/%v"`
+	Get func(id string) (Fact, error) `rest:"/facts/%v"`
 }
 
 func init() {

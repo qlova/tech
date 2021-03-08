@@ -23,7 +23,7 @@ func (*API) Import(def api.Definition) error {
 	for i := range def.Functions {
 		fn := def.Functions[i]
 
-		pattern := fn.Tag
+		pattern := fn.Tag.Get("rest")
 
 		pattern = pathReplacer.ReplaceAllLiteralString(pattern, "%v")
 
@@ -52,7 +52,7 @@ func (*API) Import(def api.Definition) error {
 				converted[i] = url.QueryEscape(fmt.Sprint(args[i].Interface()))
 			}
 
-			resp, err := http.Get(def.Tag + fmt.Sprintf(pattern, converted...))
+			resp, err := http.Get(def.Tag.Get("rest") + fmt.Sprintf(pattern, converted...))
 			if err != nil {
 				handle(err)
 				return

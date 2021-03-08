@@ -42,7 +42,7 @@ func (*API) Export(def api.Definition) error {
 	for i := range def.Functions {
 		fn := def.Functions[i]
 
-		var pattern string = fn.Tag
+		var pattern string = fn.Tag.Get("rest")
 		var locations = make([]argument, fn.Type.NumIn())
 
 		if pattern == "" {
@@ -52,7 +52,7 @@ func (*API) Export(def api.Definition) error {
 		//Does the endpoint contains parameters? this
 		//means that the Go function's arguments are
 		//found inside the path or query of the request.
-		if strings.Contains(fn.Tag, "%") {
+		if strings.Contains(fn.Tag.Get("rest"), "%") {
 
 			//Match path parameters.
 			matches := inPathRegex.FindAllStringSubmatch(pattern, -1)
@@ -130,5 +130,5 @@ func (*API) Export(def api.Definition) error {
 		})
 	}
 
-	return http.ListenAndServe(os.Getenv("PORT"), router)
+	return http.ListenAndServe(":"+os.Getenv("PORT"), router)
 }

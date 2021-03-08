@@ -51,19 +51,19 @@ type Key string
 //Tagger types can provide a fallback to a missing api tag for a
 //field of the implementing type.
 type Tagger interface {
-	Tag() string
+	Tag() reflect.StructTag
 }
 
 //Definition is a definition of an API. It can be constructed manually but
 //should normally be handled by this package.
 type Definition struct {
 	//Tag is the tag of the API field.
-	Tag string
+	Tag reflect.StructTag
 
 	//Key is the API Key for this API.
 	Key struct {
 		Pointer *Key
-		Tag     string
+		Tag     reflect.StructTag
 	}
 
 	//Protocol is the protocol that the API should encodes information in.
@@ -75,7 +75,9 @@ type Definition struct {
 
 //Function is a API-provided function.
 type Function struct {
-	Name, Tag string
+	Name string
+
+	Tag reflect.StructTag
 
 	Type  reflect.Type
 	Value reflect.Value
@@ -113,8 +115,18 @@ type Request interface {
 	//that represents the location that this request was sent from.
 	Origin() string
 
-	//Body reads in the request data so that it can be signature verified.
+	//Body reads in the request message so that it can be verified by a signature.
 	Data() []byte
+}
+
+//Validator is a type that can be used to validate its contents.
+type Validator interface {
+	Validate() error
+}
+
+//RequestScanner is a type that can scan itself from a Request.
+type RequestScanner interface {
+	ScanRequest(r Request) error
 }
 
 /* (When Go gets generics)
@@ -134,18 +146,13 @@ func Import[type T Importer](api T) T {
 
 */
 
-func tagOf(field reflect.StructField, value reflect.Value) string {
-	tag := field.Tag.Get("api")
+func tagOf(field reflect.StructField, value reflect.Value) reflect.StructTag {
 
-	if tag == "" {
-		tag = string(field.Tag)
+	if field.Tag == "" && field.Type.Implements(reflect.TypeOf([0]Tagger{}).Elem()) {
+		return value.MethodByName("Tag").Interface().(func() reflect.StructTag)()
 	}
 
-	if tag == "" && field.Type.Implements(reflect.TypeOf([0]Tagger{}).Elem()) {
-		tag = value.MethodByName("Tag").Interface().(func() string)()
-	}
-
-	return tag
+	return field.Tag
 }
 
 func definitionOf(api interface{}) Definition {

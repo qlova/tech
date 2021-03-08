@@ -13,11 +13,11 @@ import (
 var API struct {
 	rest.API
 
-	Print func() `api:"/print"`
+	Print func() `rest:"/print"`
 
-	Echo func(string) string `api:"/echo/{message=%v}"`
+	Echo func(string) string `rest:"/echo/{message=%v}"`
 
-	Concat func(a, b string) string `api:"/concat?a=%v&b=%v"`
+	Concat func(a, b string) string `rest:"/concat?a=%v&b=%v"`
 }
 
 func init() {
@@ -39,7 +39,6 @@ func Concat(a, b string) string {
 }
 
 func Test_Rest(t *testing.T) {
-
 	//Host the API on localhost.
 	go api.Export(&API)
 
@@ -51,7 +50,7 @@ func Test_Rest(t *testing.T) {
 	local.Echo = nil
 	local.Concat = nil
 
-	local.Host = "http://localhost" + os.Getenv("PORT")
+	local.Host = "http://localhost:" + os.Getenv("PORT")
 	api.Connect(&local)
 
 	local.Print()

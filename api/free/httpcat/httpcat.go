@@ -29,11 +29,11 @@ func (i *Image) Decode(reader io.Reader) error {
 
 //API implements api.Interface
 var API struct {
-	rest.API `api:"https://http.cat"`
+	rest.API `rest:"https://http.cat"`
 
 	//Image returns a cat-themed image for
 	//the given HTTP status.
-	Image func(code int) (Image, error) `api:"/%v"`
+	Image func(code int) (Image, error) `rest:"/%v"`
 }
 
 func init() {
