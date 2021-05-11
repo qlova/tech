@@ -1,7 +1,7 @@
 package win
 
 type Driver interface {
-	Open() error
+	Open(name string) error
 	//Fullscreen() error
 
 	Update() bool

@@ -8,6 +8,9 @@ import (
 
 	"qlova.tech/gpu"
 	"qlova.tech/gpu/shader"
+
+	_ "image/jpeg"
+	_ "image/png"
 )
 
 var square gpu.Mesh
@@ -55,10 +58,10 @@ func (img *Image) Draw(ops gpu.DrawOptions, t *gpu.Transform) {
 				{0, 0, 0},
 			}, gpu.UVs{
 				{0, 0},
-				{1, 0},
-				{1, 1},
+				{-1, 0},
+				{-1, 1},
 
-				{1, 1},
+				{-1, 1},
 				{0, 1},
 				{0, 0},
 			})
@@ -69,7 +72,6 @@ func (img *Image) Draw(ops gpu.DrawOptions, t *gpu.Transform) {
 
 	default:
 		textured.Texture = *(*gpu.Texture)(unsafe.Pointer(&(*img)[0]))
-		square.SetShader(textured)
 		square.Draw(ops, t)
 	}
 }

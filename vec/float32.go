@@ -1,3 +1,4 @@
+//Package vec provides variable sized
 package vec
 
 import "qlova.tech/f32"

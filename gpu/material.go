@@ -64,7 +64,7 @@ func (mat *Material) SetShader(val Shader) {
 
 	size := T.Elem().Size()
 
-	if size < bits.UintSize*materialWordSize {
+	if false && size < bits.UintSize*materialWordSize {
 		memcpy(unsafe.Pointer(&mat.words), unsafe.Pointer(V.Pointer()), size)
 		mat.shader = reflect.NewAt(T.Elem(), unsafe.Pointer(&mat.words)).Interface().(Shader)
 		mat.pointer = unsafe.Pointer(&mat.words)

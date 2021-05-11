@@ -51,7 +51,7 @@ func DeltaTime() float32 {
 	return float32(time.Since(lastFrame).Seconds())
 }
 
-func (Driver) Open() error {
+func (Driver) Open(name string) error {
 	if err := glfw.Init(); err != nil {
 		return fmt.Errorf("could not initialise glfw: %w", err)
 	}
@@ -63,7 +63,7 @@ func (Driver) Open() error {
 	glfw.WindowHint(glfw.Samples, 4)
 
 	var err error
-	MainWindow, err = glfw.CreateWindow(640, 480, "HelloCube", nil, nil)
+	MainWindow, err = glfw.CreateWindow(640, 480, name, nil, nil)
 	if err != nil {
 		return fmt.Errorf("could not open window: %w", err)
 	}

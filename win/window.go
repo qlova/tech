@@ -5,11 +5,11 @@ import "errors"
 
 var CurrentDriver Driver
 
-func Open() error {
+func Open(name string) error {
 	if CurrentDriver == nil {
 		return errors.New("no driver was imported for win")
 	}
-	return CurrentDriver.Open()
+	return CurrentDriver.Open(name)
 }
 
 func Update() bool {
