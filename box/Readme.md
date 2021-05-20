@@ -42,27 +42,26 @@ determine the field number and so on.
 
 ```go
 const (
-    Null = iota 
+	Command = iota
 
-    BitsN
-    Bits8
-    Bits16
-    Bits32
-    Bits64
-    Bits96
-    Bits128
-    Bits192
+	BitsN
+	Bits8
+	Bits16
+	Bits32
+	Bits64
+	Bits96
+	Bits128
+	Bits192
+	Bits256
 
-    Padding
-
-    Opening
-    Closing
-
-    Pointer
-    Exactly 
-    Mapping
-    Dynamic
+	Opening
+	Pointer
+	Exactly
+	Mapping
+	Dynamic
+	Boolean
 )
+
 ```
 
 ### BODY
