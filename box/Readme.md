@@ -6,20 +6,11 @@ It's an adjustable & self-describing protocol format with an optional schema.
 A BOXed message looks like this:
 
 ```
-    [ARCHITECTURE]([SCHEMA])[HEADER][NULL][BODY]
+    [VERSION]([SCHEMA])[HEADER][NULL][MESSAGE][MEMORY]
 ```
 
-### ARCHITECTURE
-Is a single byte that describes the architecture of the message.
-
-1. Is 64 bit? (else 32 bit)
-2. Is Big Endian? (else little endian)
-3. Fat strings? (else C strings)
-4. Has Schema?
-5. Fat Slices? (else thin slices)
-6. Reserved
-7. Reserved
-8. Reserved
+### VERSION
+Version of the serialisation format.
 
 ### SCHEMA
 The schema is an optional component of a message and contains
