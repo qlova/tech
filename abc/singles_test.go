@@ -9,6 +9,6 @@ import (
 
 func TestSingles(t *testing.T) {
 	for _, plural := range plurals {
-		should.Be(plural[0])(abc.Single(plural[1])).Test(t)
+		should.Be(plural[0])(abc.ToSingle(plural[1])).Test(t)
 	}
 }

@@ -145,6 +145,6 @@ var plurals = [][2]string{
 
 func TestPlurals(t *testing.T) {
 	for _, plural := range plurals {
-		should.Be(plural[1])(abc.Plural(plural[0])).Test(t)
+		should.Be(plural[1])(abc.ToPlural(plural[0])).Test(t)
 	}
 }

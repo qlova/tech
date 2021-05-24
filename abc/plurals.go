@@ -6,8 +6,8 @@ import (
 	"qlova.tech/min"
 )
 
-//Plural returns the plural form of the given english word.
-func Plural(word string) string {
+//ToPlural returns the plural form of the given english word.
+func ToPlural(word string) string {
 	if len(word) == 0 {
 		return ""
 	}
