@@ -6,8 +6,8 @@ import (
 	"qlova.tech/min"
 )
 
-//Single returns the single form of the given english word.
-func Single(word string) string {
+//ToSingle returns the single form of the given english word.
+func ToSingle(word string) string {
 	if len(word) == 0 {
 		return ""
 	}
