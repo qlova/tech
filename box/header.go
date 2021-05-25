@@ -30,10 +30,28 @@ func headerFor(obj interface{}) []byte {
 
 			fmt.Println("offset ", field.Offset)
 
-			switch field.Type.Kind() {
-			case reflect.Float64:
-				header.WriteByte(bits64 + uint8(i+1))
+			size := uint8(i + 1)
+			if size > 31 {
+				size = 0
 			}
+
+			var kind byte
+
+			switch field.Type.Size() {
+			case 1:
+				kind = bits8
+			case 2:
+				kind = bits16
+			case 4:
+				kind = bits32
+			case 8:
+				kind = bits64
+			default:
+				panic("unsupported size: " + fmt.Sprint(field.Type.Size()))
+			}
+
+			//Write kind nibble and size nibble
+			header.WriteByte(kind + size)
 		}
 
 		header.WriteByte(0)
