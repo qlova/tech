@@ -3,10 +3,13 @@ package box
 
 import (
 	"bytes"
-	"encoding/hex"
 	"fmt"
 	"reflect"
 	"time"
+)
+
+const (
+	hasSchema = 1 << iota
 )
 
 //5bit command
@@ -61,6 +64,8 @@ const (
 	//of the next header byte there will
 	//be.
 	exactly = 0x60
+
+	padding = 0x70
 )
 
 //schema entry
@@ -116,7 +121,7 @@ func Unmarshal(data []byte, obj interface{}) error {
 
 	var header, message = readHeader(data)
 
-	fmt.Println(hex.EncodeToString(header))
+	fmt.Println(sprintHeader(header))
 
 	if bytes.Compare(header, headerFor(obj)) != 0 {
 		return fmt.Errorf("cannot decode other language yet")
