@@ -25,6 +25,7 @@ func headerFor(obj interface{}) []byte {
 
 			if messageHead != field.Offset {
 				header.WriteByte(padding + byte(field.Offset-messageHead))
+				messageHead = field.Offset
 			}
 
 			messageHead += field.Type.Size()
