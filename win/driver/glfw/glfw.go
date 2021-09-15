@@ -2,99 +2,72 @@ package glfw
 
 import (
 	"fmt"
-	"runtime"
-	"time"
+	"sync"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 
 	"qlova.tech/win"
 )
 
-var MainWindow *glfw.Window
+var inited bool
+var windows = []*glfw.Window{nil}
+var mutex sync.Mutex
 
 func init() {
-	win.CurrentDriver = Driver{}
-
-	runtime.LockOSThread()
+	win.Driver = Open
 }
 
-type Driver struct{}
-
-var previousTime = time.Now()
-var lastFrame = time.Now()
-var framecount int
-
-func (Driver) Button(id string) bool {
-	return Button(id)
-}
-
-func Button(id string) bool {
-	switch id {
-	case "w":
-		return MainWindow.GetKey(glfw.KeyW) == glfw.Press
-	case "a":
-		return MainWindow.GetKey(glfw.KeyA) == glfw.Press
-	case "s":
-		return MainWindow.GetKey(glfw.KeyS) == glfw.Press
-	case "d":
-		return MainWindow.GetKey(glfw.KeyD) == glfw.Press
-	default:
-		return false
-	}
-}
-
-func (Driver) DeltaTime() float32 {
-	return DeltaTime()
-}
-
-func DeltaTime() float32 {
-	return float32(time.Since(lastFrame).Seconds())
-}
-
-func (Driver) Open(name string) error {
-	if err := glfw.Init(); err != nil {
-		return fmt.Errorf("could not initialise glfw: %w", err)
-	}
-
-	glfw.WindowHint(glfw.ContextVersionMajor, 4)
-	glfw.WindowHint(glfw.ContextVersionMinor, 1)
-	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
-	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
-	glfw.WindowHint(glfw.Samples, 4)
+func Open(w *win.Window) bool {
+	mutex.Lock()
+	defer mutex.Unlock()
 
 	var err error
-	MainWindow, err = glfw.CreateWindow(640, 480, name, nil, nil)
-	if err != nil {
-		return fmt.Errorf("could not open window: %w", err)
+
+	if !inited {
+		if err = glfw.Init(); err != nil {
+			w.Error = fmt.Errorf("could not initialise glfw: %w", err)
+			return false
+		}
 	}
 
-	MainWindow.MakeContextCurrent()
-	glfw.SwapInterval(1)
+	var window = windows[w.ID]
+	if w.ID == 0 {
+		if w.Width == 0 || w.Height == 0 {
+			w.Width, w.Height = 640, 480
+		}
 
-	fmt.Println(MainWindow.GetSize())
+		window, err = glfw.CreateWindow(w.Width, w.Height, w.Name, nil, nil)
+		if err != nil {
+			w.Error = fmt.Errorf("could not open window: %w", err)
+			return false
+		}
 
-	return nil
-}
+		windows = append(windows, window)
+		w.ID = len(windows) - 1
+	}
 
-func (Driver) Update() bool {
+	window.MakeContextCurrent()
 
-	lastFrame = time.Now()
-
-	MainWindow.SwapBuffers()
 	glfw.PollEvents()
 
-	currentTime := time.Now()
-	framecount++
-	if currentTime.Sub(previousTime) > time.Second {
-		fmt.Printf("FPS %v\r", framecount)
+	if w.Closed || window.ShouldClose() {
+		w.Closed = true
+		window.Destroy()
 
-		framecount = 0
-		previousTime = currentTime
+		if len(windows) == 0 {
+			glfw.Terminate()
+			inited = false
+		}
+
+		return false
 	}
 
-	return !MainWindow.ShouldClose()
-}
+	width, height := window.GetSize()
 
-func (Driver) Close() {
-	glfw.Terminate()
+	w.Width = width
+	w.Height = height
+
+	window.SwapBuffers()
+
+	return true
 }

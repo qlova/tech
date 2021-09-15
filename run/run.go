@@ -14,8 +14,11 @@ import (
 //App runs the given app function in a main loop
 //after opening a window and the GPU.
 func App(name string, app func()) error {
-	if err := win.Open(name); err != nil {
-		return err
+	win.Name = name
+
+	win.Open()
+	if win.Error != nil {
+		return win.Error
 	}
 	if err := gpu.Open(); err != nil {
 		return err
@@ -23,7 +26,7 @@ func App(name string, app func()) error {
 
 	gpu.Set("camera", gpu.NewTransform())
 
-	for win.Update() && gpu.Frames() {
+	for win.Open() && gpu.Frames() {
 		app()
 		if err := gpu.Sync(); err != nil {
 			return err
