@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 
+	"qlova.tech/hid"
 	"qlova.tech/win"
 )
 
@@ -30,6 +31,7 @@ func Open(w *win.Window) bool {
 		}
 	}
 
+	//Birth
 	var window = windows[w.ID]
 	if w.ID == 0 {
 		if w.Width == 0 || w.Height == 0 {
@@ -42,14 +44,30 @@ func Open(w *win.Window) bool {
 			return false
 		}
 
+		window.SetMouseButtonCallback(func(window *glfw.Window, rawButton glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
+			switch action {
+			case glfw.Press:
+				hid.Mouse.Press(uint16(rawButton + 1))
+			case glfw.Release:
+				hid.Mouse.Release(uint16(rawButton + 1))
+			}
+		})
+
 		windows = append(windows, window)
 		w.ID = len(windows) - 1
 	}
 
 	window.MakeContextCurrent()
 
+	//Input
 	glfw.PollEvents()
+	{
+		x, y := window.GetCursorPos()
+		hid.Mouse.X = float32(x)
+		hid.Mouse.Y = float32(y)
+	}
 
+	//Death
 	if w.Closed || window.ShouldClose() {
 		w.Closed = true
 		window.Destroy()
