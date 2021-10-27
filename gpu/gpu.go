@@ -1,157 +1,56 @@
 package gpu
 
-import (
-	"errors"
+import _ "embed"
 
-	"qlova.tech/vec/vec4"
-)
+//go:embed gpu.go
+var Source string
 
-//Driver is able to open return a context.
-type Driver func() (Context, error)
+//Float is an alias to float32.
+type Float = float32
+
+//Vec2 is a vector of 2 floats.
+//See the vec2 package for functions that operate on Vec2.
+type Vec2 [2]Float
+
+//Vec3 is a vector of 3 floats.
+//See the vec3 package for functions that operate on Vec3.
+type Vec3 [3]Float
+
+//Vec4 is a vector of 4 floats.
+//See the vec4 package for functions that operate on Vec4.
+type Vec4 [4]Float
+
+//RGB is a color represented by 3 floats.
+//See the rgb package for functions that operate on RGB.
+type RGB [3]Float
+
+//RGBA is a color represented by 4 floats.
+//See the rgba package for functions that operate on RGBA.
+type RGBA [4]Float
+
+//Mat3 is a 3x3 matrix.
+//See the mat3 package for functions that operate on Mat4.
+type Mat2 [2 * 2]Float
+
+//Mat3 is a 3x3 matrix.
+//See the mat3 package for functions that operate on Mat4.
+type Mat3 [3 * 3]Float
+
+//Mat4 is a 4x4 matrix.
+//See the mat4 package for functions that operate on Mat4.
+type Mat4 [4 * 4]Float
+
+//Texture is a texture on the GPU.
+type Texture Pointer
+
+//Program is a pointer to a compiled shader on the GPU.
+type Program Pointer
+
+func (p Program) Draw(mesh Mesh) {
+	//TODO
+}
 
 //Pointer is an opaque reference to a GPU memory location.
 type Pointer struct {
 	uint64
 }
-
-func (p Pointer) Value() uint64 {
-	return p.uint64
-}
-
-//Update updates the given buffer's data, resizing the buffer if needed.
-type Update struct {
-	Pointer Pointer
-	Data    interface{}
-}
-
-//Variable is a variable on the GPU.
-type Variable struct {
-	Name  string
-	Value interface{}
-}
-
-//Set sets a uniform variable on the GPU.
-//The value is read after a Sync, so only the last value is used.
-func Set(name string, value interface{}) error {
-	_, err := context.Load(Variable{name, value})
-	return err
-}
-
-//Context provides an interface to a context on the GPU.
-type Context struct {
-	//Buffer uploads the given data into a suitable buffer on the GPU.
-	//If the type is unsupported, it will return an error. An opaque reference to the buffer is returned.
-	//A buffer can be updated by passing an Update type to this function with the Buffer that needs updating.
-	//If 'data' is nil, the entire context is cleared and reset to an empty state.
-	Load func(data interface{}) (uint64, error)
-
-	//Draw schedules the drawing of the given mesh with the given transform and drawing options.
-	//If the mesh has an invalid/outdated buffer then this may return an error.
-	Draw func(Mesh, Transform, DrawOptions) error
-
-	//Sync waits for any pending buffer operations on the GPU to complete and then waits for all pending drawing operations to complete.
-	Sync func() error
-
-	version     uint64
-	meshBuffers map[mode]*meshBuffer
-}
-
-//Upload uploads any scheduled meshes to the GPU.
-func (context *Context) Upload() error {
-	for _, buf := range context.meshBuffers {
-		if buf.changed {
-			_, err := context.Load(Update{buf.id, buf.attributes})
-			if err != nil {
-				return err
-			}
-
-			buf.changed = false
-		}
-	}
-	return nil
-}
-
-//Upload uploads any scheduled meshes to the GPU.
-func Upload() error { return context.Upload() }
-
-var driver string
-var drivers = make(map[string]Driver)
-
-//Register registers a new GPU driver.
-func Register(name string, d Driver) {
-	drivers[name] = d
-}
-
-var context Context
-
-//Open opens the GPU ready for uploading data and rendering.
-//You can provide a hint to select the name of the driver to use.
-func Open(hints ...string) error {
-	if len(hints) > 0 {
-		open, ok := drivers[hints[0]]
-		if ok {
-			ctx, err := open()
-			if err == nil {
-				driver = hints[0]
-				context = ctx
-				return nil
-			}
-			return err
-		}
-		return errors.New("gpu driver " + hints[0] + " not found")
-	}
-
-	if len(drivers) == 0 {
-		return errors.New("no drivers available, please import one")
-	}
-
-	var ErrorString string = "failed to open a gpu.Context\n"
-
-	for name, open := range drivers {
-		ctx, err := open()
-		if err == nil {
-			driver = name
-			context = ctx
-			return nil
-		}
-		ErrorString += "\t" + name + ":" + err.Error()
-	}
-
-	return errors.New(ErrorString)
-}
-
-//DrawOptions that affect how a mesh is drawn.
-type DrawOptions uint64
-
-//DrawOptions.
-const (
-	Wireframe = 1 << iota
-	FrontFaceCulling
-	NoShadows
-	Clear
-)
-
-type mode struct {
-	//drawing mode, ie triangles, lines.
-	draw    uint16
-	indexed uint16
-
-	options DrawOptions
-
-	//hash of the attributes.
-	hash uint64
-}
-
-//Frame is a definition for a frame.
-type Frame struct {
-	ClearColor vec4.Type
-}
-
-//Frames clears the screen to black and then returns true.
-func Frames() bool {
-	context.Load(Frame{})
-	return true
-}
-
-//Sync applies all sceduled drawing operations.
-func Sync() error { return context.Sync() }

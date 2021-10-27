@@ -17,20 +17,12 @@ func App(name string, app func()) error {
 	win.Name = name
 
 	win.Open()
-	if win.Error != nil {
-		return win.Error
-	}
-	if err := gpu.Open(); err != nil {
-		return err
-	}
+	gpu.Open()
 
 	gpu.Set("camera", gpu.NewTransform())
 
-	for win.Open() && gpu.Frames() {
+	for win.Open() && gpu.Open() {
 		app()
-		if err := gpu.Sync(); err != nil {
-			return err
-		}
 	}
 	return nil
 }

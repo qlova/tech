@@ -14,6 +14,7 @@ const (
 //Texture is an image on the GPU.
 type Texture struct {
 	uint64
+	uploadedAtVersion uint64
 }
 
 func (t Texture) Value() uint64 {
@@ -28,13 +29,13 @@ func NewTexture(img image.Image) (Texture, error) {
 //NewTexture returns a new texture from the given image.
 func (context *Context) NewTexture(img image.Image) (Texture, error) {
 	if context.Load == nil {
-		return Texture{0}, ErrNotOpen
+		return Texture{0, context.version}, ErrNotOpen
 	}
 
 	buf, err := context.Load(img)
 	if err != nil {
-		return Texture{0}, err
+		return Texture{0, context.version}, err
 	}
 
-	return Texture{buf}, nil
+	return Texture{buf, context.version}, nil
 }

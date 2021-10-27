@@ -7,6 +7,27 @@ import (
 	mutex "sync"
 )
 
+/*
+	Meshes are generally composed of vertices which contain a set of attributes.
+	For example positions, UVs, colors, normals, etc. Some of the most common
+	attributes are included here but you can also define your own attributes.
+
+	Each field must be a fixed size type, the driver will attempt to convert
+	your data to the closest representation. See the driver packages for more
+	information.
+
+	type MeshVertex struct {
+		Position  Vec3
+		Normal    Vec3
+		UV        Vec2
+		Color     Vec4
+
+		CustomAttribute1 Vec3
+	}
+
+	In your vertex shader, you will then refer to these attributes.
+*/
+
 var ihash uint64
 var hashes = make(map[string]uint64)
 var syncHash mutex.Mutex

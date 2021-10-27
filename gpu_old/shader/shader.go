@@ -80,9 +80,7 @@ func (Textured) CompileTo(platform, version string) (interface{}, error) {
 		#define transform transformArray[gl_DrawID]
 
 		void main() {
-			gl_Position = camera*transform*position;
-			gpu_DrawID = gl_DrawID;
-			frag_uv = uv;
+			  
 		}
 	`,
 		Fragment: `#version 460 core
