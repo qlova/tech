@@ -1,213 +1,271 @@
 The Qlovatech Community Trademark License 1.0
 ===============================================
-Copyright (C) 2021 Qlova Limited <https://qlova.org>
+Qlovatech™ Copyright© 2021 Qlova <https://qlova.org>
 
 You are hereby granted a universal non-exclusive right to, use, reproduce, 
-make available, feature, modify, display, perform, distribute, and/or otherwise 
-exploit This Project for *any purpose* subject to the following conditions:
-
-1. If any third-party interacts with or observes (or is likely to interact with or
-   observe), the display, feature, performance and/or otherwise availability of Your 
-   copies of This Project. Then The Buildable Source of that copy (including any 
-   Modifications you have made) must be made publicly available to, and/or Clearly 
-   Discoverable by, any of those third-parties and licensed under the terms of This 
-   License, so that any of those third-parties can aquire The Buildable Source at a 
-   fee no more than the reasonable cost of distribution.
-
-   When you distribute a copy of This Project, your distribution must include:
+make available, feature, modify, display, perform, distribute, and/or 
+otherwise exploit This Project for *any purpose* subject to the 
+following conditions:
+      
+1. If any third-party interacts with, receives, or observes, the display, 
+   feature, performance and/or otherwise availability of your copies of 
+   This Project, then You must ensure that The Source Code and Dependencies 
+   of those copies are Readibly Obtainable and Clearly Discoverable, by those 
+   third-parties for at least 30 days after you last displayed, featured, 
+   performed and/or otherwise made your copy available.      
    
-   (a) This License, Clearly Discoverable, and
-
-   (b) The Attached Notices, Clearly Discoverable, and
-
-   (c) The Buildable Source (including any Modifications you have made), and/or
-       Clearly Discoverable instructions on how to aquire a publicly available
-       copy of it, at a fee no more than the reasonable cost of distribution.
-
-2. You may not restrict in any way, the rights that This License grants to any 
-   users or Contributors of The Project (unless they have breached a condition of 
-   This License and the breach hasn't been resolved). You agree:
+2. You may not restrict in any way, the rights that This License grants to 
+   any users or Providers of The Project (except when they have made an 
+   unresolved breach to the terms and conditions of This License). You agree:  
    
-   (a) not to sue, litigate against and/or otherwise seek damages from, in order to 
-       prevent or punish, any user or Contributor, for exercising their rights to 
-       This Project (including to any Modifications You have made).
+   (a) not to sue, litigate against and/or otherwise seek damages from, in 
+       order to prevent or punish, any user or Providers, for 
+       exercising their rights to This Project (including to any 
+       Modifications You have made).
+  
+   (b) to irrevocably and automatically grant the required licenses 
+       (including patent licenses), at no cost, fee, nor royalty to every 
+       Provider and/or user of This Project so that they may 
+       exercise their rights to any Modifications You have made).
 
-   (b) to irrevocably and automatically grant the required licenses (including 
-       patent licenses), at no cost, fee, nor royalty to every Contributor and/or 
-       user of This Project so that they may exercise their rights to any of the 
-       Modifications You made).
+   (c) not to obfuscate, omit, or obstruct in any way This License and/or 
+       the Buildable Source of This Project and/or the ability for a 
+       third-party to find, aquire and/or obtain it, either in bad faith, 
+       and/or to circumvent the terms and conditions of This License.
+
+3. When making Modifications to This Project You must decide whether or 
+   not to become/remain a "Provider" and either:
    
-   (c) to indemnify each and every Contributor and/or user of This Project, against 
-       any litigation, damages and/or penalties, arising from, trademark, copyright 
-       and/or patent infringement, directly arising from any of Your Modifications.
+   (a) You agree to become/remain a Provider. You must maintain Your Notice
+       in The Attached Notices and for at least 30 days and as long as you 
+       continue to offer any Derived Products, you must ensure the Buildable 
+       Source for Your Derived Products are, Readibly Obtainable and 
+       Clearly Discoverable, by the public.
 
-   (d) not to obfuscate, omit, or obstruct in any way This License and/or the Buildable
-       Source of This Project and/or the ability for a third-party to find or aquire it, 
-       either in bad faith, and/or to circumvent the conditions of This License.
+   (b) You do not agree to become/remain a Provider and you omit/remove Your 
+       Notice from The Attached Notices and you agree that This Project 
+       (including any of Your Modifications) may be relicensed upon the 
+       written agreement between each Provider under the terms of an agreed 
+       upon Open Source License (or at any time if there are no Providers). 
 
-3. If You do not add Trademark Notices to The Attached Notices and/or You remove 
-   Your Trademark Notices from This Project, then this signals that You explicitly 
-   agree that This Project (including any Modifications You have made) can be 
-   relicensed at any time, under the terms of a chosen Open Source License upon the 
-   written agreement between each Contributor (or without any kind of agreement if 
-   there are zero Contributors).
+4. You may not invalidate the Attached Notices through any of Your 
+   Modifications and the only permitted modifications You can make to the 
+   Attached Notices are to:
 
-   You must "Preserve The Attached Notices" which means you cannot modify The 
-   Attached Notices except to:
+   (a) Add/modify/remove your Notice.
 
-   (a) Add/change/remove Your Trademark Notices.
+   (b) Reorder the Notices.  
 
-   (c) Reorder the Trademark Notices.
+   (c) Remove a Notice from your copy of This Project the written consent 
+       of the copyright holder.
 
-   (d) Copy in Trademark Notices verbatim from another work and/or from a modified 
-       version of The Attached Notices.
+   (d) Merge Notices verbatim with another set of Notices. Each Community 
+       Trademark before the merge must remain a Community Trademark after
+       the merge. You must make a reasonable effort to research and resolve 
+       conflicts by awarding trademarks to the Trademark Owner (to your best 
+       judgement). A trademark must not be removed from the Attached Notices
+       in this way.
 
-4. You may not use the name of any Contributor nor any of their Community Trademarks 
-   (that are listed in The Attached Notices), to title, endorse or promote, any 
-   products, projects, works, performances and/or services derived from, or
-   otherwise featuring This Project unless You have the prior written consent from, 
-   or the publicly documented permission of, or You are, that Contributor.
+5. You may not use the name of any (other) Listed Providers nor any of their 
+   Community Trademarks, to title, endorse or promote, any products, 
+   projects, works, performances and/or services derived from, or otherwise 
+   featuring This Project unless You have the prior written consent from, 
+   or the publicly documented permission from the Listed Provider.
 
    However this condition cannot (and does not) prevent You from:
 
-   (a) using dictionary words to promote products, projects, works, performances 
-       and/or services, derived from, and/or otherwise featuring This Project as 
-       long as those words are used in good faith and for their natural meanings 
-       and they are not used in an attempt to capitalise on any (other) 
-       Contributor's Community Trademarks.
+   (a) "Descriptive Fair Use" which means using dictionary words to 
+       promote products, projects, works, performances and/or services, 
+       derived from, and/or otherwise featuring This Project as long as 
+       those words are used in good faith and for their natural meanings 
+       and are not used in an attempt to capitalise on the reference to 
+       any (other) Listed Provider's Community Trademarks.
 
-   (b) "Forking The Project", which means that You will never have an obligation 
-        to change the title of This Project (as You have recieved it) as long as any 
-        Modifications you have made are documented to the public and it is clear that 
-        this copy of The Project is Your copy, and as long as the existence of any of 
-        Your copies of This Project on a particular Distribution Channel would not 
-        prevent or restrict any (other) existing Contributors from distributing This 
-        Project on that Distribution Channel titled under any of their associated 
-        Community Trademarks.
+   (b) "Nominative Fair Use" which means using a Provider's Community 
+       Trademark to review and/or draw comparison to Derived Products.
 
-In the event that You breach a condition of This License, You must take immediate 
-steps (as soon as you are aware) to resolve this breach and, until You resolve 
-this breach, any rights granted to You by This License (except for the rights to 
-display and distribute The Buildable Source) are automatically terminated, however, 
-the conditions of This License will continue to apply to You and any third-party who
-has agreed to This License, may, on behalf of each copyright holder, and only in 
-good faith and to ensure the fairness, integrity, precedent and/or compliance of 
-This License, contact, sue, litigate against and/or otherwise seek and collect 
-damages from You.
+   (c) "Contributing" which means that as long as your copy is a 
+        Contribution you are not required to remove any Community 
+        Trademarks that already exist in The Project (as you recieved it).
+       
+In the event that You breach a condition of This License, You must take 
+immediate steps to resolve this breach and, until You resolve this breach, 
+any rights granted to You by This License (except for the rights to display 
+and distribute The Buildable Source and Dependencies) are automatically 
+terminated, however, the conditions of This License will continue to apply to 
+You and any third-party who has agreed to This License, may, on behalf of 
+each copyright holder, and only in good faith and to ensure the fairness, 
+integrity, precedent and/or compliance of This License, contact, sue, 
+litigate against and/or otherwise seek and collect damages from You.
 
-"This License" means version 1 of The Qlovatech Community Trademark License.
+"This License" means version 1.0 (or later) of The Qlovatech Community 
+ Trademark License.
 
-"The Project" (or "This Project") means the work covered by This License, including 
- any modified versions or derivatives of the work.
+"The Project" (or "This Project") means the work covered by This License, 
+ including any modified versions and/or derivatives.
 
-"Contributor" means a copyright holder listed inside The Attached Notices.
+"Provider" means a copyright holder listed inside The Attached Notices.
+
+"Derived Product" means a product or service created by a Provider 
+ that is referred to by a Community Trademark.
+
+"Trademark Owner" means either:
+
+    (a) the copyright holder with the earliest 
+        known use of the trademark.
+
+    (b) the copyright holder who lawfully acquired 
+        the rights to the trademark from the previous
+        Rightful Trademark Owner.
+        
+    (c) the copyright holder who was awarded the
+        he trademark through legal procedings.
 
 "The Attached Notices" means either:
 
     (a) A 'Notices' document, that is distributed with This Project, or
-    (b) A Clearly Discoverable, list of Trademark Notices located within This Project.
+
+    (b) A Clearly Discoverable, isolated list of Trademark Notices located 
+        within This Project.
 
 "You" (or "Your")
- means an individual or a legal entity exercising their rights under This License. 
- For legal entities, "You" includes any entity that controls, is controlled by, or 
- is under common control with You. For purposes of this definition, “control” means 
+ means an individual or a legal entity exercising their rights under This 
+ License. For legal entities, "You" includes any entity that controls, is 
+ controlled by, or is under common control with You. For purposes of this 
+ definition, “control” means 
 
-    (a) the power, direct or indirect, to cause the direction or management of such 
-        entity, whether by contract or otherwise, or 
+    (a) the power, direct or indirect, to cause the direction or management 
+        of such entity, whether by contract or otherwise, or 
         
-    (b) ownership of more than fifty percent (50%) of the outstanding shares or 
-        beneficial ownership of such entity.
+    (b) ownership of more than fifty percent (50%) of the outstanding shares 
+        or beneficial ownership of such entity.
 
-"Open Source License" means any license approved by the Open Source Initiative that 
- can be found on https://opensource.org/
+"Open Source License" means any license has been approved by the Open Source 
+ Initiative. A list of which can be found at https://opensource.org/
 
-"Clearly Discoverable" means existing at a standard or reasonable location such that 
- any interested third-party can easily find it.
+"Clearly Discoverable" means existing at a standard or reasonable location 
+ such that any interested third-party can find it.
 
-"Modifications" means any modifications made to The Buildable Source, including but
- not limited to any additional Dependencies, files and/or subdirectories.
+"Readabily Obtainable" means publicly available or available on request at 
+ a fee no more than the cost of distribution.
 
-"Platform" means any product, Distribution Channel, machine, compiler, software 
- interpreter, engine, environment, and/or operating system which is designed and/or 
- intended for third-party works to be Operated and/or otherwise created on.
+"Modifications" means any modifications made to The Buildable Source, 
+ including but not limited to any additional Dependencies, files and/or 
+ subdirectories.
 
-"Distribution Channel" means any store, machine, market, service, website, outlet 
- and/or other location where This Project could be used, reproduced, featured, 
- distributed, performed, displayed and/or otherwise made available on.
+"Platform" means any product, Distribution Channel, machine, compiler, 
+ software interpreter, engine, environment, and/or operating system which 
+ is designed and/or intended for third-party works to be Operated and/or 
+ otherwise created on.
 
-"Operated" means reproduced, ported, performed, embedded, featured, operated, used, 
- ran, displayed and/or distributed.
+"Distribution Channel" means any store, machine, market, service, website, 
+ outlet and/or other location where This Project could be used, reproduced, 
+ featured, distributed, performed, displayed and/or otherwise made available 
+ on.
 
-"The Buildable Source" means a file, directory and/or other standard format for 
- distribution that contains the preferred form of making changes to This Project 
- and includes The Dependencies and This License in a Clearly Discoverable location.
+"Operated" means reproduced, ported, performed, embedded, featured, operated, 
+ used, ran, displayed and/or distributed.
 
-"The Dependencies" means any work that that This Project depends on and/or embeds 
- in such a way, that if it were missing, would prevent a third-party from using This 
- Project for its intended purpose and/or in the same way that you used This Project. 
- The Dependencies need not include any:
+"The Source Code" means a file, directory and/or other standard format 
+ for distribution, that contains the preferred form of making changes to This 
+ Project and includes The Attached Notices and is licensed under the terms of 
+ This License which is included in a Clearly Discoverable location.
+
+"Contribution" means any of your copies of This Project where:
+
+    (a) Your Modifications are clearly documented and Your name is
+        associated with the copy, and
+
+    (b) A Listed Provider has not requested You to remove references to their 
+        Community Trademarks from the copy, and
+
+    (d) The existence of the copy on a particular Distribution Channel 
+        does not prevent or restrict any (other) Derived Products from 
+        existing on that Distribution Channel.
+
+"Dependencies" means any work that that This Project depends on and/or 
+ is embedding in such a way, that if it were missing, would prevent a 
+ third-party from using This Project for its intended purpose and/or in 
+ the same way that you used This Project. The Dependencies need not include any:
 
    (a) "Platform Provided Works", which means any work that is provided by a 
-        third-party Platform or its owner (including but not limited to, the Platform 
-        itself, a Software Development Kit or an Application Programming Interface) 
-        that is designed to allow third-party works to be Operated on that Platform.
+        third-party Platform or its owner (including but not limited to, the 
+        Platform itself, a Software Development Kit or an Application 
+        Programming Interface) that is designed to allow third-party works to 
+        be Operated on that Platform.s
 
-   (b) "Platform Protected Work", which means any part of The Project that is 
-        protected from disclosure or distribution because of an agreement with the 
-        owner of a third-party Platform, such that this part of the work only serves 
-        to implement a low-level, general and/or otherwise standard interface, in 
-        order to enable The Project to be Operated on that Platform.
+   (b) "Platform Protected Work", which means any part of This Project that is 
+        protected from disclosure or distribution because of an agreement with
+        the owner of a third-party Platform, such that this part of the work 
+        only serves to implement a low-level, general and/or otherwise 
+        standard interface, in order to enable The Project to be Operated on 
+        that Platform.
 
-   (c) "External Work", which means any work where the preferred form of making 
-        changes to that work are kept external and seperate from The Buildable Source 
-        and where that work depends upon and/or embeds This Project.
+   (c) "Mods or The Larger Project", which means any larger work where the 
+        preferred form of making changes to that work are kept external and 
+        seperate from The Source Code and where the work depends upon and/or 
+        embeds This Project in such a way that This Project (including any of 
+        Your Modifications) can be meaningfuly seperated from the Larger Work 
+        and This Project can continue to function and remain useful for its 
+        intended purpose without any additional modifications.
 
-   (d) "Open Source Works" which means any generally available, or publicly available 
-        works that are licensed under an Open Source License, or otherwise exist in 
-        the public domain. 
+"Notice" means a copyright notice listed in The Attached Notices that
+ is preceded by zero or more comma-separated trademarks and preceeds zero 
+ or more comma seperated identities (such as an Email Address or Domain).
+ Each trademark is associated with the copyright holder that added that 
+ copyright notice (it is theirs), and each trademark added this way is 
+ considered to be a "Community Trademark" when:
 
-"Trademark Notices" means a copyright notice listed in The Attached Notices that
- is preceded by zero or more comma-separated trademarks and preceeds zero or more
- comma seperated contact details (such as an Email Address). Each trademark is 
- associated with the copyright holder that added that copyright notice (it is theirs), 
- and each trademark added this way is considered to be a "Community Trademark" when:
+   (a) It is the appropriate legal representation of a trademark, or is a 
+       term or phrase followed by, the unicode trademark symbol, '(TM)' 
+       or '(R)', and
 
-   (a) it is the appropriate legal representation of a trademark, or is a term or 
-       phrase followed by, the unicode trademark symbol, '(TM)' or '(R)', and
+   (b) It is unique and "Distinguishable" (a resonable person will not 
+       confuse the trademark with another Listed Provider's Community Trademark).
 
-   (b) it is clearly distinguishable (by a reasonable person) from any other
-       previously added Community Trademarks by any other Contributor, and
+   (c) It was added in good faith and represents a genuine mark that is being
+       used for a Derived Product.
 
-   (c) it was added in good faith and represents a genuine mark that is being used by 
-       the Contributor to title products, projects, works, performances and/or services.
+THERE IS NO WARRANTY FOR THIS PROJECT, TO THE EXTENT PERMITTED BY APPLICABLE 
+LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER 
+PARTIES PROVIDE THIS PROJECT “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER 
+EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE 
+QUALITY AND PERFORMANCE OF THIS PROJECT IS WITH YOU. SHOULD THIS PROJECT PROVE 
+DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
 
-THERE IS NO WARRANTY FOR THIS PROJECT, TO THE EXTENT PERMITTED BY APPLICABLE LAW. 
-EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES 
-PROVIDE THIS PROJECT “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, 
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
-A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THIS PROJECT 
-IS WITH YOU. SHOULD THIS PROJECT PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY 
-SERVICING, REPAIR OR CORRECTION.
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR WHEN AGREED TO IN WRITING WILL 
+ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR USES THIS PROJECT 
+AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, 
+INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE 
+THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED 
+INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE 
+PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY 
+HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
-IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR WHEN AGREED TO IN WRITING WILL ANY 
-COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR USES THIS PROJECT AS PERMITTED 
-ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR 
-CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING 
-BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY 
-YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), 
-EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+IF ANY PART OF THIS LICENSE IS DECLARED UNENFORCABLE AND/OR INVALID, THE 
+REMAINDER WILL CONTINUE TO BE ENFORCABLE AND VALID.
 
-IF ANY PART OF THIS LICENSE IS DECLARED UNENFORCABLE AND/OR INVALID, THE REMAINDER WILL 
-CONTINUE TO BE ENFORCABLE AND VALID.
-
-You may copy and display This License freely and you may apply it to Your own project by 
-attaching it in a Clearly Discoverable location and (optionally) adding the text in 
-Exhibit A to any relevant documentation. You should also add a copyright notice and 
-optional trademarks inside of a 'Notices' file, or in a list at the top of your file 
-(if your project is distributed as a single file). However, You may not modify the text 
-or wording of This License without permission from Qlova Limited.
+You may copy and display This License freely and you may apply it to Your own 
+project by attaching it in a Clearly Discoverable location and (optionally) 
+adding the text in Exhibit A to any relevant documentation. You should also 
+add a copyright notice and optional trademarks inside of a 'Notices' file, or 
+in a list at the top of your file (if your project is distributed as a single 
+file). However, You may not modify the text or wording of This License without 
+written permission from Qlova.
 
 Exhibit A:
-  This project is licensed under the The Qlovatech Community Trademark License 1.0, this 
-  means you can do what you like with this project as long as you *copyleft* your changes 
-  and respect the community trademarks, for more details, read the https://qlova.tech/ctl
+  This project is licensed under the The Qlovatech Community Trademark License 1.0
+  this means you can do what you like with this project as long as you share your 
+  changes and respect the community trademarks. See the https://qlova.tech/ctl/1.0
+
+Quick Tip: If You are building a Mod or Larger Project and You are depending on 
+an unmodified copy of This Project from a Listed Provider, you can simply name This 
+License and refer to the Listed Provider's Community Trademark. See Exhibit B for
+an example. Just make sure the information is specific enough so that interested
+users can find the Listed Provider's copy of The Source Code to This Project.
+
+Exhibit B:
+  This project has been built [for/with] [Community Trademark] which is licensed 
+  under the The Qlovatech Community Trademark License, you can build stuff
+  [for/with] [Community Trademark] too! Go check out [link to Derived Product].
