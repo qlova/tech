@@ -7,7 +7,7 @@ make available, feature, modify, display, perform, distribute, and/or
 otherwise exploit This Project for *any purpose* subject to the 
 following conditions:
       
-1. If any third-party interacts with, receives, or observes, the display, 
+1. If any third party interacts with, receives, or observes, the display, 
    feature, performance and/or otherwise availability of your copies of 
    This Project, then You must ensure that The Source Code and Dependencies 
    of those copies are Readibly Obtainable and Clearly Discoverable, by those 
@@ -30,7 +30,7 @@ following conditions:
 
    (c) not to obfuscate, omit, or obstruct in any way This License and/or 
        the Buildable Source of This Project and/or the ability for a 
-       third-party to find, aquire and/or obtain it, either in bad faith, 
+       third party to find, acquire and/or obtain it, either in bad faith, 
        and/or to circumvent the terms and conditions of This License.
 
 3. When making Modifications to This Project You must decide whether or 
@@ -86,14 +86,14 @@ following conditions:
 
    (c) "Contributing" which means that as long as your copy is a 
         Contribution you are not required to remove any Community 
-        Trademarks that already exist in The Project (as you recieved it).
+        Trademarks that already exist in The Project (as you received it).
        
 In the event that You breach a condition of This License, You must take 
 immediate steps to resolve this breach and, until You resolve this breach, 
 any rights granted to You by This License (except for the rights to display 
 and distribute The Buildable Source and Dependencies) are automatically 
 terminated, however, the conditions of This License will continue to apply to 
-You and any third-party who has agreed to This License, may, on behalf of 
+You and any third party who has agreed to This License, may, on behalf of 
 each copyright holder, and only in good faith and to ensure the fairness, 
 integrity, precedent and/or compliance of This License, contact, sue, 
 litigate against and/or otherwise seek and collect damages from You.
@@ -119,7 +119,7 @@ litigate against and/or otherwise seek and collect damages from You.
         Rightful Trademark Owner.
         
     (c) the copyright holder who was awarded the
-        he trademark through legal procedings.
+        he trademark through legal proceedings.
 
 "The Attached Notices" means either:
 
@@ -137,14 +137,14 @@ litigate against and/or otherwise seek and collect damages from You.
     (a) the power, direct or indirect, to cause the direction or management 
         of such entity, whether by contract or otherwise, or 
         
-    (b) ownership of more than fifty percent (50%) of the outstanding shares 
+    (b) ownership of more than fifty per cent (50%) of the outstanding shares 
         or beneficial ownership of such entity.
 
 "Open Source License" means any license has been approved by the Open Source 
  Initiative. A list of which can be found at https://opensource.org/
 
 "Clearly Discoverable" means existing at a standard or reasonable location 
- such that any interested third-party can find it.
+ such that any interested third party can find it.
 
 "Readabily Obtainable" means publicly available or available on request at 
  a fee no more than the cost of distribution.
@@ -155,7 +155,7 @@ litigate against and/or otherwise seek and collect damages from You.
 
 "Platform" means any product, Distribution Channel, machine, compiler, 
  software interpreter, engine, environment, and/or operating system which 
- is designed and/or intended for third-party works to be Operated and/or 
+ is designed and/or intended for third party works to be Operated and/or 
  otherwise created on.
 
 "Distribution Channel" means any store, machine, market, service, website, 
@@ -185,42 +185,42 @@ litigate against and/or otherwise seek and collect damages from You.
 
 "Dependencies" means any work that that This Project depends on and/or 
  is embedding in such a way, that if it were missing, would prevent a 
- third-party from using This Project for its intended purpose and/or in 
+ third party from using This Project for its intended purpose and/or in 
  the same way that you used This Project. The Dependencies need not include any:
 
    (a) "Platform Provided Works", which means any work that is provided by a 
-        third-party Platform or its owner (including but not limited to, the 
+        third party Platform or its owner (including but not limited to, the 
         Platform itself, a Software Development Kit or an Application 
-        Programming Interface) that is designed to allow third-party works to 
+        Programming Interface) that is designed to allow third party works to 
         be Operated on that Platform.s
 
    (b) "Platform Protected Work", which means any part of This Project that is 
         protected from disclosure or distribution because of an agreement with
-        the owner of a third-party Platform, such that this part of the work 
+        the owner of a third party Platform, such that this part of the work 
         only serves to implement a low-level, general and/or otherwise 
         standard interface, in order to enable The Project to be Operated on 
         that Platform.
 
    (c) "Mods or The Larger Project", which means any larger work where the 
         preferred form of making changes to that work are kept external and 
-        seperate from The Source Code and where the work depends upon and/or 
+        separate from The Source Code and where the work depends upon and/or 
         embeds This Project in such a way that This Project (including any of 
-        Your Modifications) can be meaningfuly seperated from the Larger Work 
+        Your Modifications) can be meaningfully separated from the Larger Work 
         and This Project can continue to function and remain useful for its 
         intended purpose without any additional modifications.
 
 "Notice" means a copyright notice listed in The Attached Notices that
- is preceded by zero or more comma-separated trademarks and preceeds zero 
- or more comma seperated contact details (such as an Email Address). Each 
- trademark is associated with the copyright holder that added that copyright 
- notice (it is theirs), and each trademark added this way is considered to 
- be a "Community Trademark" when:
+ is preceded by zero or more comma-separated trademarks and precedes zero 
+ or more comma separated identities (such as an Email Address or Domain).
+ Each trademark is associated with the copyright holder that added that 
+ copyright notice (it is theirs), and each trademark added this way is 
+ considered to be a "Community Trademark" when:
 
    (a) It is the appropriate legal representation of a trademark, or is a 
        term or phrase followed by, the unicode trademark symbol, '(TM)' 
        or '(R)', and
 
-   (b) It is unique and "Distinguishable" (a resonable person will not 
+   (b) It is unique and "Distinguishable" (a reasonable person will not 
        confuse the trademark with another Listed Provider's Community Trademark).
 
    (c) It was added in good faith and represents a genuine mark that is being
@@ -243,8 +243,8 @@ INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE
 PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY 
 HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
-IF ANY PART OF THIS LICENSE IS DECLARED UNENFORCABLE AND/OR INVALID, THE 
-REMAINDER WILL CONTINUE TO BE ENFORCABLE AND VALID.
+IF ANY PART OF THIS LICENSE IS DECLARED UNENFORCEABLE AND/OR INVALID, THE 
+REMAINDER WILL CONTINUE TO BE ENFORCEABLE AND VALID.
 
 You may copy and display This License freely and you may apply it to Your own 
 project by attaching it in a Clearly Discoverable location and (optionally) 
