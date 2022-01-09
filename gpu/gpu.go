@@ -3,6 +3,7 @@ package gpu
 import (
 	"errors"
 
+	"qlova.tech/mat/mat4"
 	"qlova.tech/vec/vec4"
 )
 
@@ -155,3 +156,5 @@ func Frames() bool {
 
 //Sync applies all sceduled drawing operations.
 func Sync() error { return context.Sync() }
+
+var Camera mat4.Type

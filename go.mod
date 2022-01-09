@@ -1,9 +1,8 @@
 module qlova.tech
 
-go 1.15
+go 1.17
 
 require (
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-gl/gl v0.0.0-20210813123233-e4099ee2221f
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20201108214237-06ea97f0c265
 	github.com/gorilla/mux v1.8.0
@@ -12,4 +11,17 @@ require (
 	github.com/ojrac/opensimplex-go v1.0.2
 	github.com/sanity-io/litter v1.5.0
 	qlova.org/should v1.0.2
+)
+
+require (
+	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/ghodss/yaml v1.0.0 // indirect
+	github.com/go-ole/go-ole v1.2.4 // indirect
+	github.com/jaypipes/pcidb v0.6.0 // indirect
+	github.com/mattn/go-runewidth v0.0.9 // indirect
+	github.com/mitchellh/go-homedir v1.0.0 // indirect
+	github.com/pkg/errors v0.8.0 // indirect
+	gopkg.in/yaml.v2 v2.2.2 // indirect
+	howett.net/plist v0.0.0-20181124034731-591f970eefbb // indirect
 )

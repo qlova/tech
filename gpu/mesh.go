@@ -226,7 +226,7 @@ func (m Mesh) Triangles() []struct{} {
 }
 
 //Triangle returns the i'th Triangle of this mesh.
-func (m Mesh) Triangle(i int) (a, b, c Vec3) {
+func (m Mesh) Triangle(i int) (a, b, c vec3.Type) {
 	buf := m.data
 	if m.indexed {
 		offset := i*3 + int(m.offset)
@@ -240,7 +240,7 @@ func (m Mesh) Triangle(i int) (a, b, c Vec3) {
 
 //Raycast checks if the specified ray intersects this ray.
 //If ok, the intersection point is returned.
-func (m Mesh) Raycast(ray ray.Caster, t Transform) (point Vec3, ok bool) {
+func (m Mesh) Raycast(ray ray.Caster, t Transform) (point vec3.Type, ok bool) {
 	tt := m.Transform.Mul(t)
 
 	inv := tt.Inverse()

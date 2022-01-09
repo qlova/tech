@@ -1,3 +1,4 @@
+//go:build !js
 // +build !js
 
 //Package run provides a cross-platform application runner.
@@ -24,7 +25,7 @@ func App(name string, app func()) error {
 		return err
 	}
 
-	gpu.Set("camera", gpu.NewTransform())
+	gpu.Set("uniform_0", gpu.NewTransform())
 
 	for win.Open() && gpu.Frames() {
 		app()

@@ -39,7 +39,7 @@ func (model Model) Draw(options DrawOptions, t *Transform) error {
 
 //Raycast checks if the specified ray intersects this model.
 //If ok, the intersection point is returned.
-func (model Model) Raycast(ray ray.Caster, t Transform) (point Vec3, ok bool) {
+func (model Model) Raycast(ray ray.Caster, t Transform) (point vec3.Type, ok bool) {
 
 	var closest float32 = math.MaxFloat32
 

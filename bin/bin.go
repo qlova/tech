@@ -7,14 +7,13 @@ import (
 	"unsafe"
 
 	"qlova.tech/gpu"
-	"qlova.tech/gpu/shader"
 
 	_ "image/jpeg"
 	_ "image/png"
 )
 
 var square gpu.Mesh
-var textured = &shader.Textured{}
+var textured = &gpu.Textured{}
 
 //Image is image embedded inside of the binary. It will be decoded
 //and uploaded to the GPU the first time is is used in a draw call.

@@ -273,11 +273,11 @@ func sync() error {
 		}
 
 		if shadowShaderPointer == 0 {
-			p, err := loadShader(0, new(shadowShader))
+			/*p, err := loadShader(0, new(shadowShader))
 			if err != nil {
 				return err
 			}
-			shadowShaderPointer = uint32(p)
+			shadowShaderPointer = uint32(p)*/
 		}
 		state.shader = shadowShaderPointer
 

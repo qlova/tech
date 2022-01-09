@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"qlova.tech/gpu"
-	"qlova.tech/gpu/driver/opengl/glsl"
+	"qlova.tech/gpu/driver/opengl/glsl/glsl460"
 
 	"github.com/go-gl/gl/v4.6-core/gl"
 )
@@ -117,12 +117,17 @@ func loadShader(p uint64, shader gpu.Shader) (uint64, error) {
 		pointer = gl.CreateProgram()
 	}
 
-	function, err := shader.CompileTo("glsl", "460")
+	vertexSource, core, err := glsl460.Compile(shader.Vertex, nil)
 	if err != nil {
 		return 0, err
 	}
 
-	compileSource := func(kind uint32, source string) (uint32, error) {
+	fragmentSource, _, err := glsl460.Compile(shader.Fragment, core)
+	if err != nil {
+		return 0, err
+	}
+
+	compileSource := func(kind uint32, source []byte) (uint32, error) {
 		shader := gl.CreateShader(kind)
 
 		csources, free := gl.Strs(string(source) + "\000")
@@ -147,12 +152,12 @@ func loadShader(p uint64, shader gpu.Shader) (uint64, error) {
 		return shader, nil
 	}
 
-	vertex, err := compileSource(gl.VERTEX_SHADER, function.(glsl.Shader).Vertex)
+	vertex, err := compileSource(gl.VERTEX_SHADER, vertexSource)
 	if err != nil {
 		return 0, err
 	}
 
-	fragment, err := compileSource(gl.FRAGMENT_SHADER, function.(glsl.Shader).Fragment)
+	fragment, err := compileSource(gl.FRAGMENT_SHADER, fragmentSource)
 	if err != nil {
 		return 0, err
 	}

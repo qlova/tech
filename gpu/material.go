@@ -4,12 +4,15 @@ import (
 	"math/bits"
 	"reflect"
 	"unsafe"
+
+	"qlova.tech/gpu/shader"
 )
 
 //Shader is a program that run on a GPU and can be compiled to a given gpu platform and version.
 type Shader interface {
 	//Draw(Mesh, Transform, Mode)
-	CompileTo(platform, version string) (interface{}, error)
+	Fragment(*shader.Core)
+	Vertex(*shader.Core)
 
 	//Variables returns the variable addresses of this shader.
 	Variables() []interface{}

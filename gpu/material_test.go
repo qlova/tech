@@ -21,11 +21,11 @@ func (t BigTest) Variables() []interface{}                      { return nil }
 func TestSize(t *testing.T) {
 	var v Material
 
-	v.SetShader(&Test{1, 3})
+	//v.SetShader(&Test{1, 3})
 
 	fmt.Println(v.shader)
 
-	v.SetShader(&BigTest{1, 3})
+	//v.SetShader(&BigTest{1, 3})
 
 	fmt.Println(v.shader)
 }

@@ -1,4 +1,4 @@
-package gpu
+package shader
 
 import "qlova.tech/gpu/internal/gputype"
 
