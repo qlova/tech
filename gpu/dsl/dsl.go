@@ -97,12 +97,12 @@ type Definer struct {
 type Core struct {
 	Definer
 
-	In, Out struct {
+	Arg, Out struct {
 		Flat Attributes
 		Attributes
 	}
 
-	Uniform, Current struct {
+	Uniform, Get struct {
 		Array func(size int) Uniforms
 		Uniforms
 	}
