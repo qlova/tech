@@ -8,13 +8,13 @@ import (
 )
 
 func TestVec3(t *testing.T) {
-	a := Type{1, 2, 3}
-	b := Type{4, -5, 6}
+	a := Float32{1, 2, 3}
+	b := Float32{4, -5, 6}
 
 	should.Be("12")(fmt.Sprint(Dot(a, b))).Test(t)
 
-	a = Type{3, -3, 1}
-	b = Type{4, 9, 2}
+	a = Float32{3, -3, 1}
+	b = Float32{4, 9, 2}
 
-	should.Be(Type{-15, -2, 39})(Cross(a, b)).Test(t)
+	should.Be(Float32{-15, -2, 39})(Cross(a, b)).Test(t)
 }

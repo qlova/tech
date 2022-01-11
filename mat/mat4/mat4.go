@@ -9,9 +9,9 @@ const (
 	z = 14
 )
 
-type Type [4 * 4]float32
+type Float32 [4 * 4]float32
 
-func (a *Type) Inverse() Type {
+func (a *Float32) Inverse() Float32 {
 	n11 := a[0]
 	n12 := a[4]
 	n13 := a[8]
@@ -37,10 +37,10 @@ func (a *Type) Inverse() Type {
 	det := n11*t11 + n21*t12 + n31*t13 + n41*t14
 
 	if det == 0 {
-		return Type{}
+		return Float32{}
 	}
 
-	var m Type
+	var m Float32
 
 	m[0] = t11
 	m[1] = n24*n33*n41 - n23*n34*n41 - n24*n31*n43 + n21*n34*n43 + n23*n31*n44 - n21*n33*n44
@@ -66,13 +66,13 @@ func (a *Type) Inverse() Type {
 	return m
 }
 
-func (a *Type) SetScale(X, Y, Z float32) {
+func (a *Float32) SetScale(X, Y, Z float32) {
 	a[0] = X
 	a[5] = Y
 	a[10] = Z
 }
 
-func (a Type) Mul(b Type) Type {
+func (a Float32) Mul(b Float32) Float32 {
 	a11 := a[0]
 	a12 := a[4]
 	a13 := a[8]
@@ -107,7 +107,7 @@ func (a Type) Mul(b Type) Type {
 	b43 := b[11]
 	b44 := b[15]
 
-	var m Type
+	var m Float32
 
 	m[0] = a11*b11 + a12*b21 + a13*b31 + a14*b41
 	m[4] = a11*b12 + a12*b22 + a13*b32 + a14*b42
@@ -133,22 +133,22 @@ func (a Type) Mul(b Type) Type {
 }
 
 //Translate translates the transfrom by the given x,y,z coordinates.
-func (t *Type) Translate(X, Y, Z float32) {
+func (t *Float32) Translate(X, Y, Z float32) {
 	t[x] += X
 	t[y] += Y
 	t[z] += Z
 }
 
 //SetPosition sets the position of the transform.
-func (t *Type) SetPosition(X, Y, Z float32) {
+func (t *Float32) SetPosition(X, Y, Z float32) {
 	t[x] = X
 	t[y] = Y
 	t[z] = Z
 }
 
 //SetRotation sets the rotation component of the matrix.
-func (t *Type) Rotate(X, Y, Z float32) {
-	m := Type{}
+func (t *Float32) Rotate(X, Y, Z float32) {
+	m := Float32{}
 	x := X
 	y := Y
 	z := Z

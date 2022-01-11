@@ -10,10 +10,10 @@ import (
 var (
 
 	// Camera is the transformation of the camera.
-	Camera mat4.Type
+	Camera mat4.Float32
 
 	// Transform is the transformation of the current object.
-	Transform mat4.Type
+	Transform mat4.Float32
 )
 
 // Textured is a basic program that draws a textured mesh.

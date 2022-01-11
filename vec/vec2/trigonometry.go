@@ -5,7 +5,7 @@ import "qlova.tech/f32"
 //Acos returns the angle whose trigonometric cosine is x.
 //The range of values returned by acos is [0,π].
 //The result is undefined if |x|>1.
-func Acos(x Type) (out Type) {
+func Acos(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Acos(x[i])
 	}
@@ -14,7 +14,7 @@ func Acos(x Type) (out Type) {
 
 //Acosh returns the arc hyperbolic cosine of x; the non-negative inverse of cosh.
 //Results are undefined if x<1.
-func Acosh(x Type) (out Type) {
+func Acosh(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Acosh(x[i])
 	}
@@ -23,7 +23,7 @@ func Acosh(x Type) (out Type) {
 
 //Asin returns the angle whose trigonometric sine is x.
 //The range of values returned by asin is [−π2,π2]. The result is undefined if |x|>1.
-func Asin(x Type) (out Type) {
+func Asin(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Asin(x[i])
 	}
@@ -31,7 +31,7 @@ func Asin(x Type) (out Type) {
 }
 
 //Asinh returns the arc hyperbolic sine of x; the inverse of sinh.
-func Asinh(x Type) (out Type) {
+func Asinh(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Asinh(x[i])
 	}
@@ -40,7 +40,7 @@ func Asinh(x Type) (out Type) {
 
 //Atan returns the angle whose trigonometric arctangent is x.
 //Values returned in this case are in the range [−π2,π2].
-func Atan(x Type) (out Type) {
+func Atan(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Atan(x[i])
 	}
@@ -51,7 +51,7 @@ func Atan(x Type) (out Type) {
 //the signs of y and x are used to determine the quadrant that the angle lies in.
 //The values returned by atan in this case are in the range [−π,π].
 //Results are undefined if x is zero.
-func Atan2(y, x Type) (out Type) {
+func Atan2(y, x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Atan2(y[i], x[i])
 	}
@@ -60,7 +60,7 @@ func Atan2(y, x Type) (out Type) {
 
 //Atanh returns the arc hyperbolic tangent of x; the inverse of tanh.
 //Results are undefined if |x|>1.
-func Atanh(x Type) (out Type) {
+func Atanh(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Atanh(x[i])
 	}
@@ -68,7 +68,7 @@ func Atanh(x Type) (out Type) {
 }
 
 //Cos returns the trigonometric cosine of angle.
-func Cos(angle Type) (out Type) {
+func Cos(angle Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Cos(angle[i])
 	}
@@ -76,7 +76,7 @@ func Cos(angle Type) (out Type) {
 }
 
 //Cosh returns the hyperbolic cosine of x. The hyperbolic cosine of x is computed as (e^x+e^−x)/2
-func Cosh(x Type) (out Type) {
+func Cosh(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Cosh(x[i])
 	}
@@ -84,7 +84,7 @@ func Cosh(x Type) (out Type) {
 }
 
 //Degrees converts a quantity, specified in radians into degrees.
-func Degrees(radians Type) (out Type) {
+func Degrees(radians Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Degrees(radians[i])
 	}
@@ -92,7 +92,7 @@ func Degrees(radians Type) (out Type) {
 }
 
 //Radians converts a quantity, specified in degrees into radians.
-func Radians(degrees Type) (out Type) {
+func Radians(degrees Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Radians(degrees[i])
 	}
@@ -100,7 +100,7 @@ func Radians(degrees Type) (out Type) {
 }
 
 //Sin returns the trigonometric cosine of angle.
-func Sin(angle Type) (out Type) {
+func Sin(angle Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Sin(angle[i])
 	}
@@ -108,7 +108,7 @@ func Sin(angle Type) (out Type) {
 }
 
 //Sinh returns the hyperbolic cosine of x. The hyperbolic cosine of x is computed as (e^x+e^−x)/2
-func Sinh(x Type) (out Type) {
+func Sinh(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Sinh(x[i])
 	}
@@ -116,7 +116,7 @@ func Sinh(x Type) (out Type) {
 }
 
 //Tan returns the trigonometric cosine of angle.
-func Tan(angle Type) (out Type) {
+func Tan(angle Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Tan(angle[i])
 	}
@@ -124,7 +124,7 @@ func Tan(angle Type) (out Type) {
 }
 
 //Tanh returns the hyperbolic cosine of x. The hyperbolic cosine of x is computed as (e^x+e^−x)/2
-func Tanh(x Type) (out Type) {
+func Tanh(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Tanh(x[i])
 	}

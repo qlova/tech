@@ -125,7 +125,7 @@ func (s state) updateUniforms() {
 			gl.Uniform3f(location, v[0], v[1], v[2])
 		case [4]float32:
 			gl.Uniform4f(location, v[0], v[1], v[2], v[3])
-		case vec4.Type:
+		case vec4.Float32:
 			gl.Uniform4f(location, v[0], v[1], v[2], v[3])
 
 		case [16]float32:

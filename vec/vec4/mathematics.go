@@ -3,7 +3,7 @@ package vec4
 import "qlova.tech/f32"
 
 //Abs returns the absolute value of x.
-func Abs(x Type) (out Type) {
+func Abs(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Abs(x[i])
 	}
@@ -11,7 +11,7 @@ func Abs(x Type) (out Type) {
 }
 
 //Ceil returns a value equal to the nearest integer that is greater than or equal to x.
-func Ceil(x Type) (out Type) {
+func Ceil(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Ceil(x[i])
 	}
@@ -19,7 +19,7 @@ func Ceil(x Type) (out Type) {
 }
 
 //Clamp returns the value of x constrained to the range min to max.
-func Clamp(x Type, min, max float32) (out Type) {
+func Clamp(x Float32, min, max float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Clamp(x[i], min, max)
 	}
@@ -27,7 +27,7 @@ func Clamp(x Type, min, max float32) (out Type) {
 }
 
 //Exp returns the natural exponentiation of x. i.e., ex.
-func Exp(x Type) (out Type) {
+func Exp(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Exp(x[i])
 	}
@@ -35,7 +35,7 @@ func Exp(x Type) (out Type) {
 }
 
 //Exp2 returns the natural exponentiation of x. i.e., ex.
-func Exp2(x Type) (out Type) {
+func Exp2(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Exp2(x[i])
 	}
@@ -43,7 +43,7 @@ func Exp2(x Type) (out Type) {
 }
 
 //Floor returns a value equal to the nearest integer that is less than or equal to x.
-func Floor(x Type) (out Type) {
+func Floor(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Floor(x[i])
 	}
@@ -62,7 +62,7 @@ fma() will be computed with the same precision as any other fma() consumed by a 
 
 Otherwise, in the absense of precise consumption, there are no special constraints on the number of operations or difference in precision between fma() and the expression a * b + c.
 */
-func FMA(a, b, c Type) (out Type) {
+func FMA(a, b, c Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.FMA(a[i], b[i], c[i])
 	}
@@ -70,7 +70,7 @@ func FMA(a, b, c Type) (out Type) {
 }
 
 //Fract returns the fractional part of x.
-func Fract(x Type) (out Type) {
+func Fract(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Fract(x[i])
 	}
@@ -78,7 +78,7 @@ func Fract(x Type) (out Type) {
 }
 
 //InverseSqrt returns the inverse of the square root of x. i.e., the value 1/(√x). Results are undefined if x≤0.
-func InverseSqrt(x Type) (out Type) {
+func InverseSqrt(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.InverseSqrt(x[i])
 	}
@@ -86,7 +86,7 @@ func InverseSqrt(x Type) (out Type) {
 }
 
 //Log returns the natural logarithm of x. i.e., the value y which satisfies x=e^y.
-func Log(x Type) (out Type) {
+func Log(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Log(x[i])
 	}
@@ -94,7 +94,7 @@ func Log(x Type) (out Type) {
 }
 
 //Log2 returns the base 2 logarithm of x. i.e., the value y which satisfies x=2^y. Results are undefined if x≤0.
-func Log2(x Type) (out Type) {
+func Log2(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Log2(x[i])
 	}
@@ -102,7 +102,7 @@ func Log2(x Type) (out Type) {
 }
 
 //Max returns the maximum of the two parameters.
-func Max(x, y Type) (out Type) {
+func Max(x, y Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Max(x[i], y[i])
 	}
@@ -110,7 +110,7 @@ func Max(x, y Type) (out Type) {
 }
 
 //Min returns the minimum of the two parameters.
-func Min(x, y Type) (out Type) {
+func Min(x, y Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Min(x[i], y[i])
 	}
@@ -118,7 +118,7 @@ func Min(x, y Type) (out Type) {
 }
 
 //Mix performs a linear interpolation between x and y using a to weight between them.
-func Mix(x, y Type, a float32) (out Type) {
+func Mix(x, y Float32, a float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Mix(x[i], y[i], a)
 	}
@@ -126,7 +126,7 @@ func Mix(x, y Type, a float32) (out Type) {
 }
 
 //Mod returns the value of x modulo y.
-func Mod(x, y Type) (out Type) {
+func Mod(x, y Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Mod(x[i], y[i])
 	}
@@ -134,7 +134,7 @@ func Mod(x, y Type) (out Type) {
 }
 
 //Pow returns the value of x raised to the y power. i.e., x^y. Results are undefined if x< or if x=0 and y=0.
-func Pow(x, y Type) (out Type) {
+func Pow(x, y Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Pow(x[i], y[i])
 	}
@@ -144,7 +144,7 @@ func Pow(x, y Type) (out Type) {
 //Round returns a value equal to the nearest integer to x.
 //The fraction 0.5 will round in a direction chosen by the implementation, presumably the direction that is fastest.
 //This includes the possibility that Round(x) returns the same value as RoundEven(x) for all values of x.
-func Round(x Type) (out Type) {
+func Round(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Round(x[i])
 	}
@@ -153,7 +153,7 @@ func Round(x Type) (out Type) {
 
 //RoundEven returns a value equal to the nearest integer to x.
 //The fractional part of 0.5 will round toward the nearest even integer. For example, both 3.5 and 4.5 will round to 4.0
-func RoundEven(x Type) (out Type) {
+func RoundEven(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.RoundEven(x[i])
 	}
@@ -161,7 +161,7 @@ func RoundEven(x Type) (out Type) {
 }
 
 //Sign returns -1.0 if x is less than 0.0, 0.0 if x is equal to 0.0, and +1.0 if x is greater than 0.0.
-func Sign(x Type) (out Type) {
+func Sign(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Sign(x[i])
 	}
@@ -170,7 +170,7 @@ func Sign(x Type) (out Type) {
 
 //SmoothStep performs smooth Hermite interpolation between 0 and 1 when a < x < b.
 //This is useful in cases where a threshold function with a smooth transition is desired.
-func SmoothStep(a, b float32, x Type) (out Type) {
+func SmoothStep(a, b float32, x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.SmoothStep(a, b, x[i])
 	}
@@ -179,7 +179,7 @@ func SmoothStep(a, b float32, x Type) (out Type) {
 
 //Sqrt returns the square root of x. i.e., the value √x.
 //Results are undefined if x<0.
-func Sqrt(x Type) (out Type) {
+func Sqrt(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Sqrt(x[i])
 	}
@@ -187,7 +187,7 @@ func Sqrt(x Type) (out Type) {
 }
 
 //Step generates a step function by comparing x to edge.
-func Step(edge float32, x Type) (out Type) {
+func Step(edge float32, x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Step(edge, x[i])
 	}
@@ -195,7 +195,7 @@ func Step(edge float32, x Type) (out Type) {
 }
 
 //Trunc returns a a value equal to the nearest integer to x whose absolute value is not larger than the absolute value of x.
-func Trunc(x Type) (out Type) {
+func Trunc(x Float32) (out Float32) {
 	for i := range out {
 		out[i] = f32.Trunc(x[i])
 	}

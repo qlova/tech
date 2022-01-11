@@ -9,15 +9,15 @@ import (
 
 //Caster is used to raycast geometry.
 type Caster struct {
-	Origin, Direction vec3.Type
+	Origin, Direction vec3.Float32
 }
 
-func (ray Caster) at(t float32) vec3.Type {
+func (ray Caster) at(t float32) vec3.Float32 {
 	return vec3.Add(ray.Direction.Times(t), ray.Origin)
 }
 
 //Transform this ray by the given matrix.
-func (ray *Caster) Transform(m *mat4.Type) {
+func (ray *Caster) Transform(m *mat4.Float32) {
 	ray.Direction.Add(ray.Origin)
 	ray.Direction.Transform(m)
 	ray.Origin.Transform(m)
@@ -27,7 +27,7 @@ func (ray *Caster) Transform(m *mat4.Type) {
 
 //Box tests for an intersection between the ray and the box.
 //If ok, the returned point is the point of intersection.
-func (ray Caster) Box(box cad.Box) (point vec3.Type, ok bool) {
+func (ray Caster) Box(box cad.Box) (point vec3.Float32, ok bool) {
 	// http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-7-intersecting-simple-shapes/ray-box-intersection/
 
 	var tmin, tmax, tymin, tymax, tzmin, tzmax float32
@@ -103,10 +103,10 @@ func (ray Caster) Box(box cad.Box) (point vec3.Type, ok bool) {
 
 //Triangle tests for an intersection between the ray and the triangle.
 //If ok, the returned point is the point of intersection.
-func (ray Caster) Triangle(a, b, c vec3.Type) (point vec3.Type, ok bool) {
-	var edge1 vec3.Type = vec3.Sub(b, a)
-	var edge2 vec3.Type = vec3.Sub(c, a)
-	var normal vec3.Type = vec3.Cross(edge1, edge2)
+func (ray Caster) Triangle(a, b, c vec3.Float32) (point vec3.Float32, ok bool) {
+	var edge1 vec3.Float32 = vec3.Sub(b, a)
+	var edge2 vec3.Float32 = vec3.Sub(c, a)
+	var normal vec3.Float32 = vec3.Cross(edge1, edge2)
 
 	// Solve Q + t*D = b1*E1 + b2*E2 (Q = kDiff, D = ray direction,
 	// E1 = kEdge1, E2 = kEdge2, N = Cross(E1,E2)) by

@@ -18,5 +18,5 @@ const (
 	A
 )
 
-//Type is a 4D vector type.
-type Type [4]float32
+//Float32 is a 4D vector type.
+type Float32 [4]float32

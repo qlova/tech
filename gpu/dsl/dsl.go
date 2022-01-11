@@ -36,12 +36,12 @@ type Uniforms struct {
 	RGBA func(*rgba.Color) RGBA
 	RGB  func(*rgb.Color) RGB
 
-	Vec2 func(*vec2.Type) Vec2
-	Vec3 func(*vec3.Type) Vec3
-	Vec4 func(*vec4.Type) Vec4
+	Vec2 func(*vec2.Float32) Vec2
+	Vec3 func(*vec3.Float32) Vec3
+	Vec4 func(*vec4.Float32) Vec4
 
-	Mat3 func(*mat3.Type) Mat3
-	Mat4 func(*mat4.Type) Mat4
+	Mat3 func(*mat3.Float32) Mat3
+	Mat4 func(*mat4.Float32) Mat4
 
 	Sampler func(*core.Texture) Sampler
 }

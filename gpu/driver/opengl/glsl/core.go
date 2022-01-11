@@ -159,14 +159,14 @@ func Core(buf *bytes.Buffer, vtx *shader.Core) *shader.Core {
 	core.Out.RGB = func(attr vertex.Attribute) shader.RGB { return NewRGB(makeQualFor(attr, "out", "vec3")) }
 	core.Out.RGBA = func(attr vertex.Attribute) shader.RGBA { return NewRGBA(makeQualFor(attr, "out", "vec4")) }
 
-	core.Uniform.Vec2 = func(*vec2.Type) shader.Vec2 { return NewVec2(makeQualFor("", "uniform", "vec2")) }
-	core.Uniform.Vec3 = func(*vec3.Type) shader.Vec3 { return NewVec3(makeQualFor("", "uniform", "vec3")) }
-	core.Uniform.Vec4 = func(*vec4.Type) shader.Vec4 { return NewVec4(makeQualFor("", "uniform", "vec4")) }
+	core.Uniform.Vec2 = func(*vec2.Float32) shader.Vec2 { return NewVec2(makeQualFor("", "uniform", "vec2")) }
+	core.Uniform.Vec3 = func(*vec3.Float32) shader.Vec3 { return NewVec3(makeQualFor("", "uniform", "vec3")) }
+	core.Uniform.Vec4 = func(*vec4.Float32) shader.Vec4 { return NewVec4(makeQualFor("", "uniform", "vec4")) }
 	core.Uniform.RGB = func(*rgb.Color) shader.RGB { return NewRGB(makeQualFor("", "uniform", "vec3")) }
 	core.Uniform.RGBA = func(*rgba.Color) shader.RGBA { return NewRGBA(makeQualFor("", "uniform", "vec4")) }
 	core.Uniform.Sampler = func(*gpu.Texture) shader.Sampler { return NewSampler(makeQualFor("", "uniform", "sampler2D")) }
-	core.Uniform.Mat4 = func(*mat4.Type) shader.Mat4 { return NewMat4(makeQualFor("", "uniform", "mat4")) }
-	core.Uniform.Mat3 = func(*mat3.Type) shader.Mat3 { return NewMat3(makeQualFor("", "uniform", "mat3")) }
+	core.Uniform.Mat4 = func(*mat4.Float32) shader.Mat4 { return NewMat4(makeQualFor("", "uniform", "mat4")) }
+	core.Uniform.Mat3 = func(*mat3.Float32) shader.Mat3 { return NewMat3(makeQualFor("", "uniform", "mat3")) }
 
 	core.Set.RGBA = func(a, b shader.RGBA) { line("%s = %s;\n", a.Value, b.Value) }
 	core.Set.Vec2 = func(a, b shader.Vec2) { line("%s = %s;\n", a.Value, b.Value) }

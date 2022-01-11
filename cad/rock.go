@@ -20,7 +20,7 @@ type Rock struct {
 
 	ScrapeCount int
 
-	Scale vec3.Type
+	Scale vec3.Float32
 
 	Random func() float32
 
@@ -83,7 +83,7 @@ func (rock Rock) scrape(positionIndex int, positions [][3]float32, cells []uint3
 	var n = normals[positionIndex]
 
 	var r0 = centerPosition
-	vec3.Add(r0, vec3.Type(n).Times(-strength))
+	vec3.Add(r0, vec3.Float32(n).Times(-strength))
 
 	var stack []int
 	stack = append(stack, positionIndex)
@@ -91,7 +91,7 @@ func (rock Rock) scrape(positionIndex int, positions [][3]float32, cells []uint3
 	/*
 		Projects the point `p` onto the plane defined by the normal `n` and the point `r0`
 	*/
-	project := func(n, r0, p vec3.Type) vec3.Type {
+	project := func(n, r0, p vec3.Float32) vec3.Float32 {
 		// For an explanation of the math, see http://math.stackexchange.com/a/100766
 
 		var t = vec3.Dot(n, vec3.Sub(r0, p)) / vec3.Dot(n, n)
@@ -141,13 +141,13 @@ func (rock Rock) Mesh() Mesh {
 	if rock.Random == nil {
 		rock.Random = rand.Float32
 	}
-	if rock.Scale == (vec3.Type{}) {
-		rock.Scale = vec3.Type{1, 1, 1}
+	if rock.Scale == (vec3.Float32{}) {
+		rock.Scale = vec3.Float32{1, 1, 1}
 	}
 
 	var noise = opensimplex.NewNormalized(rock.Seed)
 
-	var sphere = NewSphere(vec3.Type{}, 1).Mesh(20)
+	var sphere = NewSphere(vec3.Float32{}, 1).Mesh(20)
 
 	var positions = sphere.Vertices
 	var cells = sphere.Indicies

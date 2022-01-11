@@ -7,5 +7,5 @@ const (
 	Y
 )
 
-//Type is a 2D vector type.
-type Type [2]float32
+//Float32 is a 2D vector type.
+type Float32 [2]float32

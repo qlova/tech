@@ -71,13 +71,13 @@ func compile(fn func(*shader.Core), vtx *shader.Core) ([]byte, *shader.Core, err
 		return fmt.Sprintf("%v[gpu_DrawID]", name)
 	}
 
-	core.Current.Vec2 = func(*vec2.Type) shader.Vec2 { return glsl.NewVec2(makeCurrent("vec2")) }
-	core.Current.Vec3 = func(*vec3.Type) shader.Vec3 { return glsl.NewVec3(makeCurrent("vec3")) }
-	core.Current.Vec4 = func(*vec4.Type) shader.Vec4 { return glsl.NewVec4(makeCurrent("vec4")) }
+	core.Current.Vec2 = func(*vec2.Float32) shader.Vec2 { return glsl.NewVec2(makeCurrent("vec2")) }
+	core.Current.Vec3 = func(*vec3.Float32) shader.Vec3 { return glsl.NewVec3(makeCurrent("vec3")) }
+	core.Current.Vec4 = func(*vec4.Float32) shader.Vec4 { return glsl.NewVec4(makeCurrent("vec4")) }
 	core.Current.RGB = func(*rgb.Color) shader.RGB { return glsl.NewRGB(makeCurrent("vec3")) }
 	core.Current.RGBA = func(*rgba.Color) shader.RGBA { return glsl.NewRGBA(makeCurrent("vec4")) }
-	core.Current.Mat3 = func(*mat3.Type) shader.Mat3 { return glsl.NewMat3(makeCurrent("mat3")) }
-	core.Current.Mat4 = func(*mat4.Type) shader.Mat4 { return glsl.NewMat4(makeCurrent("mat4")) }
+	core.Current.Mat3 = func(*mat3.Float32) shader.Mat3 { return glsl.NewMat3(makeCurrent("mat3")) }
+	core.Current.Mat4 = func(*mat4.Float32) shader.Mat4 { return glsl.NewMat4(makeCurrent("mat4")) }
 	core.Current.Sampler = func(*gpu.Texture) shader.Sampler { return glsl.NewSampler(makeCurrent("sampler2D")) }
 
 	core.Main = func(fn func()) {

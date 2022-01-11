@@ -18,20 +18,20 @@ const (
 	B
 )
 
-//Type is a 3D vector type.
-type Type [3]float32
+//Float32 is a 3D vector type.
+type Float32 [3]float32
 
 //X returns the x component of the vector.
-func (v Type) X() float32 { return v[X] }
+func (v Float32) X() float32 { return v[X] }
 
 //Y returns the y component of the vector.
-func (v Type) Y() float32 { return v[Y] }
+func (v Float32) Y() float32 { return v[Y] }
 
 //Z returns the z component of the vector.
-func (v Type) Z() float32 { return v[Z] }
+func (v Float32) Z() float32 { return v[Z] }
 
 //Transform this vector by the given matrix.
-func (v *Type) Transform(m *mat4.Type) {
+func (v *Float32) Transform(m *mat4.Float32) {
 	x := v[X]
 	y := v[Y]
 	z := v[Z]
