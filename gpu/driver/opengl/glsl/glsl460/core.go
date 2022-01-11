@@ -19,7 +19,24 @@ import (
 	"qlova.tech/gpu/shader"
 )
 
-func Compile(fn func(*shader.Core), vtx *shader.Core) ([]byte, *shader.Core, error) {
+//Compile a vertex and fragment shader to GLSL 430.
+func Compile(program gpu.Program) (vert []byte, frag []byte, err error) {
+	var core *shader.Core
+
+	vert, core, err = compile(program.Vertex, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	frag, _, err = compile(program.Fragment, core)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return vert, frag, nil
+}
+
+func compile(fn func(*shader.Core), vtx *shader.Core) ([]byte, *shader.Core, error) {
 	fragment := vtx != nil
 
 	var buf bytes.Buffer

@@ -1,4 +1,4 @@
-package gputype
+package dsl
 
 type Texture struct {
 	uint64

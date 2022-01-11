@@ -55,7 +55,7 @@ func load(data interface{}) (buf uint64, err error) {
 		return loadAttributes(buf, v)
 
 	//Compile shader.
-	case gpu.Shader:
+	case gpu.Program:
 		return loadShader(buf, v)
 
 	default:
@@ -111,18 +111,13 @@ func loadTexture(p uint64, img image.Image) (uint64, error) {
 	return pointer, nil
 }
 
-func loadShader(p uint64, shader gpu.Shader) (uint64, error) {
+func loadShader(p uint64, program gpu.Program) (uint64, error) {
 	var pointer = uint32(p)
 	if pointer == 0 {
 		pointer = gl.CreateProgram()
 	}
 
-	vertexSource, core, err := glsl460.Compile(shader.Vertex, nil)
-	if err != nil {
-		return 0, err
-	}
-
-	fragmentSource, _, err := glsl460.Compile(shader.Fragment, core)
+	vertexSource, fragmentSource, err := glsl460.Compile(program)
 	if err != nil {
 		return 0, err
 	}

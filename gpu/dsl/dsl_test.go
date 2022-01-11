@@ -1,4 +1,4 @@
-package shader_test
+package dsl_test
 
 import (
 	"fmt"

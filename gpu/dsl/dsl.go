@@ -1,7 +1,7 @@
-package shader
+// Package dsl provides a domain-specific shading language.
+package dsl
 
 import (
-	"qlova.tech/gpu/internal/gputype"
 	"qlova.tech/gpu/vertex"
 	"qlova.tech/mat/mat3"
 	"qlova.tech/mat/mat4"
@@ -11,9 +11,6 @@ import (
 	"qlova.tech/vec/vec3"
 	"qlova.tech/vec/vec4"
 )
-
-type Fragment func(*Core)
-type Vertex func(*Core)
 
 type Attributes struct {
 	Bool  func(vertex.Attribute) Bool
@@ -45,7 +42,7 @@ type Uniforms struct {
 	Mat3 func(*mat3.Type) Mat3
 	Mat4 func(*mat4.Type) Mat4
 
-	Sampler func(*gputype.Texture) Sampler
+	Sampler func(*Texture) Sampler
 }
 
 type Setter struct {
@@ -95,6 +92,7 @@ type Definer struct {
 	RGBA func(RGBA) RGBA
 }
 
+// Core is the core handle for DSL
 type Core struct {
 	Definer
 
@@ -114,6 +112,7 @@ type Core struct {
 
 	//builtin variables
 	Position Vec4
+	Fragment Vec4
 
 	Main     func(fn func())
 	If       func(c Bool, fn func()) IfElseChain

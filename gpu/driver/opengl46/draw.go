@@ -100,7 +100,7 @@ const (
 	pointerTypeUint64
 )
 
-func loadVariables(shader gpu.Shader) []variable {
+func loadVariables(shader gpu.Program) []variable {
 	var rvalue = reflect.ValueOf(shader)
 	if rvalue.Type().Kind() != reflect.Ptr {
 		panic("shader must have pointer reciever")

@@ -1,160 +1,196 @@
+//Package gpu is a high-level GPU rendering API.
 package gpu
 
 import (
-	"errors"
+	"image/color"
+	"sync"
 
+	"qlova.tech/gpu/dsl"
+	"qlova.tech/gpu/texture"
+	"qlova.tech/gpu/vertex"
 	"qlova.tech/mat/mat4"
-	"qlova.tech/vec/vec4"
 )
 
-//Driver is able to open return a context.
-type Driver func() (Context, error)
+//standardised uniforms/variables.
+var (
 
-//Pointer is an opaque reference to a GPU memory location.
-type Pointer struct {
-	uint64
+	//Camera is the transformation of the camera.
+	Camera mat4.Type
+
+	//Transform is the transformation of the current object.
+	Transform mat4.Type
+)
+
+// Driver is a GPU driver that enables GPU rendering.
+type Driver struct {
+	NewFrame   func(c color.Color)
+	NewMesh    func(vertices vertex.Array, hints ...vertex.Hint) (vertex.Reader, Pointer, error)
+	NewTexture func(data texture.Data, hints ...texture.Hint) (texture.Reader, Pointer, error)
+	NewProgram func(vert, frag func(Core), hints ...Hint) (Binary, Pointer, error)
+
+	Draw func(program, mesh Pointer)
+	Sync func()
 }
 
-func (p Pointer) Value() uint64 {
-	return p.uint64
+//driver is the current driver.
+var driver Driver
+var drivers map[string]func() (Driver, error)
+var mutex sync.Mutex
+
+// Register a new gpu Opener.
+func Register(name string, opener func() (Driver, error)) {
+	mutex.Lock()
+	defer mutex.Unlock()
+	drivers[name] = opener
 }
 
-//Update updates the given buffer's data, resizing the buffer if needed.
-type Update struct {
-	Pointer Pointer
-	Data    interface{}
+// Core is a processing core on the GPU and can
+// be instructed on how to render a Mesh.
+// Whenever a mesh is drawn, the gpu core will be
+// passed vertex attributes, which can then
+// adjust the attributes and produce an output.
+//
+// The core can be instructed using a GLSL-style
+// DSL. Checkout the dsl package for more info.
+type Core dsl.Core
+
+// Pointer is a pointer to a GPU resource.
+// Drivers are free to use this as they wish.
+type Pointer [3]uint64
+
+// Error is an error returned by the GPU package.
+type Error struct {
+	string
 }
 
-//Variable is a variable on the GPU.
-type Variable struct {
-	Name  string
-	Value interface{}
+// Error implements error.
+func (e Error) Error() string {
+	return e.string
 }
 
-//Set sets a uniform variable on the GPU.
-//The value is read after a Sync, so only the last value is used.
-func Set(name string, value interface{}) error {
-	_, err := context.Load(Variable{name, value})
-	return err
-}
+// ErrNoDriver is returned when no driver is available.
+var ErrNoDriver = Error{"no gpu.Driver available, did you import one?"}
 
-//Context provides an interface to a context on the GPU.
-type Context struct {
-	//Buffer uploads the given data into a suitable buffer on the GPU.
-	//If the type is unsupported, it will return an error. An opaque reference to the buffer is returned.
-	//A buffer can be updated by passing an Update type to this function with the Buffer that needs updating.
-	//If 'data' is nil, the entire context is cleared and reset to an empty state.
-	Load func(data interface{}) (uint64, error)
+// Open attempts to open a GPU driver for rendering operations.
+// returns ErrNoDriver if no driver is available. Pass hints
+// to influence which driver is used for rendering when there
+// are multiple candidates.
+func Open(hints ...string) error {
+	mutex.Lock()
+	defer mutex.Unlock()
 
-	//Draw schedules the drawing of the given mesh with the given transform and drawing options.
-	//If the mesh has an invalid/outdated buffer then this may return an error.
-	Draw func(Mesh, Transform, DrawOptions) error
-
-	//Sync waits for any pending buffer operations on the GPU to complete and then waits for all pending drawing operations to complete.
-	Sync func() error
-
-	version     uint64
-	meshBuffers map[mode]*meshBuffer
-}
-
-//Upload uploads any scheduled meshes to the GPU.
-func (context *Context) Upload() error {
-	for _, buf := range context.meshBuffers {
-		if buf.changed {
-			_, err := context.Load(Update{buf.id, buf.attributes})
+	try := func(name string) error {
+		if opener, ok := drivers[name]; ok {
+			var err error
+			driver, err = opener()
 			if err != nil {
 				return err
 			}
-
-			buf.changed = false
-		}
-	}
-	return nil
-}
-
-//Upload uploads any scheduled meshes to the GPU.
-func Upload() error { return context.Upload() }
-
-var driver string
-var drivers = make(map[string]Driver)
-
-//Register registers a new GPU driver.
-func Register(name string, d Driver) {
-	drivers[name] = d
-}
-
-var context Context
-
-//Open opens the GPU ready for uploading data and rendering.
-//You can provide a hint to select the name of the driver to use.
-func Open(hints ...string) error {
-	if len(hints) > 0 {
-		open, ok := drivers[hints[0]]
-		if ok {
-			ctx, err := open()
-			if err == nil {
-				driver = hints[0]
-				context = ctx
-				return nil
-			}
-			return err
-		}
-		return errors.New("gpu driver " + hints[0] + " not found")
-	}
-
-	if len(drivers) == 0 {
-		return errors.New("no drivers available, please import one")
-	}
-
-	var ErrorString string = "failed to open a gpu.Context\n"
-
-	for name, open := range drivers {
-		ctx, err := open()
-		if err == nil {
-			driver = name
-			context = ctx
 			return nil
 		}
-		ErrorString += "\t" + name + ":" + err.Error()
+		return nil
 	}
 
-	return errors.New(ErrorString)
+	for _, name := range hints {
+		if err := try(name); err == nil {
+			return nil
+		}
+	}
+
+	for name := range drivers {
+		if err := try(name); err == nil {
+			return nil
+		}
+	}
+
+	return ErrNoDriver
 }
 
-//DrawOptions that affect how a mesh is drawn.
-type DrawOptions uint64
-
-//DrawOptions.
-const (
-	Wireframe = 1 << iota
-	FrontFaceCulling
-	NoShadows
-	Clear
-)
-
-type mode struct {
-	//drawing mode, ie triangles, lines.
-	draw    uint16
-	indexed uint16
-
-	options DrawOptions
-
-	//hash of the attributes.
-	hash uint64
-}
-
-//Frame is a definition for a frame.
-type Frame struct {
-	ClearColor vec4.Type
-}
-
-//Frames clears the screen to black and then returns true.
-func Frames() bool {
-	context.Load(Frame{})
+// Draw flushes any pending operations to the GPU
+// and returns true.
+func Draw() bool {
+	driver.Sync()
 	return true
 }
 
-//Sync applies all sceduled drawing operations.
-func Sync() error { return context.Sync() }
+// NewFrame clears the output display with the given color.
+// Until the next call to Draw, all drawing operations will
+// be shaded by the value of Shader at the time of the call.
+func NewFrame(c color.Color) {
+	driver.NewFrame(c)
+}
 
-var Camera mat4.Type
+// Shader is the shader used to determine the lighting
+// for a fragment. By default, no lighting calculation
+// is performed and the fragment will be set to the
+// output of the fragment's program.
+var Shader func(Core)
+
+//Mesh is a reference to a mesh uploaded to the GPU.
+type Mesh struct {
+	reader  vertex.Reader
+	pointer Pointer
+}
+
+// NewMesh returns a new Mesh from the given vertex array and
+// vertex hints.
+func NewMesh(vertices vertex.Array, hints ...vertex.Hint) (Mesh, error) {
+	reader, pointer, err := driver.NewMesh(vertices, hints...)
+	return Mesh{reader, pointer}, err
+}
+
+// Hint is a hint that can be used to configure the
+// behaviour of the GPU when rendering.
+type Hint uint64
+
+// Hints.
+const (
+	Cull Hint = 1 << iota
+	Front
+	Back
+	Blend
+	Wireframe
+	Shaded
+)
+
+//Binary is a compiled Program.
+type Binary interface {
+	Data() []byte
+}
+
+// Program is a reference to a program uploaded to the GPU.
+// Programs are used to draw Meshes and specify how they
+// will be renderered.
+type Program struct {
+	reader  Binary
+	pointer Pointer
+}
+
+// NewProgram returns a new Program from the given vertex
+// and fragment functions. The vertex function is called
+// once for each vertex in the mesh. The fragment function
+// is called once for each fragment in the mesh. Hints can
+// be provided to configure rendering behaviour.
+func NewProgram(vert, frag func(Core), hints ...Hint) (Program, error) {
+	binary, pointer, err := driver.NewProgram(vert, frag, hints...)
+	return Program{binary, pointer}, err
+}
+
+// Draw draws the given mesh using the given program.
+// Until the next call to gpu.Draw, the rendering order
+// of subsequent calls to Draw are undefined.
+func (p Program) Draw(m Mesh) {
+	driver.Draw(p.pointer, m.pointer)
+}
+
+// Texture is a reference to a texture uploaded to the GPU.
+type Texture struct {
+	reader  texture.Reader
+	pointer Pointer
+}
+
+// NewTexture returns a new Texture from the given texture data and hints.
+func NewTexture(data texture.Data, hints ...texture.Hint) (Texture, error) {
+	reader, pointer, err := driver.NewTexture(data, hints...)
+	return Texture{reader, pointer}, err
+}
