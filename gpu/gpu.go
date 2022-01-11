@@ -6,19 +6,9 @@ import (
 	"sync"
 
 	"qlova.tech/gpu/dsl"
+	"qlova.tech/gpu/internal/core"
 	"qlova.tech/gpu/texture"
 	"qlova.tech/gpu/vertex"
-	"qlova.tech/mat/mat4"
-)
-
-//standardised uniforms/variables.
-var (
-
-	//Camera is the transformation of the camera.
-	Camera mat4.Type
-
-	//Transform is the transformation of the current object.
-	Transform mat4.Type
 )
 
 // Driver is a GPU driver that enables GPU rendering.
@@ -184,13 +174,10 @@ func (p Program) Draw(m Mesh) {
 }
 
 // Texture is a reference to a texture uploaded to the GPU.
-type Texture struct {
-	reader  texture.Reader
-	pointer Pointer
-}
+type Texture = core.Texture
 
 // NewTexture returns a new Texture from the given texture data and hints.
 func NewTexture(data texture.Data, hints ...texture.Hint) (Texture, error) {
 	reader, pointer, err := driver.NewTexture(data, hints...)
-	return Texture{reader, pointer}, err
+	return core.NewTexture(reader, core.Pointer(pointer)), err
 }

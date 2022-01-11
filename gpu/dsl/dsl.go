@@ -2,6 +2,7 @@
 package dsl
 
 import (
+	"qlova.tech/gpu/internal/core"
 	"qlova.tech/gpu/vertex"
 	"qlova.tech/mat/mat3"
 	"qlova.tech/mat/mat4"
@@ -42,7 +43,7 @@ type Uniforms struct {
 	Mat3 func(*mat3.Type) Mat3
 	Mat4 func(*mat4.Type) Mat4
 
-	Sampler func(*Texture) Sampler
+	Sampler func(*core.Texture) Sampler
 }
 
 type Setter struct {
@@ -112,7 +113,7 @@ type Core struct {
 
 	//builtin variables
 	Position Vec4
-	Fragment Vec4
+	Fragment RGBA
 
 	Main     func(fn func())
 	If       func(c Bool, fn func()) IfElseChain
