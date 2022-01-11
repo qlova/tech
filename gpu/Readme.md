@@ -1,4 +1,6 @@
 # GPU
+PLEASE NOTE: this package has recently gone through a complete redesign and the opengl driver needs
+to be rewritten.
 
 A high-level Go module for high-performance GPU operations.
 This package currently is being developed against OpenGL 4.6 
