@@ -28,10 +28,13 @@ Things that we would love to see in the future with this module:
 (please contribute)
 
 * Vulkan driver
-* Order-independent transparency.
+* Order-independent transparency
 * WebGL/WebGPU driver
 * OpenGLES driver
 * GPU Skeletal Animations
 * CPU/GPU Frustum Culling
 * Proper shadow rendering
 * Transparency Handling
+* Reflections
+* VR/AR support
+* Raytracing
