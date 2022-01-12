@@ -1,26 +1,26 @@
 package dsl
 
-type Texture struct {
-	uint64
+type Type interface {
+	dslType()
 }
 
-func NewTexture(v uint64) Texture {
-	return Texture{v}
-}
+type Value string
 
-func (t Texture) Value() uint64 {
-	return t.uint64
+func (v Value) String() string {
+	return string(v)
 }
 
 //Internal types available to shader cores running on
 //the GPU.
 type (
 	Bool struct {
-		Value string
+		Type
+		Value
 	}
 
 	Int struct {
-		Value string
+		Type
+		Value
 
 		LessThan func(Int) Bool
 		MoreThan func(Int) Bool
@@ -36,7 +36,8 @@ type (
 	}
 
 	Uint struct {
-		Value string
+		Type
+		Value
 
 		LessThan func(Uint) Bool
 		MoreThan func(Uint) Bool
@@ -52,7 +53,8 @@ type (
 	}
 
 	Float struct {
-		Value string
+		Type
+		Value
 
 		LessThan func(Float) Bool
 		MoreThan func(Float) Bool
@@ -93,8 +95,10 @@ type (
 	}
 
 	Vec2 struct {
-		Value string
-		X, Y  Float
+		Type
+		Value
+
+		X, Y Float
 
 		Length     func() Float
 		DistanceTo func(Vec2) Float
@@ -103,7 +107,9 @@ type (
 	}
 
 	Vec3 struct {
-		Value   string
+		Type
+		Value
+
 		X, Y, Z Float
 
 		RGB func() RGB
@@ -116,7 +122,9 @@ type (
 	}
 
 	Vec4 struct {
-		Value      string
+		Type
+		Value
+
 		X, Y, Z, W Float
 
 		RGBA func() RGBA
@@ -127,34 +135,69 @@ type (
 		Normalize  func() Vec4
 	}
 
+	Mat2 struct {
+		Type
+		Value
+
+		Times     func(Mat2) Mat2
+		Transform func(Vec2) Vec2
+	}
+
 	Mat3 struct {
-		Value string
+		Type
+		Value
 
 		Transform func(Vec3) Vec3
 	}
 
 	Mat4 struct {
-		Value string
+		Type
+		Value
 
 		Times     func(Mat4) Mat4
 		Transform func(Vec4) Vec4
 	}
 
 	RGB struct {
-		Value   string
+		Type
+		Value
+
 		R, G, B Float
 
 		Vec3 func() Vec3
 	}
 
 	RGBA struct {
-		Value      string
+		Type
+		Value
+
 		R, G, B, A Float
 
 		Vec4 func() Vec4
 	}
 
-	Sampler struct {
-		Value string
+	Texture1D struct {
+		Type
+		Value
+
+		Sample func(Float) RGBA
+	}
+	Texture2D struct {
+		Type
+		Value
+
+		Sample func(Vec2) RGBA
+	}
+	Texture3D struct {
+		Type
+		Value
+
+		Sample func(Vec3) RGBA
+	}
+	TextureCube struct {
+		Type
+		Value
+
+		Sample func(Vec3) RGBA
 	}
 )

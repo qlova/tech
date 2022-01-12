@@ -24,7 +24,7 @@ type Textured struct {
 }
 
 // Vertex function.
-func (t *Textured) Vertex(core *Core) {
+func (t *Textured) Vertex(core Core) {
 	position := core.Arg.Vec4(vertex.Position)
 
 	camera := core.Uniform.Mat4(&Camera)
@@ -36,15 +36,15 @@ func (t *Textured) Vertex(core *Core) {
 }
 
 // Fragment function.
-func (t *Textured) Fragment(core *Core) {
+func (t *Textured) Fragment(core Core) {
 	f := core.New.Float
 
 	uv := core.Arg.Vec2(vertex.UV)
 
-	texture := core.Get.Sampler(&t.Texture)
+	texture := core.Get.Texture2D(&t.Texture)
 
 	core.Main(func() {
-		c := core.RGBA(core.Sample(texture, uv))
+		c := core.RGBA(texture.Sample(uv))
 		core.If(c.A.LessThan(f(0.85)), func() {
 			core.Discard()
 		})

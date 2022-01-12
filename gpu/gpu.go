@@ -18,6 +18,8 @@ type Driver struct {
 	NewTexture func(data texture.Data, hints ...texture.Hint) (texture.Reader, Pointer, error)
 	NewProgram func(vert, frag func(Core), hints ...Hint) (Binary, Pointer, error)
 
+	SetShader func(shader func(Core))
+
 	Draw func(program, mesh Pointer)
 	Sync func()
 }
@@ -42,7 +44,7 @@ func Register(name string, opener func() (Driver, error)) {
 //
 // The core can be instructed using a GLSL-style
 // DSL. Checkout the dsl package for more info.
-type Core dsl.Core
+type Core = dsl.Core
 
 // Pointer is a pointer to a GPU resource.
 // Drivers are free to use this as they wish.
@@ -110,11 +112,14 @@ func NewFrame(c color.Color) {
 	driver.NewFrame(c)
 }
 
-// Shader is the shader used to determine the lighting
-// for a fragment. By default, no lighting calculation
+// SetShader sets the shader used to determine the shading
+// for a fragment. By default, no shading calculation
 // is performed and the fragment will be set to the
-// output of the fragment's program.
-var Shader func(Core)
+// output of the fragment's program. This call will have
+// take effect after the next call to gpu.Draw.
+func SetShader(shader func(Core)) {
+	driver.SetShader(shader)
+}
 
 //Mesh is a reference to a mesh uploaded to the GPU.
 type Mesh struct {
