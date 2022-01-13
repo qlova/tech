@@ -1,4 +1,4 @@
-//Package provides a GLSL 110 DSL compiler.
+//Package provides a core GLSL compiler.
 package glsl
 
 import (

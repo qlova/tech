@@ -5,8 +5,9 @@ import (
 	"sync"
 
 	"qlova.tech/dsl"
-	"qlova.tech/img"
+	"qlova.tech/led"
 	"qlova.tech/rgb"
+	"qlova.tech/tex"
 	"qlova.tech/vtx"
 )
 
@@ -14,8 +15,10 @@ import (
 type Driver struct {
 	NewFrame   func(color rgb.Color)
 	NewMesh    func(vertices vtx.Array, hints ...vtx.Hint) (vtx.Reader, Pointer, error)
-	NewTexture func(image img.Data, hints ...img.Hint) (img.Reader, Pointer, error)
-	NewProgram func(vert, frag dsl.Shader, hints ...dsl.Hint) (Binary, Pointer, error)
+	NewTexture func(image tex.Data, hints ...tex.Hint) (tex.Reader, Pointer, error)
+	NewProgram func(vert, frag dsl.Shader, hints ...dsl.Hint) (dsl.Reader, Pointer, error)
+
+	SetLighting func(lights ...led.Light)
 
 	Draw func(program, mesh Pointer)
 	Sync func()
@@ -85,9 +88,9 @@ func Open(hints ...string) error {
 	return ErrNoDriver
 }
 
-// Draw flushes any pending operations to the GPU
+// Sync flushes any pending operations to the GPU
 // and returns true.
-func Draw() bool {
+func Sync() bool {
 	driver.Sync()
 	return true
 }
@@ -112,16 +115,11 @@ func NewMesh(vertices vtx.Array, hints ...vtx.Hint) (Mesh, error) {
 	return Mesh{reader, pointer}, err
 }
 
-//Binary is a compiled Program.
-type Binary interface {
-	Data() []byte
-}
-
 // Program is a reference to a program uploaded to the GPU.
 // Programs are used to draw Meshes and specify how they
 // will be renderered.
 type Program struct {
-	reader  Binary
+	reader  dsl.Reader
 	pointer Pointer
 }
 
@@ -146,12 +144,17 @@ func (p Program) Draw(m Mesh) {
 type Texture struct {
 	dsl.Texture
 
-	reader  img.Reader
+	reader  tex.Reader
 	pointer Pointer
 }
 
 // NewTexture returns a new Texture from the given texture data and hints.
-func NewTexture(image img.Data, hints ...img.Hint) (Texture, error) {
+func NewTexture(image tex.Data, hints ...tex.Hint) (Texture, error) {
 	reader, pointer, err := driver.NewTexture(image, hints...)
 	return Texture{nil, reader, pointer}, err
+}
+
+// SetLighting sets the lighting for the next frame.
+func SetLighting(lights ...led.Light) {
+	driver.SetLighting(lights...)
 }

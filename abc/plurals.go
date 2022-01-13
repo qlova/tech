@@ -2,9 +2,14 @@ package abc
 
 import (
 	"strings"
-
-	"qlova.tech/min"
 )
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
 
 //ToPlural returns the plural form of the given english word.
 func ToPlural(word string) string {
@@ -21,7 +26,7 @@ func ToPlural(word string) string {
 		return word
 	}
 
-	for i := min.Int(len(word), len(suffixToPlural)-1); i > 0; i-- {
+	for i := min(len(word), len(suffixToPlural)-1); i > 0; i-- {
 		suffix := word[len(word)-i:]
 
 		if rule, ok := suffixToPlural[i][suffix]; ok {

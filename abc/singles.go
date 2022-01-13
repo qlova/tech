@@ -2,8 +2,6 @@ package abc
 
 import (
 	"strings"
-
-	"qlova.tech/min"
 )
 
 //ToSingle returns the single form of the given english word.
@@ -21,7 +19,7 @@ func ToSingle(word string) string {
 		return word
 	}
 
-	for i := min.Int(len(word), len(suffixToSingle)-1); i > 0; i-- {
+	for i := min(len(word), len(suffixToSingle)-1); i > 0; i-- {
 		suffix := word[len(word)-i:]
 
 		if rule, ok := suffixToSingle[i][suffix]; ok {

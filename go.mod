@@ -3,7 +3,7 @@ module qlova.tech
 go 1.18
 
 require (
-	github.com/go-gl/gl v0.0.0-20210813123233-e4099ee2221f
+	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20201108214237-06ea97f0c265
 	github.com/gorilla/mux v1.8.0
 	github.com/jaypipes/ghw v0.7.0

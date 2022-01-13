@@ -71,6 +71,9 @@ const (
 	Shaded
 )
 
+//TODO
+type Reader interface{}
+
 // Shader is a function that instructs a core on how to
 // process a vertex or fragment.
 type Shader func(Core)
