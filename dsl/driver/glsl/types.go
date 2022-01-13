@@ -3,11 +3,11 @@ package glsl
 import (
 	"fmt"
 
-	"qlova.tech/gpu/dsl"
-	"qlova.tech/gpu/dsl/dslutil"
+	"qlova.tech/dsl"
+	"qlova.tech/dsl/dslutil"
 )
 
-func (s Program) TypeOf(t dsl.Type) string {
+func (s stage) TypeOf(t dsl.Type) string {
 	switch t.(type) {
 	case dsl.Bool:
 		return "bool"
@@ -45,11 +45,11 @@ func (s Program) TypeOf(t dsl.Type) string {
 	panic(fmt.Sprintf("unknown dsl type: %T", t))
 }
 
-func (s Program) NewBool(name string) dsl.Bool {
+func (s stage) NewBool(name string) dsl.Bool {
 	return dslutil.NewBool(name, s, dslutil.Bool{})
 }
 
-func (s Program) NewInt(name string) dsl.Int {
+func (s stage) NewInt(name string) dsl.Int {
 	return dslutil.NewInt(name, s, dslutil.Int{
 		LessThan:  "(%v < %v)",
 		MoreThan:  "(%v > %v)",
@@ -64,7 +64,7 @@ func (s Program) NewInt(name string) dsl.Int {
 	})
 }
 
-func (s Program) NewUint(name string) dsl.Uint {
+func (s stage) NewUint(name string) dsl.Uint {
 	return dslutil.NewUint(name, s, dslutil.Uint{
 		LessThan:  "(%v < %v)",
 		MoreThan:  "(%v > %v)",
@@ -79,7 +79,7 @@ func (s Program) NewUint(name string) dsl.Uint {
 	})
 }
 
-func (s Program) NewFloat(name string) dsl.Float {
+func (s stage) NewFloat(name string) dsl.Float {
 	return dslutil.NewFloat(name, s, dslutil.Float{
 		LessThan: "(%v < %v)",
 		MoreThan: "(%v > %v)",
@@ -118,7 +118,7 @@ func (s Program) NewFloat(name string) dsl.Float {
 	})
 }
 
-func (s Program) NewVec2(name string) dsl.Vec2 {
+func (s stage) NewVec2(name string) dsl.Vec2 {
 	return dslutil.NewVec2(name, s, dslutil.Vec2{
 		X: "%v.x", Y: "%v.y",
 
@@ -129,7 +129,7 @@ func (s Program) NewVec2(name string) dsl.Vec2 {
 	})
 }
 
-func (s Program) NewVec3(name string) dsl.Vec3 {
+func (s stage) NewVec3(name string) dsl.Vec3 {
 	return dslutil.NewVec3(name, s, dslutil.Vec3{
 		X: "%v.x", Y: "%v.y", Z: "%v.z",
 
@@ -141,7 +141,7 @@ func (s Program) NewVec3(name string) dsl.Vec3 {
 	})
 }
 
-func (s Program) NewVec4(name string) dsl.Vec4 {
+func (s stage) NewVec4(name string) dsl.Vec4 {
 	return dslutil.NewVec4(name, s, dslutil.Vec4{
 		X: "%v.x", Y: "%v.y", Z: "%v.z", W: "%v.w",
 
@@ -152,27 +152,27 @@ func (s Program) NewVec4(name string) dsl.Vec4 {
 	})
 }
 
-func (s Program) NewMat2(name string) dsl.Mat2 {
+func (s stage) NewMat2(name string) dsl.Mat2 {
 	return dslutil.NewMat2(name, s, dslutil.Mat2{
 		Times:     "(%v * %v)",
 		Transform: "(%v * %v)",
 	})
 }
 
-func (s Program) NewMat3(name string) dsl.Mat3 {
+func (s stage) NewMat3(name string) dsl.Mat3 {
 	return dslutil.NewMat3(name, s, dslutil.Mat3{
 		Transform: "(%v * %v)",
 	})
 }
 
-func (s Program) NewMat4(name string) dsl.Mat4 {
+func (s stage) NewMat4(name string) dsl.Mat4 {
 	return dslutil.NewMat4(name, s, dslutil.Mat4{
 		Times:     "(%v * %v)",
 		Transform: "(%v * %v)",
 	})
 }
 
-func (s Program) NewRGB(name string) dsl.RGB {
+func (s stage) NewRGB(name string) dsl.RGB {
 	return dslutil.NewRGB(name, s, dslutil.RGB{
 		R: "%v.r", G: "%v.g", B: "%v.b",
 
@@ -180,7 +180,7 @@ func (s Program) NewRGB(name string) dsl.RGB {
 	})
 }
 
-func (s Program) NewRGBA(name string) dsl.RGBA {
+func (s stage) NewRGBA(name string) dsl.RGBA {
 	return dslutil.NewRGBA(name, s, dslutil.RGBA{
 		R: "%v.r", G: "%v.g", B: "%v.b", A: "%v.a",
 
@@ -188,25 +188,25 @@ func (s Program) NewRGBA(name string) dsl.RGBA {
 	})
 }
 
-func (s Program) NewTexture1D(name string) dsl.Texture1D {
+func (s stage) NewTexture1D(name string) dsl.Texture1D {
 	return dslutil.NewTexture1D(name, s, dslutil.Texture1D{
 		Sample: "sample1D(%v, %v)",
 	})
 }
 
-func (s Program) NewTexture2D(name string) dsl.Texture2D {
+func (s stage) NewTexture2D(name string) dsl.Texture2D {
 	return dslutil.NewTexture2D(name, s, dslutil.Texture2D{
 		Sample: "sample2D(%v, %v)",
 	})
 }
 
-func (s Program) NewTexture3D(name string) dsl.Texture3D {
+func (s stage) NewTexture3D(name string) dsl.Texture3D {
 	return dslutil.NewTexture3D(name, s, dslutil.Texture3D{
 		Sample: "sample3D(%v, %v)",
 	})
 }
 
-func (s Program) NewTextureCube(name string) dsl.TextureCube {
+func (s stage) NewTextureCube(name string) dsl.TextureCube {
 	return dslutil.NewTextureCube(name, s, dslutil.TextureCube{
 		Sample: "sampleCube(%v, %v)",
 	})

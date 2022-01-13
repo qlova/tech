@@ -16,7 +16,7 @@ easier to work with than low-level GPU drivers such as
 standardised and opionated.
 
 ## Shaders
-Shaders are written in Go using a DSL that will be translated
+Shaders are written in Go using DSL that will be translated
 into the appropriate shading language for any supported gpu drivers, currently bare-bones GLSL is supported.
 
 (Check out the source for the `gpu.Textured` type, which implements

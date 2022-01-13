@@ -1,9 +1,10 @@
 package gpu
 
 import (
-	"qlova.tech/gpu/vertex"
+	"qlova.tech/dsl"
 	"qlova.tech/mat/mat4"
 	"qlova.tech/rgb/rgba"
+	"qlova.tech/vtx"
 )
 
 // standardised uniforms/variables.
@@ -24,32 +25,27 @@ type Textured struct {
 }
 
 // Vertex function.
-func (t *Textured) Vertex(core Core) {
-	position := core.Arg.Vec4(vertex.Position)
+func (t *Textured) Vertex(core dsl.Core) {
+	position := core.In.Vec4(vtx.Position)
 
 	camera := core.Uniform.Mat4(&Camera)
 	transform := core.Get.Mat4(&Transform)
 
-	core.Main(func() {
-		core.Set.Vec4(core.Position, camera.Times(transform).Transform(position))
-	})
+	core.Set.Vec4(core.Position, camera.Times(transform).Transform(position))
 }
 
 // Fragment function.
-func (t *Textured) Fragment(core Core) {
-	f := core.New.Float
+func (t *Textured) Fragment(core dsl.Core) {
+	f := core.Float
 
-	uv := core.Arg.Vec2(vertex.UV)
-
+	uv := core.In.Vec2(vtx.UV)
 	texture := core.Get.Texture2D(&t.Texture)
 
-	core.Main(func() {
-		c := core.RGBA(texture.Sample(uv))
-		core.If(c.A.LessThan(f(0.85)), func() {
-			core.Discard()
-		})
-		core.Set.RGBA(core.Fragment, c)
+	c := core.Var.RGBA(texture.Sample(uv))
+	core.If(c.A.LessThan(f(0.85)), func() {
+		core.Discard()
 	})
+	core.Set.RGBA(core.Fragment, c)
 }
 
 // Colored is a basic program that draws a colored mesh.
@@ -60,22 +56,16 @@ type Colored struct {
 }
 
 // Vertex function.
-func (c *Colored) Vertex(core *Core) {
-	position := core.Arg.Vec4(vertex.Position)
+func (c *Colored) Vertex(core dsl.Core) {
+	position := core.In.Vec4(vtx.Position)
 
 	camera := core.Uniform.Mat4(&Camera)
 	transform := core.Get.Mat4(&Transform)
 
-	core.Main(func() {
-		core.Set.Vec4(core.Position, camera.Times(transform).Transform(position))
-	})
+	core.Set.Vec4(core.Position, camera.Times(transform).Transform(position))
 }
 
 // Fragment function.
-func (c *Colored) Fragment(core *Core) {
-	color := core.Get.RGBA(&c.Color)
-
-	core.Main(func() {
-		core.Set.RGBA(core.Fragment, color)
-	})
+func (c *Colored) Fragment(core dsl.Core) {
+	core.Set.RGBA(core.Fragment, core.Get.RGBA(&c.Color))
 }

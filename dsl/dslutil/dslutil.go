@@ -1,13 +1,78 @@
-//Package dslutil has helpful utitilies for creating DSL compilers.
+/*
+	Package dslutil has helpful utitilies for creating DSL drivers.
+
+	How to write a DSL driver
+
+	DSL shaders are nothing more than a function that directs a dsl.Core.
+	So in theory, all you need to do is write a function that produces
+	a vertex, fragment and lighting dsl.Core and configure the functions
+	attached to these cores to produce the desired output.
+
+	In practice, writing all of these functions is complex, verbose and
+	repetitive, so dslutil provides a set of helpful functions, types
+	and interfaces that reduce many common operations to format strings.
+
+	The following example is a standard way to use dslutil to build
+	a DSL driver.
+
+	Example
+
+	Let's say you want to write a driver that outputs (a made up)
+	Vendor Specific Shading Language (VSSL). So create a 'vssl' package
+	and add a Source type. The Source type will serve as a base for
+	producing VSSL source code. It should embed a State. This type
+	needs a Files() method for producing your output shader files
+	and a Cores() method for creating the cores passed to the vertex
+	and fragment shaders.
+
+		type Source struct {
+			dslutil.State
+
+			vertexShader bytes.Buffer
+			fragmentShader bytes.Buffer
+		}
+
+		func (s Source) Files() (vert, frag []byte) {
+			return s.vertexShader.Bytes(), s.fragmentShader.Bytes()
+		}
+
+		// custom values for passing to each stage
+		// for differentiation.
+		type stage struct {
+			*bytes.Buffer
+		}
+
+		func (s Source) Cores() (vert, frag dsl.Core) {
+			return core(stage{vertexShader}), core(stage{fragmentShader})
+		}
+
+		func core(s stage) {
+			//use dslutil constructors here.
+		}
+
+	The GPU driver will then be able to use your package to produce
+	VSSL so that it can be passed to the gpu.
+
+		func LoadShader(vert, frag dsl.Shader) error {
+			var source vssl.Source
+
+			v, f := source.Cores()
+			vert(v)
+			frag(f)
+
+			return driver.UploadShaderFilesToGPU(source.Files())
+		}
+
+	For a more detailed example, check out one of the existing
+	drivers.
+*/
 package dslutil
 
 import (
 	"fmt"
 	"io"
 
-	"qlova.tech/gpu/dsl"
-	"qlova.tech/gpu/internal/core"
-	"qlova.tech/gpu/vertex"
+	"qlova.tech/dsl"
 	"qlova.tech/mat/mat2"
 	"qlova.tech/mat/mat3"
 	"qlova.tech/mat/mat4"
@@ -16,6 +81,7 @@ import (
 	"qlova.tech/vec/vec2"
 	"qlova.tech/vec/vec3"
 	"qlova.tech/vec/vec4"
+	"qlova.tech/vtx"
 )
 
 // TypeSystem is a DSL type system that
@@ -49,39 +115,39 @@ type TypeSystem interface {
 // fmt.Sprintf(format, vertex.Attribute, dsl.Type)
 func Attributes(w io.Writer, sl TypeSystem, aformat, vformat string) dsl.Attributes {
 	return dsl.Attributes{
-		Bool: func(a vertex.Attribute) (t dsl.Bool) {
+		Bool: func(a vtx.Attribute) (t dsl.Bool) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewBool(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Int: func(a vertex.Attribute) (t dsl.Int) {
+		Int: func(a vtx.Attribute) (t dsl.Int) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewInt(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Uint: func(a vertex.Attribute) (t dsl.Uint) {
+		Uint: func(a vtx.Attribute) (t dsl.Uint) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewUint(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Float: func(a vertex.Attribute) (t dsl.Float) {
+		Float: func(a vtx.Attribute) (t dsl.Float) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewFloat(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Vec2: func(a vertex.Attribute) (t dsl.Vec2) {
+		Vec2: func(a vtx.Attribute) (t dsl.Vec2) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewVec2(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Vec3: func(a vertex.Attribute) (t dsl.Vec3) {
+		Vec3: func(a vtx.Attribute) (t dsl.Vec3) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewVec3(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Vec4: func(a vertex.Attribute) (t dsl.Vec4) {
+		Vec4: func(a vtx.Attribute) (t dsl.Vec4) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewVec4(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		RGB: func(a vertex.Attribute) (t dsl.RGB) {
+		RGB: func(a vtx.Attribute) (t dsl.RGB) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewRGB(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		RGBA: func(a vertex.Attribute) (t dsl.RGBA) {
+		RGBA: func(a vtx.Attribute) (t dsl.RGBA) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewRGBA(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
@@ -143,34 +209,42 @@ type Constructor struct {
 	RGBA string
 }
 
-func (s State) NewConstructor(helper Constructor) dsl.Constructor {
+func (s State) NewConstructor(ts TypeSystem, helper Constructor) dsl.Constructor {
+
+	a, b, c, d := dsl.Literals(
+		func(b bool) dsl.Bool {
+			return ts.NewBool(fmt.Sprintf(helper.Bool, b))
+		},
+		func(i int32) dsl.Int {
+			return ts.NewInt(fmt.Sprintf(helper.Int, i))
+		},
+		func(i uint32) dsl.Uint {
+			return ts.NewUint(fmt.Sprintf(helper.Uint, i))
+		},
+		func(f float32) dsl.Float {
+			return ts.NewFloat(fmt.Sprintf(helper.Float, f))
+		},
+	)
+
 	return dsl.Constructor{
-		Bool: func(b bool) dsl.Bool {
-			return s.NewBool(fmt.Sprintf(helper.Bool, b))
-		},
-		Int: func(i int) dsl.Int {
-			return s.NewInt(fmt.Sprintf(helper.Int, i))
-		},
-		Uint: func(i uint) dsl.Uint {
-			return s.NewUint(fmt.Sprintf(helper.Uint, i))
-		},
-		Float: func(f float32) dsl.Float {
-			return s.NewFloat(fmt.Sprintf(helper.Float, f))
-		},
+		Bool:  a,
+		Int:   b,
+		Uint:  c,
+		Float: d,
 		Vec2: func(x, y dsl.Float) dsl.Vec2 {
-			return s.NewVec2(fmt.Sprintf(helper.Vec2, x, y))
+			return ts.NewVec2(fmt.Sprintf(helper.Vec2, x, y))
 		},
 		Vec3: func(x, y, z dsl.Float) dsl.Vec3 {
-			return s.NewVec3(fmt.Sprintf(helper.Vec3, x, y, z))
+			return ts.NewVec3(fmt.Sprintf(helper.Vec3, x, y, z))
 		},
 		Vec4: func(x, y, z, w dsl.Float) dsl.Vec4 {
-			return s.NewVec4(fmt.Sprintf(helper.Vec4, x, y, z, w))
+			return ts.NewVec4(fmt.Sprintf(helper.Vec4, x, y, z, w))
 		},
 		RGB: func(r, g, b dsl.Float) dsl.RGB {
-			return s.NewRGB(fmt.Sprintf(helper.RGB, r, g, b))
+			return ts.NewRGB(fmt.Sprintf(helper.RGB, r, g, b))
 		},
 		RGBA: func(r, g, b, a dsl.Float) dsl.RGBA {
-			return s.NewRGBA(fmt.Sprintf(helper.RGBA, r, g, b, a))
+			return ts.NewRGBA(fmt.Sprintf(helper.RGBA, r, g, b, a))
 		},
 	}
 }
@@ -181,8 +255,6 @@ type Uniform struct {
 }
 
 type State struct {
-	TypeSystem
-
 	counts map[string]int
 	indent int
 
@@ -215,55 +287,56 @@ func (s *State) GetUniformName() string {
 	return fmt.Sprintf("uniform_%v", s.counts["uniform"])
 }
 
-func (s *State) NewDefiner(w io.Writer, format string) dsl.Definer {
+func (s *State) NewDefiner(w io.Writer, ts TypeSystem, format string) dsl.Definer {
 
 	definer := func(t dsl.Type) string {
 		var name = s.GetVariableName()
-		fmt.Fprintf(w, format, s.TypeOf(t), name, t)
+		fmt.Fprintf(w, format, ts.TypeOf(t), name, t)
 		return name
 	}
 
 	return dsl.Definer{
-		Bool:  func(b dsl.Bool) dsl.Bool { return s.NewBool(definer(b)) },
-		Int:   func(i dsl.Int) dsl.Int { return s.NewInt(definer(i)) },
-		Uint:  func(u dsl.Uint) dsl.Uint { return s.NewUint(definer(u)) },
-		Float: func(f dsl.Float) dsl.Float { return s.NewFloat(definer(f)) },
-		Vec2:  func(v dsl.Vec2) dsl.Vec2 { return s.NewVec2(definer(v)) },
-		Vec3:  func(v dsl.Vec3) dsl.Vec3 { return s.NewVec3(definer(v)) },
-		Vec4:  func(v dsl.Vec4) dsl.Vec4 { return s.NewVec4(definer(v)) },
-		Mat2:  func(m dsl.Mat2) dsl.Mat2 { return s.NewMat2(definer(m)) },
-		Mat3:  func(m dsl.Mat3) dsl.Mat3 { return s.NewMat3(definer(m)) },
-		Mat4:  func(m dsl.Mat4) dsl.Mat4 { return s.NewMat4(definer(m)) },
-		RGB:   func(r dsl.RGB) dsl.RGB { return s.NewRGB(definer(r)) },
-		RGBA:  func(r dsl.RGBA) dsl.RGBA { return s.NewRGBA(definer(r)) },
+		Bool:  func(b dsl.Bool) dsl.Bool { return ts.NewBool(definer(b)) },
+		Int:   func(i dsl.Int) dsl.Int { return ts.NewInt(definer(i)) },
+		Uint:  func(u dsl.Uint) dsl.Uint { return ts.NewUint(definer(u)) },
+		Float: func(f dsl.Float) dsl.Float { return ts.NewFloat(definer(f)) },
+		Vec2:  func(v dsl.Vec2) dsl.Vec2 { return ts.NewVec2(definer(v)) },
+		Vec3:  func(v dsl.Vec3) dsl.Vec3 { return ts.NewVec3(definer(v)) },
+		Vec4:  func(v dsl.Vec4) dsl.Vec4 { return ts.NewVec4(definer(v)) },
+		Mat2:  func(m dsl.Mat2) dsl.Mat2 { return ts.NewMat2(definer(m)) },
+		Mat3:  func(m dsl.Mat3) dsl.Mat3 { return ts.NewMat3(definer(m)) },
+		Mat4:  func(m dsl.Mat4) dsl.Mat4 { return ts.NewMat4(definer(m)) },
+		RGB:   func(r dsl.RGB) dsl.RGB { return ts.NewRGB(definer(r)) },
+		RGBA:  func(r dsl.RGBA) dsl.RGBA { return ts.NewRGBA(definer(r)) },
 	}
 }
 
-func (s *State) NewUniforms(w io.Writer, uformat, vformat string) dsl.Uniforms {
+func (s *State) NewUniforms(w io.Writer, ts TypeSystem, uformat, vformat string) dsl.Uniforms {
 
 	uniform := func(pointer interface{}, t dsl.Type) string {
 		var name = s.GetUniformName()
-		fmt.Fprintf(w, fmt.Sprintf(uformat, name, s.TypeOf(t), s.counts["uniform"]))
+		fmt.Fprintf(w, fmt.Sprintf(uformat, name, ts.TypeOf(t), s.counts["uniform"]))
 		s.Uniforms = append(s.Uniforms, Uniform{name, pointer})
 		return fmt.Sprintf(vformat, name)
 	}
 
 	return dsl.Uniforms{
-		Bool:      func(v *bool) (t dsl.Bool) { return s.NewBool(uniform(v, t)) },
-		Int:       func(v *int) (t dsl.Int) { return s.NewInt(uniform(v, t)) },
-		Uint:      func(v *uint) (t dsl.Uint) { return s.NewUint(uniform(v, t)) },
-		Float:     func(v *float32) (t dsl.Float) { return s.NewFloat(uniform(v, t)) },
-		Vec2:      func(v *vec2.Float32) (t dsl.Vec2) { return s.NewVec2(uniform(v, t)) },
-		Vec3:      func(v *vec3.Float32) (t dsl.Vec3) { return s.NewVec3(uniform(v, t)) },
-		Vec4:      func(v *vec4.Float32) (t dsl.Vec4) { return s.NewVec4(uniform(v, t)) },
-		Mat2:      func(v *mat2.Float32) (t dsl.Mat2) { return s.NewMat2(uniform(v, t)) },
-		Mat3:      func(v *mat3.Float32) (t dsl.Mat3) { return s.NewMat3(uniform(v, t)) },
-		Mat4:      func(v *mat4.Float32) (t dsl.Mat4) { return s.NewMat4(uniform(v, t)) },
-		RGB:       func(v *rgb.Color) (t dsl.RGB) { return s.NewRGB(uniform(v, t)) },
-		RGBA:      func(v *rgba.Color) (t dsl.RGBA) { return s.NewRGBA(uniform(v, t)) },
-		Texture1D: func(v *core.Texture) (t dsl.Texture1D) { return s.NewTexture1D(uniform(v, t)) },
-		Texture2D: func(v *core.Texture) (t dsl.Texture2D) { return s.NewTexture2D(uniform(v, t)) },
-		Texture3D: func(v *core.Texture) (t dsl.Texture3D) { return s.NewTexture3D(uniform(v, t)) },
+		Bool:  func(v *bool) (t dsl.Bool) { return ts.NewBool(uniform(v, t)) },
+		Int:   func(v *int32) (t dsl.Int) { return ts.NewInt(uniform(v, t)) },
+		Uint:  func(v *uint32) (t dsl.Uint) { return ts.NewUint(uniform(v, t)) },
+		Float: func(v *float32) (t dsl.Float) { return ts.NewFloat(uniform(v, t)) },
+		Vec2:  func(v *vec2.Float32) (t dsl.Vec2) { return ts.NewVec2(uniform(v, t)) },
+		Vec3:  func(v *vec3.Float32) (t dsl.Vec3) { return ts.NewVec3(uniform(v, t)) },
+		Vec4:  func(v *vec4.Float32) (t dsl.Vec4) { return ts.NewVec4(uniform(v, t)) },
+		Mat2:  func(v *mat2.Float32) (t dsl.Mat2) { return ts.NewMat2(uniform(v, t)) },
+		Mat3:  func(v *mat3.Float32) (t dsl.Mat3) { return ts.NewMat3(uniform(v, t)) },
+		Mat4:  func(v *mat4.Float32) (t dsl.Mat4) { return ts.NewMat4(uniform(v, t)) },
+		RGB:   func(v *rgb.Color) (t dsl.RGB) { return ts.NewRGB(uniform(v, t)) },
+		RGBA:  func(v *rgba.Color) (t dsl.RGBA) { return ts.NewRGBA(uniform(v, t)) },
+
+		Texture1D: func(v dsl.Texture) (t dsl.Texture1D) { return ts.NewTexture1D(uniform(v, t)) },
+		Texture2D: func(v dsl.Texture) (t dsl.Texture2D) { return ts.NewTexture2D(uniform(v, t)) },
+		Texture3D: func(v dsl.Texture) (t dsl.Texture3D) { return ts.NewTexture3D(uniform(v, t)) },
 	}
 }
 

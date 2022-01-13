@@ -2,23 +2,20 @@
 package gpu
 
 import (
-	"image/color"
 	"sync"
 
-	"qlova.tech/gpu/dsl"
-	"qlova.tech/gpu/internal/core"
-	"qlova.tech/gpu/texture"
-	"qlova.tech/gpu/vertex"
+	"qlova.tech/dsl"
+	"qlova.tech/img"
+	"qlova.tech/rgb"
+	"qlova.tech/vtx"
 )
 
 // Driver is a GPU driver that enables GPU rendering.
 type Driver struct {
-	NewFrame   func(c color.Color)
-	NewMesh    func(vertices vertex.Array, hints ...vertex.Hint) (vertex.Reader, Pointer, error)
-	NewTexture func(data texture.Data, hints ...texture.Hint) (texture.Reader, Pointer, error)
-	NewProgram func(vert, frag func(Core), hints ...Hint) (Binary, Pointer, error)
-
-	SetShader func(shader func(Core))
+	NewFrame   func(color rgb.Color)
+	NewMesh    func(vertices vtx.Array, hints ...vtx.Hint) (vtx.Reader, Pointer, error)
+	NewTexture func(image img.Data, hints ...img.Hint) (img.Reader, Pointer, error)
+	NewProgram func(vert, frag dsl.Shader, hints ...dsl.Hint) (Binary, Pointer, error)
 
 	Draw func(program, mesh Pointer)
 	Sync func()
@@ -35,16 +32,6 @@ func Register(name string, opener func() (Driver, error)) {
 	defer mutex.Unlock()
 	drivers[name] = opener
 }
-
-// Core is a processing core on the GPU and can
-// be instructed on how to render a Mesh.
-// Whenever a mesh is drawn, the gpu core will be
-// passed vertex attributes, which can then
-// adjust the attributes and produce an output.
-//
-// The core can be instructed using a GLSL-style
-// DSL. Checkout the dsl package for more info.
-type Core = dsl.Core
 
 // Pointer is a pointer to a GPU resource.
 // Drivers are free to use this as they wish.
@@ -108,45 +95,22 @@ func Draw() bool {
 // NewFrame clears the output display with the given color.
 // Until the next call to Draw, all drawing operations will
 // be shaded by the value of Shader at the time of the call.
-func NewFrame(c color.Color) {
-	driver.NewFrame(c)
-}
-
-// SetShader sets the shader used to determine the shading
-// for a fragment. By default, no shading calculation
-// is performed and the fragment will be set to the
-// output of the fragment's program. This call will have
-// take effect after the next call to gpu.Draw.
-func SetShader(shader func(Core)) {
-	driver.SetShader(shader)
+func NewFrame(color rgb.Color) {
+	driver.NewFrame(color)
 }
 
 //Mesh is a reference to a mesh uploaded to the GPU.
 type Mesh struct {
-	reader  vertex.Reader
+	reader  vtx.Reader
 	pointer Pointer
 }
 
 // NewMesh returns a new Mesh from the given vertex array and
 // vertex hints.
-func NewMesh(vertices vertex.Array, hints ...vertex.Hint) (Mesh, error) {
+func NewMesh(vertices vtx.Array, hints ...vtx.Hint) (Mesh, error) {
 	reader, pointer, err := driver.NewMesh(vertices, hints...)
 	return Mesh{reader, pointer}, err
 }
-
-// Hint is a hint that can be used to configure the
-// behaviour of the GPU when rendering.
-type Hint uint64
-
-// Hints.
-const (
-	Cull Hint = 1 << iota
-	Front
-	Back
-	Blend
-	Wireframe
-	Shaded
-)
 
 //Binary is a compiled Program.
 type Binary interface {
@@ -166,7 +130,7 @@ type Program struct {
 // once for each vertex in the mesh. The fragment function
 // is called once for each fragment in the mesh. Hints can
 // be provided to configure rendering behaviour.
-func NewProgram(vert, frag func(Core), hints ...Hint) (Program, error) {
+func NewProgram(vert, frag dsl.Shader, hints ...dsl.Hint) (Program, error) {
 	binary, pointer, err := driver.NewProgram(vert, frag, hints...)
 	return Program{binary, pointer}, err
 }
@@ -179,10 +143,15 @@ func (p Program) Draw(m Mesh) {
 }
 
 // Texture is a reference to a texture uploaded to the GPU.
-type Texture = core.Texture
+type Texture struct {
+	dsl.Texture
+
+	reader  img.Reader
+	pointer Pointer
+}
 
 // NewTexture returns a new Texture from the given texture data and hints.
-func NewTexture(data texture.Data, hints ...texture.Hint) (Texture, error) {
-	reader, pointer, err := driver.NewTexture(data, hints...)
-	return core.NewTexture(reader, core.Pointer(pointer)), err
+func NewTexture(image img.Data, hints ...img.Hint) (Texture, error) {
+	reader, pointer, err := driver.NewTexture(image, hints...)
+	return Texture{nil, reader, pointer}, err
 }

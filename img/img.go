@@ -1,4 +1,4 @@
-package texture
+package img
 
 // Hint for how the gpu should handle the texture.
 type Hint uint64
@@ -116,13 +116,13 @@ const (
 
 )
 
-// Data holds texture data.
+// Data holds image data.
 type Data interface {
 
-	// Texture returns a byte slice of texture data
+	// Image returns a byte slice of image data
 	// for the specified format. The returned format
 	// must appear in the list of formats provided to
 	// this function. Otherwise Texture should return
 	// an error.
-	Texture(...Format) (Format, []byte, error)
+	Image(...Format) (Format, []byte, error)
 }

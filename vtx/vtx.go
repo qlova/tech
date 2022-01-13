@@ -1,7 +1,7 @@
 /*
-	Package vertex provides functions for working with vertex data.
+	Package vtx provides functions for working with vertex data.
 */
-package vertex
+package vtx
 
 import (
 	"reflect"
