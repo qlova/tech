@@ -2,9 +2,9 @@ package gpu
 
 import (
 	"qlova.tech/dsl"
-	"qlova.tech/mat/mat4"
+	"qlova.tech/xyz/mat4"
 	"qlova.tech/rgb/rgba"
-	"qlova.tech/vtx"
+	"qlova.tech/xyz/vtx"
 )
 
 // standardised uniforms/variables.

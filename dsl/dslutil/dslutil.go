@@ -73,15 +73,15 @@ import (
 	"io"
 
 	"qlova.tech/dsl"
-	"qlova.tech/mat/mat2"
-	"qlova.tech/mat/mat3"
-	"qlova.tech/mat/mat4"
+	"qlova.tech/xyz/mat2"
+	"qlova.tech/xyz/mat3"
+	"qlova.tech/xyz/mat4"
 	"qlova.tech/rgb"
 	"qlova.tech/rgb/rgba"
-	"qlova.tech/vec/vec2"
-	"qlova.tech/vec/vec3"
-	"qlova.tech/vec/vec4"
-	"qlova.tech/vtx"
+	"qlova.tech/xyz/vec2"
+	"qlova.tech/xyz/vec3"
+	"qlova.tech/xyz/vec4"
+	"qlova.tech/xyz/vtx"
 )
 
 // TypeSystem is a DSL type system that

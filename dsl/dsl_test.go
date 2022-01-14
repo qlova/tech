@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"qlova.tech/dsl/driver/glsl/glsl460"
+	"qlova.tech/dsl/glsl/glsl460"
 	"qlova.tech/gpu"
 )
 

@@ -5,10 +5,10 @@ import (
 	"sync"
 
 	"qlova.tech/dsl"
-	"qlova.tech/led"
+	"qlova.tech/rgb/led"
 	"qlova.tech/rgb"
-	"qlova.tech/tex"
-	"qlova.tech/vtx"
+	"qlova.tech/rgb/tex"
+	"qlova.tech/xyz/vtx"
 )
 
 // Driver is a GPU driver that enables GPU rendering.
@@ -26,7 +26,7 @@ type Driver struct {
 
 //driver is the current driver.
 var driver Driver
-var drivers map[string]func() (Driver, error)
+var drivers = make(map[string]func() (Driver, error))
 var mutex sync.Mutex
 
 // Register a new gpu Opener.
