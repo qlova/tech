@@ -5,17 +5,17 @@ import (
 	"sync"
 
 	"qlova.tech/dsl"
-	"qlova.tech/rgb/led"
 	"qlova.tech/rgb"
-	"qlova.tech/rgb/tex"
-	"qlova.tech/xyz/vtx"
+	"qlova.tech/rgb/texture"
+	"qlova.tech/rgb/led"
+	"qlova.tech/xyz/vertex"
 )
 
 // Driver is a GPU driver that enables GPU rendering.
 type Driver struct {
 	NewFrame   func(color rgb.Color)
-	NewMesh    func(vertices vtx.Array, hints ...vtx.Hint) (vtx.Reader, Pointer, error)
-	NewTexture func(image tex.Data, hints ...tex.Hint) (tex.Reader, Pointer, error)
+	NewMesh    func(vertices vertex.Array, hints ...vertex.Hint) (vertex.Reader, Pointer, error)
+	NewTexture func(image texture.Data, hints ...texture.Hint) (texture.Reader, Pointer, error)
 	NewProgram func(vert, frag dsl.Shader, hints ...dsl.Hint) (dsl.Reader, Pointer, error)
 
 	SetLighting func(lights ...led.Light)
@@ -104,13 +104,13 @@ func NewFrame(color rgb.Color) {
 
 //Mesh is a reference to a mesh uploaded to the GPU.
 type Mesh struct {
-	reader  vtx.Reader
+	reader  vertex.Reader
 	pointer Pointer
 }
 
 // NewMesh returns a new Mesh from the given vertex array and
 // vertex hints.
-func NewMesh(vertices vtx.Array, hints ...vtx.Hint) (Mesh, error) {
+func NewMesh(vertices vertex.Array, hints ...vertex.Hint) (Mesh, error) {
 	reader, pointer, err := driver.NewMesh(vertices, hints...)
 	return Mesh{reader, pointer}, err
 }
@@ -144,12 +144,12 @@ func (p Program) Draw(m Mesh) {
 type Texture struct {
 	dsl.Texture
 
-	reader  tex.Reader
+	reader  texture.Reader
 	pointer Pointer
 }
 
 // NewTexture returns a new Texture from the given texture data and hints.
-func NewTexture(image tex.Data, hints ...tex.Hint) (Texture, error) {
+func NewTexture(image texture.Data, hints ...texture.Hint) (Texture, error) {
 	reader, pointer, err := driver.NewTexture(image, hints...)
 	return Texture{nil, reader, pointer}, err
 }

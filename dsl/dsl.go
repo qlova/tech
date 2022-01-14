@@ -46,15 +46,15 @@
 package dsl
 
 import (
+	"qlova.tech/rgb"
+	"qlova.tech/rgb/rgba"
 	"qlova.tech/xyz/mat2"
 	"qlova.tech/xyz/mat3"
 	"qlova.tech/xyz/mat4"
-	"qlova.tech/rgb"
-	"qlova.tech/rgb/rgba"
 	"qlova.tech/xyz/vec2"
 	"qlova.tech/xyz/vec3"
 	"qlova.tech/xyz/vec4"
-	"qlova.tech/xyz/vtx"
+	"qlova.tech/xyz/vertex"
 )
 
 // Hint is a hint that can be used to configure the
@@ -80,17 +80,17 @@ type Shader func(Core)
 
 // Attributes that can be passed in or out of a Shader.
 type Attributes struct {
-	Bool  func(vtx.Attribute) Bool
-	Int   func(vtx.Attribute) Int
-	Uint  func(vtx.Attribute) Uint
-	Float func(vtx.Attribute) Float
+	Bool  func(vertex.Attribute) Bool
+	Int   func(vertex.Attribute) Int
+	Uint  func(vertex.Attribute) Uint
+	Float func(vertex.Attribute) Float
 
-	RGBA func(vtx.Attribute) RGBA
-	RGB  func(vtx.Attribute) RGB
+	RGBA func(vertex.Attribute) RGBA
+	RGB  func(vertex.Attribute) RGB
 
-	Vec2 func(vtx.Attribute) Vec2
-	Vec3 func(vtx.Attribute) Vec3
-	Vec4 func(vtx.Attribute) Vec4
+	Vec2 func(vertex.Attribute) Vec2
+	Vec3 func(vertex.Attribute) Vec3
+	Vec4 func(vertex.Attribute) Vec4
 }
 
 // Texture is any struct that embeds this type.

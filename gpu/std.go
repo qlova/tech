@@ -2,9 +2,9 @@ package gpu
 
 import (
 	"qlova.tech/dsl"
-	"qlova.tech/xyz/mat4"
 	"qlova.tech/rgb/rgba"
-	"qlova.tech/xyz/vtx"
+	"qlova.tech/xyz/mat4"
+	"qlova.tech/xyz/vertex"
 )
 
 // standardised uniforms/variables.
@@ -26,7 +26,7 @@ type Textured struct {
 
 // Vertex function.
 func (t *Textured) Vertex(core dsl.Core) {
-	position := core.In.Vec4(vtx.Position)
+	position := core.In.Vec4(vertex.Position)
 
 	camera := core.Uniform.Mat4(&Camera)
 	transform := core.Get.Mat4(&Transform)
@@ -38,7 +38,7 @@ func (t *Textured) Vertex(core dsl.Core) {
 func (t *Textured) Fragment(core dsl.Core) {
 	f := core.Float
 
-	uv := core.In.Vec2(vtx.UV)
+	uv := core.In.Vec2(vertex.UV)
 	texture := core.Get.Texture2D(&t.Texture)
 
 	c := core.Var.RGBA(texture.Sample(uv))
@@ -57,7 +57,7 @@ type Colored struct {
 
 // Vertex function.
 func (c *Colored) Vertex(core dsl.Core) {
-	position := core.In.Vec4(vtx.Position)
+	position := core.In.Vec4(vertex.Position)
 
 	camera := core.Uniform.Mat4(&Camera)
 	transform := core.Get.Mat4(&Transform)

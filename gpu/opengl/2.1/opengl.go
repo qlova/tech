@@ -13,10 +13,10 @@ import (
 	"qlova.tech/dsl"
 	"qlova.tech/dsl/glsl/glsl110"
 	"qlova.tech/gpu"
-	"qlova.tech/rgb/led"
 	"qlova.tech/rgb"
-	"qlova.tech/rgb/tex"
-	"qlova.tech/xyz/vtx"
+	"qlova.tech/rgb/texture"
+	"qlova.tech/rgb/led"
+	"qlova.tech/xyz/vertex"
 )
 
 func init() {
@@ -63,7 +63,7 @@ func newFrame(color rgb.Color) {
 }
 
 type vertexAttributePointer struct {
-	attribute vtx.Attribute
+	attribute vertex.Attribute
 
 	size    int32
 	kind    uint32
@@ -136,7 +136,7 @@ var queue = make(chan func(), 256)
 
 // naive mesh loader, we make no transformation to the
 // vertex array and use it as is.
-func newMesh(vertices vtx.Array, hints ...vtx.Hint) (reader vtx.Reader, ptr gpu.Pointer, err error) {
+func newMesh(vertices vertex.Array, hints ...vertex.Hint) (reader vertex.Reader, ptr gpu.Pointer, err error) {
 	var buffers = vertices.Buffers()
 	var layout = vertices.Layout()
 
@@ -207,14 +207,14 @@ func newMesh(vertices vtx.Array, hints ...vtx.Hint) (reader vtx.Reader, ptr gpu.
 	return &index, gpu.Pointer{uint64(index), uint64(vertices.Length())}, nil
 }
 
-var supportedTextureFormats = []tex.Format{
-	tex.RGB + 8,
-	tex.RGB*tex.Alpha + 8,
+var supportedTextureFormats = []texture.Format{
+	texture.RGB + 8,
+	texture.RGB*texture.Alpha + 8,
 }
 
-func newTexture(texture tex.Data, hints ...tex.Hint) (tex.Reader, gpu.Pointer, error) {
-	width, height := texture.TextureSize()
-	format, data, err := texture.TextureData(supportedTextureFormats...)
+func newTexture(tex texture.Data, hints ...texture.Hint) (texture.Reader, gpu.Pointer, error) {
+	width, height := tex.TextureSize()
+	format, data, err := tex.TextureData(supportedTextureFormats...)
 	if err != nil {
 		return nil, gpu.Pointer{}, err
 	}
@@ -224,9 +224,9 @@ func newTexture(texture tex.Data, hints ...tex.Hint) (tex.Reader, gpu.Pointer, e
 	gl.BindTexture(gl.TEXTURE_2D, ptr)
 
 	switch format {
-	case tex.RGB + 8:
+	case texture.RGB + 8:
 		gl.TexImage2D(gl.TEXTURE_2D, 0, gl.RGB, int32(width), int32(height), 0, gl.RGB, gl.UNSIGNED_BYTE, gl.Ptr(data))
-	case tex.RGB*tex.Alpha + 8:
+	case texture.RGB*texture.Alpha + 8:
 		gl.TexImage2D(gl.TEXTURE_2D, 0, gl.RGBA, int32(width), int32(height), 0, gl.RGBA, gl.UNSIGNED_BYTE, gl.Ptr(data))
 	default:
 		return nil, gpu.Pointer{}, fmt.Errorf("unsupported texture format: %v", format)

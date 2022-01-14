@@ -1,4 +1,4 @@
-package tex
+package texture
 
 // Hint for how the gpu should handle the texture.
 type Hint uint64

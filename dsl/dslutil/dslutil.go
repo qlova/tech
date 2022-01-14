@@ -73,15 +73,15 @@ import (
 	"io"
 
 	"qlova.tech/dsl"
+	"qlova.tech/rgb"
+	"qlova.tech/rgb/rgba"
 	"qlova.tech/xyz/mat2"
 	"qlova.tech/xyz/mat3"
 	"qlova.tech/xyz/mat4"
-	"qlova.tech/rgb"
-	"qlova.tech/rgb/rgba"
 	"qlova.tech/xyz/vec2"
 	"qlova.tech/xyz/vec3"
 	"qlova.tech/xyz/vec4"
-	"qlova.tech/xyz/vtx"
+	"qlova.tech/xyz/vertex"
 )
 
 // TypeSystem is a DSL type system that
@@ -115,39 +115,39 @@ type TypeSystem interface {
 // fmt.Sprintf(format, vertex.Attribute, dsl.Type)
 func Attributes(w io.Writer, sl TypeSystem, aformat, vformat string) dsl.Attributes {
 	return dsl.Attributes{
-		Bool: func(a vtx.Attribute) (t dsl.Bool) {
+		Bool: func(a vertex.Attribute) (t dsl.Bool) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewBool(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Int: func(a vtx.Attribute) (t dsl.Int) {
+		Int: func(a vertex.Attribute) (t dsl.Int) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewInt(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Uint: func(a vtx.Attribute) (t dsl.Uint) {
+		Uint: func(a vertex.Attribute) (t dsl.Uint) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewUint(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Float: func(a vtx.Attribute) (t dsl.Float) {
+		Float: func(a vertex.Attribute) (t dsl.Float) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewFloat(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Vec2: func(a vtx.Attribute) (t dsl.Vec2) {
+		Vec2: func(a vertex.Attribute) (t dsl.Vec2) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewVec2(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Vec3: func(a vtx.Attribute) (t dsl.Vec3) {
+		Vec3: func(a vertex.Attribute) (t dsl.Vec3) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewVec3(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Vec4: func(a vtx.Attribute) (t dsl.Vec4) {
+		Vec4: func(a vertex.Attribute) (t dsl.Vec4) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewVec4(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		RGB: func(a vtx.Attribute) (t dsl.RGB) {
+		RGB: func(a vertex.Attribute) (t dsl.RGB) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewRGB(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		RGBA: func(a vtx.Attribute) (t dsl.RGBA) {
+		RGBA: func(a vertex.Attribute) (t dsl.RGBA) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewRGBA(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},

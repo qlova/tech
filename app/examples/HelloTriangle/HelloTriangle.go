@@ -8,7 +8,7 @@ import (
 	"qlova.tech/gpu"
 	"qlova.tech/rgb"
 	"qlova.tech/xyz/vec3"
-	"qlova.tech/xyz/vtx"
+	"qlova.tech/xyz/vertex"
 
 	_ "qlova.tech/gpu/opengl/2.1"
 )
@@ -21,8 +21,8 @@ type HelloTriangle struct {
 }
 
 func (hello *HelloTriangle) Load() (err error) {
-	hello.triangle, err = gpu.NewMesh(vtx.Attributes{
-		vtx.Position: vtx.Data([]vec3.Float32{
+	hello.triangle, err = gpu.NewMesh(vertex.Attributes{
+		vertex.Position: vertex.Data([]vec3.Float32{
 			{-1, -1, 0},
 			{1, -1, 0},
 			{0, 1, 0},
@@ -32,7 +32,7 @@ func (hello *HelloTriangle) Load() (err error) {
 }
 
 func (*HelloTriangle) Vertex(core dsl.Core) {
-	core.Set.Vec4(core.Position, core.In.Vec4(vtx.Position))
+	core.Set.Vec4(core.Position, core.In.Vec4(vertex.Position))
 }
 
 func (*HelloTriangle) Fragment(core dsl.Core) {
