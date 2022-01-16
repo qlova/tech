@@ -28,9 +28,7 @@ type Runtime struct {
 	systems []System
 }
 
-func Open(name string, systems ...System) error {
-	open(name)
-
+func load(systems []System) error {
 	if err := gpu.Open(); err != nil {
 		return err
 	}
@@ -57,8 +55,11 @@ func Open(name string, systems ...System) error {
 
 		systems[i] = system
 	}
+	return nil
+}
 
-	return launch(systems...)
+func Open(name string, systems ...System) error {
+	return open(name, systems...)
 }
 
 type Loader interface {

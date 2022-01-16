@@ -11,7 +11,7 @@ import (
 var window = js.Global()
 var canvas js.Value
 
-func open(name string) error {
+func open(name string, systems ...System) error {
 	window.Get("document").Set("title", name)
 
 	//create a full-window canvas.
@@ -24,10 +24,7 @@ func open(name string) error {
 	window.Get("document").Get("body").Get("style").Set("margin", "0")
 	window.Get("document").Get("body").Get("style").Set("overflow", "hidden")
 
-	return nil
-}
-
-func launch(systems ...System) error {
+	load(systems)
 
 	var close chan error
 

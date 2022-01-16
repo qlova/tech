@@ -1,31 +1,34 @@
-//go:build !js && !android
+//go:build android
 
-//Package provides an opengl 2.1 gpu driver.
+//Package provides an OpenGL ES 2.0 gpu driver.
 package opengl
 
 import (
 	"fmt"
 	"image"
+	"log"
 	"reflect"
 	"runtime"
 	"sync"
 	"sync/atomic"
 	"unsafe"
 
-	"github.com/go-gl/gl/v2.1/gl"
+	es "golang.org/x/mobile/gl"
 
 	"qlova.tech/app"
 	"qlova.tech/dsl"
 	"qlova.tech/dsl/dslutil"
-	"qlova.tech/dsl/glsl/glsl110"
+	"qlova.tech/dsl/glsl/glsl100"
 	"qlova.tech/gpu"
 	"qlova.tech/rgb"
 	"qlova.tech/xy"
 	"qlova.tech/xyz"
 )
 
+var gl es.Context
+
 func init() {
-	gpu.Register("OpenGL 2.1", func() (gpu.Driver, error) {
+	gpu.Register("OpenGL ES 2.0", func() (gpu.Driver, error) {
 		if err := open(); err != nil {
 			return gpu.Driver{}, err
 		}
@@ -63,21 +66,23 @@ func open() error {
 		return nil //if already opened, do nothing.
 	}
 
-	if err := gl.Init(); err != nil {
-		return err
+	if app.GL != nil {
+		gl = app.GL
+	} else {
+		return fmt.Errorf("no OpenGL ES 2.0 context available")
 	}
 
-	gl.Enable(gl.DEPTH_TEST)
+	gl.Enable(es.DEPTH_TEST)
 
 	atomic.StoreInt32(&opened, 1)
 	return nil
 }
 
 func newFrame(color rgb.Color) {
-	gl.Viewport(0, 0, int32(app.Width), int32(app.Height))
+	gl.Viewport(0, 0, app.Width, app.Height)
 
 	gl.ClearColor(float32(color.Red())/255, float32(color.Green())/255, float32(color.Blue())/255, 1)
-	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	gl.Clear(es.COLOR_BUFFER_BIT | es.DEPTH_BUFFER_BIT)
 }
 
 type vertexAttributePointer struct {
@@ -87,7 +92,7 @@ type vertexAttributePointer struct {
 	kind    uint32
 	norm    bool
 	stride  int32
-	pointer uint32
+	pointer es.Buffer
 }
 
 type vertexAttributeObject struct {
@@ -99,12 +104,12 @@ type vertexAttributeObject struct {
 	pointers []vertexAttributePointer
 
 	//pointers to the buffers being used.
-	buffers []uint32
+	buffers []es.Buffer
 
 	count int
 
 	indexed  bool
-	indicies uint32
+	indicies es.Buffer
 }
 
 var vaos hotswapVAOs
@@ -178,16 +183,17 @@ func newMesh(vertices xyz.Vertices, hints ...gpu.MeshHint) (unsafe.Pointer, erro
 	var layout = vertices.Layout()
 	var indicies, indexed = vertices.Indexed()
 
-	var pointers = make([]uint32, len(buffers))
-	gl.GenBuffers(int32(len(pointers)), &pointers[0])
+	var pointers = make([]es.Buffer, len(buffers))
 
 	for i, buffer := range buffers {
+		pointers[i] = gl.CreateBuffer()
+
 		if indexed && i == indicies {
-			gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, pointers[i])
-			gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, len(buffer), gl.Ptr(&buffer[0]), gl.STATIC_DRAW)
+			gl.BindBuffer(es.ELEMENT_ARRAY_BUFFER, pointers[i])
+			gl.BufferData(es.ELEMENT_ARRAY_BUFFER, buffer, es.STATIC_DRAW)
 		} else {
-			gl.BindBuffer(gl.ARRAY_BUFFER, pointers[i])
-			gl.BufferData(gl.ARRAY_BUFFER, len(buffer), gl.Ptr(&buffer[0]), gl.STATIC_DRAW)
+			gl.BindBuffer(es.ARRAY_BUFFER, pointers[i])
+			gl.BufferData(es.ARRAY_BUFFER, buffer, es.STATIC_DRAW)
 		}
 	}
 
@@ -198,21 +204,21 @@ func newMesh(vertices xyz.Vertices, hints ...gpu.MeshHint) (unsafe.Pointer, erro
 
 		switch attribute.Kind {
 		case reflect.Bool, reflect.Int8:
-			kind = gl.BYTE
+			kind = es.BYTE
 		case reflect.Uint8:
-			kind = gl.UNSIGNED_BYTE
+			kind = es.UNSIGNED_BYTE
 		case reflect.Int16:
-			kind = gl.SHORT
+			kind = es.SHORT
 		case reflect.Uint16:
-			kind = gl.UNSIGNED_SHORT
+			kind = es.UNSIGNED_SHORT
 		case reflect.Int32:
-			kind = gl.INT
+			kind = es.INT
 		case reflect.Uint32:
-			kind = gl.UNSIGNED_INT
+			kind = es.UNSIGNED_INT
 		case reflect.Float32:
-			kind = gl.FLOAT
+			kind = es.FLOAT
 		case reflect.Complex64:
-			kind = gl.FLOAT
+			kind = es.FLOAT
 			size /= 2
 		default:
 			return nil, fmt.Errorf("unsupported vertex attribute kind: %s", attribute.Kind)
@@ -248,7 +254,9 @@ func newMesh(vertices xyz.Vertices, hints ...gpu.MeshHint) (unsafe.Pointer, erro
 
 		//this needs to run on the main thread...
 		queue <- func() {
-			gl.DeleteBuffers(int32(len(buffers)), &buffers[0])
+			for _, buffer := range buffers {
+				gl.DeleteBuffer(buffer)
+			}
 		}
 
 		atomic.StoreUint32(&vaos[i].deleted, 1)
@@ -258,7 +266,7 @@ func newMesh(vertices xyz.Vertices, hints ...gpu.MeshHint) (unsafe.Pointer, erro
 }
 
 func newTexture(tex image.Image, hints ...gpu.TextureHint) (unsafe.Pointer, error) {
-	width, height := tex.Bounds().Dx(), tex.Bounds().Dy()
+	/*width, height := tex.Bounds().Dx(), tex.Bounds().Dy()
 
 	var ptr uint32
 	gl.GenTextures(1, &ptr)
@@ -275,30 +283,31 @@ func newTexture(tex image.Image, hints ...gpu.TextureHint) (unsafe.Pointer, erro
 		queue <- func() {
 			gl.DeleteTextures(1, ptr)
 		}
-	})
+	})*/
 
-	return unsafe.Pointer(&ptr), nil
+	return nil, nil
 }
 
-func compileError(shader uint32) error {
-	var logLength int32
-	gl.GetShaderiv(shader, gl.INFO_LOG_LENGTH, &logLength)
-
-	if logLength > 0 {
-		var log = make([]byte, logLength)
-		gl.GetShaderInfoLog(shader, logLength, nil, &log[0])
+func compileError(shader es.Shader) error {
+	var log = gl.GetShaderInfoLog(shader)
+	if len(log) > 0 {
 		return fmt.Errorf("%s", log)
 	}
 
 	return nil
 }
 
-var programUniforms = make(map[uint32][]dslutil.Uniform)
+type shader struct {
+	program  es.Program
+	uniforms []dslutil.Uniform
+}
 
 func newProgram(v, f dsl.Shader, hints ...gpu.ProgramHint) (unsafe.Pointer, error) {
+	var s shader
+
 	var program = gl.CreateProgram()
 
-	var source glsl110.Source
+	var source glsl100.Source
 
 	vert, frag := source.Cores()
 	v(vert)
@@ -314,22 +323,18 @@ func newProgram(v, f dsl.Shader, hints ...gpu.ProgramHint) (unsafe.Pointer, erro
 	//fmt.Println(string(vertSrc))
 	//fmt.Println(string(fragSrc))
 
-	programUniforms[program] = source.Uniforms
+	s.uniforms = source.Uniforms
 
-	var vertex = gl.CreateShader(gl.VERTEX_SHADER)
-	vsources, free := gl.Strs(string(vertSrc))
-	gl.ShaderSource(vertex, 1, vsources, nil)
+	var vertex = gl.CreateShader(es.VERTEX_SHADER)
+	gl.ShaderSource(vertex, string(vertSrc))
 	gl.CompileShader(vertex)
-	free()
 	if err := compileError(vertex); err != nil {
 		return nil, err
 	}
 
-	var fragment = gl.CreateShader(gl.FRAGMENT_SHADER)
-	fsources, free := gl.Strs(string(fragSrc))
-	gl.ShaderSource(fragment, 1, fsources, nil)
+	var fragment = gl.CreateShader(es.FRAGMENT_SHADER)
+	gl.ShaderSource(fragment, string(fragSrc))
 	gl.CompileShader(fragment)
-	free()
 	if err := compileError(fragment); err != nil {
 		return nil, err
 	}
@@ -341,35 +346,37 @@ func newProgram(v, f dsl.Shader, hints ...gpu.ProgramHint) (unsafe.Pointer, erro
 
 	gl.LinkProgram(program)
 
-	var status int32
-	gl.GetProgramiv(program, gl.LINK_STATUS, &status)
-	if status == gl.FALSE {
-		var logLength int32
-		gl.GetProgramiv(program, gl.INFO_LOG_LENGTH, &logLength)
-		if logLength > 0 {
-			var log = make([]byte, logLength)
-			gl.GetProgramInfoLog(program, logLength, nil, &log[0])
-			return nil, fmt.Errorf("%s", log)
-		}
+	var status = gl.GetProgrami(program, es.LINK_STATUS)
+	if status == es.FALSE {
+		return nil, fmt.Errorf("%s", gl.GetProgramInfoLog(program))
 	}
 
-	runtime.SetFinalizer(&program, func(program *uint32) {
+	s.program = program
+
+	runtime.SetFinalizer(&s, func(s *shader) {
+		program := s.program
 		queue <- func() {
-			gl.DeleteProgram(*program)
+			gl.DeleteProgram(program)
 		}
 	})
 
-	return unsafe.Pointer(&program), nil
+	log.Println(s)
+
+	return unsafe.Pointer(&s), nil
 }
 
 func draw(program, mesh unsafe.Pointer) {
-	gl.UseProgram(*(*uint32)(program))
+	log.Println(program)
+
+	var s = *(*shader)(program)
+
+	gl.UseProgram(s.program)
 	var vao = vaos.Read()[*(*uint32)(mesh)]
 
 	//load uniforms
-	var uniforms = programUniforms[*(*uint32)(program)]
+	var uniforms = s.uniforms
 	for _, uniform := range uniforms {
-		var location = gl.GetUniformLocation(*(*uint32)(program), gl.Str(uniform.Name+"\x00"))
+		var location = gl.GetUniformLocation(s.program, uniform.Name)
 
 		switch v := uniform.Pointer.(type) {
 		case *bool:
@@ -379,16 +386,16 @@ func draw(program, mesh unsafe.Pointer) {
 				gl.Uniform1i(location, 0)
 			}
 		case int32:
-			gl.Uniform1i(location, int32(v))
+			gl.Uniform1i(location, int(v))
 		case uint32:
-			gl.Uniform1i(location, int32(v))
+			gl.Uniform1i(location, int(v))
 		case *float32:
 			gl.Uniform1f(location, *v)
 
 		case *xy.Vector:
-			gl.Uniform2fv(location, 1, &v[0])
+			gl.Uniform2fv(location, v[:])
 		case *xyz.Vector:
-			gl.Uniform3fv(location, 1, &v[0])
+			gl.Uniform3fv(location, v[:])
 		//case *vec4.Float32:
 		//	gl.Uniform4fv(location, 1, &v[0])
 
@@ -399,35 +406,33 @@ func draw(program, mesh unsafe.Pointer) {
 				float32(v.Blue()) / 255,
 				float32(v.Alpha()) / 255,
 			}
-			gl.Uniform4fv(location, 1, &a[0])
+			gl.Uniform4fv(location, a[:])
 
 		//case *mat2.Float32:
 		//	gl.UniformMatrix2fv(location, 1, false, &v[0])
 		case *xy.Transform:
-			gl.UniformMatrix3fv(location, 1, false, &v[0])
+			gl.UniformMatrix3fv(location, v[:])
 		case *xyz.Transform:
-			gl.UniformMatrix4fv(location, 1, false, &v[0])
+			gl.UniformMatrix4fv(location, v[:])
 		}
 	}
 
 	for _, pointer := range vao.pointers {
-		if index := gl.GetAttribLocation(*(*uint32)(program), gl.Str(string(pointer.attribute+"\x00"))); index >= 0 {
-			gl.EnableVertexAttribArray(uint32(index))
-			gl.BindBuffer(gl.ARRAY_BUFFER, pointer.pointer)
-			gl.VertexAttribPointerWithOffset(uint32(index), pointer.size, pointer.kind, pointer.norm, pointer.stride, 0)
-		}
+		index := gl.GetAttribLocation(s.program, string(pointer.attribute))
+		gl.EnableVertexAttribArray(index)
+		gl.BindBuffer(es.ARRAY_BUFFER, pointer.pointer)
+		gl.VertexAttribPointer(index, int(pointer.size), es.Enum(pointer.kind), pointer.norm, int(pointer.stride), 0)
 	}
 
 	if vao.indexed {
-		gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, vao.indicies)
-		gl.DrawElementsWithOffset(gl.TRIANGLES, int32(vao.count), gl.UNSIGNED_SHORT, 0)
+		gl.BindBuffer(es.ELEMENT_ARRAY_BUFFER, vao.indicies)
+		gl.DrawElements(es.TRIANGLES, int(vao.count), es.UNSIGNED_SHORT, 0)
 	} else {
-		gl.DrawArrays(gl.TRIANGLES, 0, int32(vao.count))
+		gl.DrawArrays(es.TRIANGLES, 0, int(vao.count))
 	}
 
 	for _, pointer := range vao.pointers {
-		if index := gl.GetAttribLocation(*(*uint32)(program), gl.Str(string(pointer.attribute+"\x00"))); index >= 0 {
-			gl.DisableVertexAttribArray(uint32(index))
-		}
+		index := gl.GetAttribLocation(s.program, string(pointer.attribute))
+		gl.DisableVertexAttribArray(index)
 	}
 }

@@ -10,6 +10,7 @@ import (
 	"qlova.tech/xyz"
 
 	_ "qlova.tech/gpu/opengl/2.1"
+	_ "qlova.tech/gpu/opengl/es/2.0"
 	_ "qlova.tech/gpu/webgl/1.0"
 )
 

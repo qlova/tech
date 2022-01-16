@@ -12,7 +12,7 @@ import (
 
 var window *glfw.Window
 
-func open(name string) error {
+func open(name string, systems ...System) error {
 	runtime.LockOSThread()
 
 	err := glfw.Init()
@@ -27,10 +27,8 @@ func open(name string) error {
 
 	window.MakeContextCurrent()
 
-	return nil
-}
+	load(systems)
 
-func launch(systems ...System) error {
 	for {
 		Width, Height = window.GetSize()
 		glfw.PollEvents()
