@@ -7,8 +7,7 @@ import (
 	"qlova.tech/dsl"
 	"qlova.tech/gpu"
 	"qlova.tech/rgb"
-	"qlova.tech/xyz/vec3"
-	"qlova.tech/xyz/vertex"
+	"qlova.tech/xyz"
 
 	_ "qlova.tech/gpu/opengl/2.1"
 )
@@ -17,42 +16,40 @@ type HelloTriangle struct {
 	app.System
 	gpu.Program
 
+	color    rgb.Color
 	triangle gpu.Mesh
 }
 
 func (hello *HelloTriangle) Load() (err error) {
-	hello.triangle, err = gpu.NewMesh(vertex.Attributes{
-		vertex.Position: vertex.Data([]vec3.Float32{
+	hello.triangle, err = gpu.NewMesh(gpu.Attributes{
+		"position": gpu.Data([]xyz.Vector{
 			{-1, -1, 0},
 			{1, -1, 0},
 			{0, 1, 0},
 		}),
 	})
+	hello.color = rgb.Bytes(255, 255, 0, 255)
 	return err
 }
 
 func (*HelloTriangle) Vertex(core dsl.Core) {
-	core.Set.Vec4(core.Position, core.In.Vec4(vertex.Position))
+	core.Set.Vec3(core.Position, core.In.Vec3("position"))
 }
 
-func (*HelloTriangle) Fragment(core dsl.Core) {
-	f := core.Float
-	red := core.RGBA(f(1), f(0), f(0), f(1))
-
-	core.Set.RGBA(core.Fragment, red)
+func (hello *HelloTriangle) Fragment(core dsl.Core) {
+	core.Set.RGB(core.Fragment, core.Get.RGB(&hello.color))
 }
 
 func (hello *HelloTriangle) Update() {
-	gpu.NewFrame(rgb.New(0, 0, 0))
+	gpu.NewFrame(0)
 
 	hello.Draw(hello.triangle)
 }
 
 func main() {
-	err := app.New("Hello Triangle",
+	if err := app.Open("Hello Triangle",
 		new(HelloTriangle),
-	).Launch()
-	if err != nil {
+	); err != nil {
 		log.Fatal(err)
 	}
 }

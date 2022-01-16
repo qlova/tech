@@ -14,13 +14,13 @@ func (s stage) TypeOf(t dsl.Type) string {
 	case dsl.Int:
 		return "int"
 	case dsl.Uint:
-		return "uint"
+		return "int" //uint is not supported in glsl 110
 	case dsl.Float:
 		return "float"
 	case dsl.Vec2:
 		return "vec2"
 	case dsl.Vec3:
-		return "vec3"
+		return "vec4"
 	case dsl.Vec4:
 		return "vec4"
 	case dsl.Mat2:
@@ -30,8 +30,6 @@ func (s stage) TypeOf(t dsl.Type) string {
 	case dsl.Mat4:
 		return "mat4"
 	case dsl.RGB:
-		return "vec3"
-	case dsl.RGBA:
 		return "vec4"
 	case dsl.Texture1D:
 		return "sampler1D"
@@ -68,8 +66,8 @@ func (s stage) NewUint(name string) dsl.Uint {
 	return dslutil.NewUint(name, s, dslutil.Uint{
 		LessThan:  "(%v < %v)",
 		MoreThan:  "(%v > %v)",
-		Plus:      "(%v + %v)",
-		Minus:     "(%v - %v)",
+		Plus:      "max(0, %v + %v)",
+		Minus:     "max(0, %v - %v)",
 		Times:     "(%v * %v)",
 		DividedBy: "(%v / %v)",
 
@@ -167,21 +165,14 @@ func (s stage) NewMat3(name string) dsl.Mat3 {
 
 func (s stage) NewMat4(name string) dsl.Mat4 {
 	return dslutil.NewMat4(name, s, dslutil.Mat4{
-		Times:     "(%v * %v)",
-		Transform: "(%v * %v)",
+		Times:           "(%v * %v)",
+		Transform:       "(%v * %v)",
+		TransformNormal: "(transpose(inverse(%v)) * %v)",
 	})
 }
 
 func (s stage) NewRGB(name string) dsl.RGB {
 	return dslutil.NewRGB(name, s, dslutil.RGB{
-		R: "%v.r", G: "%v.g", B: "%v.b",
-
-		Vec3: "%v",
-	})
-}
-
-func (s stage) NewRGBA(name string) dsl.RGBA {
-	return dslutil.NewRGBA(name, s, dslutil.RGBA{
 		R: "%v.r", G: "%v.g", B: "%v.b", A: "%v.a",
 
 		Vec4: "%v",

@@ -112,8 +112,6 @@ type (
 
 		X, Y, Z Float
 
-		RGB func() RGB
-
 		Length     func() Float
 		DistanceTo func(Vec3) Float
 		Dot        func(Vec3) Float
@@ -127,7 +125,7 @@ type (
 
 		X, Y, Z, W Float
 
-		RGBA func() RGBA
+		RGB func() RGB
 
 		Length     func() Float
 		DistanceTo func(Vec4) Float
@@ -154,20 +152,13 @@ type (
 		Type
 		Value
 
-		Times     func(Mat4) Mat4
-		Transform func(Vec4) Vec4
+		Times func(Mat4) Mat4
+
+		TransformNormal func(Vec3) Vec3
+		Transform       func(Vec3) Vec3
 	}
 
 	RGB struct {
-		Type
-		Value
-
-		R, G, B Float
-
-		Vec3 func() Vec3
-	}
-
-	RGBA struct {
 		Type
 		Value
 
@@ -180,24 +171,24 @@ type (
 		Type
 		Value
 
-		Sample func(Float) RGBA
+		Sample func(Float) RGB
 	}
 	Texture2D struct {
 		Type
 		Value
 
-		Sample func(Vec2) RGBA
+		Sample func(Vec2) RGB
 	}
 	Texture3D struct {
 		Type
 		Value
 
-		Sample func(Vec3) RGBA
+		Sample func(Vec3) RGB
 	}
 	TextureCube struct {
 		Type
 		Value
 
-		Sample func(Vec3) RGBA
+		Sample func(Vec3) RGB
 	}
 )

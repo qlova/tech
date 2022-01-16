@@ -4,13 +4,17 @@ package app
 
 import (
 	"fmt"
+	"runtime"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"qlova.tech/gpu"
 )
 
 var window *glfw.Window
 
 func open(name string) error {
+	runtime.LockOSThread()
+
 	err := glfw.Init()
 	if err != nil {
 		return fmt.Errorf("could not initialise glfw: %w", err)
@@ -28,6 +32,7 @@ func open(name string) error {
 
 func launch(systems ...System) error {
 	for {
+		Width, Height = window.GetSize()
 		glfw.PollEvents()
 
 		if window.ShouldClose() {
@@ -36,12 +41,12 @@ func launch(systems ...System) error {
 			return nil
 		}
 
-		Width, Height = window.GetSize()
-
 		for _, system := range systems {
 			system.Update()
 		}
 
+		gpu.Sync()
 		window.SwapBuffers()
+		runtime.GC()
 	}
 }

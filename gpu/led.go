@@ -1,9 +1,8 @@
-//Package led provides a lighting model.
-package led
+package gpu
 
 import (
 	"qlova.tech/rgb"
-	"qlova.tech/xyz/vec3"
+	"qlova.tech/xyz"
 )
 
 // Light is a compacted representation of a
@@ -11,14 +10,14 @@ import (
 // a directional light, a point light, or a
 // spotlight.
 type Light struct {
-	Position    vec3.Float32
-	Direction   vec3.Float32
-	Attenuation vec3.Float32
+	Position    xyz.Vector
+	Direction   xyz.Vector
+	Attenuation xyz.Vector
 	Color       rgb.Color
 }
 
 // NewDirectionalLight returns a directional light.
-func NewDirectionalLight(position, direction vec3.Float32, color rgb.Color) Light {
+func NewDirectionalLight(position, direction xyz.Vector, color rgb.Color) Light {
 	return Light{
 		Position:  position,
 		Direction: direction,
@@ -27,7 +26,7 @@ func NewDirectionalLight(position, direction vec3.Float32, color rgb.Color) Ligh
 }
 
 // NewPointLight returns a point light. Attenuation values must be non-zero.
-func NewPointLight(position vec3.Float32, attenuation vec3.Float32, color rgb.Color) Light {
+func NewPointLight(position, attenuation xyz.Vector, color rgb.Color) Light {
 	return Light{
 		Position:    position,
 		Attenuation: attenuation,
@@ -36,11 +35,11 @@ func NewPointLight(position vec3.Float32, attenuation vec3.Float32, color rgb.Co
 }
 
 // NewSpotLight returns a spotlight.
-func NewSpotlight(position, direction vec3.Float32, angle float32, color rgb.Color) Light {
+func NewSpotlight(position, direction xyz.Vector, angle float32, color rgb.Color) Light {
 	return Light{
 		Position:    position,
 		Direction:   direction,
-		Attenuation: vec3.Float32{angle, 0, 0},
+		Attenuation: xyz.Vector{angle, 0, 0},
 		Color:       color,
 	}
 }

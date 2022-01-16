@@ -47,14 +47,8 @@ package dsl
 
 import (
 	"qlova.tech/rgb"
-	"qlova.tech/rgb/rgba"
-	"qlova.tech/xyz/mat2"
-	"qlova.tech/xyz/mat3"
-	"qlova.tech/xyz/mat4"
-	"qlova.tech/xyz/vec2"
-	"qlova.tech/xyz/vec3"
-	"qlova.tech/xyz/vec4"
-	"qlova.tech/xyz/vertex"
+	"qlova.tech/xy"
+	"qlova.tech/xyz"
 )
 
 // Hint is a hint that can be used to configure the
@@ -78,19 +72,20 @@ type Reader interface{}
 // process a vertex or fragment.
 type Shader func(Core)
 
+type Attribute string
+
 // Attributes that can be passed in or out of a Shader.
 type Attributes struct {
-	Bool  func(vertex.Attribute) Bool
-	Int   func(vertex.Attribute) Int
-	Uint  func(vertex.Attribute) Uint
-	Float func(vertex.Attribute) Float
+	Bool  func(Attribute) Bool
+	Int   func(Attribute) Int
+	Uint  func(Attribute) Uint
+	Float func(Attribute) Float
 
-	RGBA func(vertex.Attribute) RGBA
-	RGB  func(vertex.Attribute) RGB
+	RGB func(Attribute) RGB
 
-	Vec2 func(vertex.Attribute) Vec2
-	Vec3 func(vertex.Attribute) Vec3
-	Vec4 func(vertex.Attribute) Vec4
+	Vec2 func(Attribute) Vec2
+	Vec3 func(Attribute) Vec3
+	Vec4 func(Attribute) Vec4
 }
 
 // Texture is any struct that embeds this type.
@@ -109,16 +104,15 @@ type Uniforms struct {
 	Uint  func(*uint32) Uint
 	Float func(*float32) Float
 
-	RGBA func(*rgba.Color) RGBA
-	RGB  func(*rgb.Color) RGB
+	RGB func(*rgb.Color) RGB
 
-	Vec2 func(*vec2.Float32) Vec2
-	Vec3 func(*vec3.Float32) Vec3
-	Vec4 func(*vec4.Float32) Vec4
+	Vec2 func(*xy.Vector) Vec2
+	Vec3 func(*xyz.Vector) Vec3
+	//Vec4 func(*vec4.Float32) Vec4
 
-	Mat2 func(*mat2.Float32) Mat2
-	Mat3 func(*mat3.Float32) Mat3
-	Mat4 func(*mat4.Float32) Mat4
+	//Mat2 func(*mat2.Float32) Mat2
+	Mat3 func(*xy.Transform) Mat3
+	Mat4 func(*xyz.Transform) Mat4
 
 	Texture1D   func(Texture) Texture1D
 	Texture2D   func(Texture) Texture2D
@@ -142,8 +136,7 @@ type Definer struct {
 	Mat3 func(Mat3) Mat3
 	Mat4 func(Mat4) Mat4
 
-	RGB  func(RGB) RGB
-	RGBA func(RGBA) RGBA
+	RGB func(RGB) RGB
 }
 
 // enforcable literals.
@@ -196,8 +189,7 @@ type Constructor struct {
 	Vec3 func(x, y, z Float) Vec3
 	Vec4 func(x, y, z, w Float) Vec4
 
-	RGB  func(r, g, b Float) RGB
-	RGBA func(r, g, b, a Float) RGBA
+	RGB func(r, g, b, a Float) RGB
 }
 
 // Setter can be used to set shader values.
@@ -209,8 +201,7 @@ type Setter struct {
 	Uint  func(a, b Uint)
 	Float func(a, b Float)
 
-	RGBA func(a, b RGBA)
-	RGB  func(a, b RGB)
+	RGB func(a, b RGB)
 
 	Vec2 func(a, b Vec2)
 	Vec3 func(a, b Vec3)
@@ -246,11 +237,15 @@ type Core struct {
 	Set Setter
 
 	// Position of the vertex that the GPU will draw.
-	Position Vec4
+	Position Vec3
 
 	// Fragment color of the 'pixel' that will drawn.
 	// Can be affected by lighting and other effects.
-	Fragment RGBA
+	Fragment RGB
+
+	// Normal of the fragment that will be passed
+	// to the lighting shader.
+	Normal Vec3
 
 	// If directs the shader core to run fn if the
 	// condition is true. It returns an IfElseChain

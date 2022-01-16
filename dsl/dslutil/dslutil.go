@@ -74,14 +74,8 @@ import (
 
 	"qlova.tech/dsl"
 	"qlova.tech/rgb"
-	"qlova.tech/rgb/rgba"
-	"qlova.tech/xyz/mat2"
-	"qlova.tech/xyz/mat3"
-	"qlova.tech/xyz/mat4"
-	"qlova.tech/xyz/vec2"
-	"qlova.tech/xyz/vec3"
-	"qlova.tech/xyz/vec4"
-	"qlova.tech/xyz/vertex"
+	"qlova.tech/xy"
+	"qlova.tech/xyz"
 )
 
 // TypeSystem is a DSL type system that
@@ -103,7 +97,6 @@ type TypeSystem interface {
 	NewMat4(string) dsl.Mat4
 
 	NewRGB(string) dsl.RGB
-	NewRGBA(string) dsl.RGBA
 
 	NewTexture1D(string) dsl.Texture1D
 	NewTexture2D(string) dsl.Texture2D
@@ -115,41 +108,37 @@ type TypeSystem interface {
 // fmt.Sprintf(format, vertex.Attribute, dsl.Type)
 func Attributes(w io.Writer, sl TypeSystem, aformat, vformat string) dsl.Attributes {
 	return dsl.Attributes{
-		Bool: func(a vertex.Attribute) (t dsl.Bool) {
+		Bool: func(a dsl.Attribute) (t dsl.Bool) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewBool(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Int: func(a vertex.Attribute) (t dsl.Int) {
+		Int: func(a dsl.Attribute) (t dsl.Int) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewInt(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Uint: func(a vertex.Attribute) (t dsl.Uint) {
+		Uint: func(a dsl.Attribute) (t dsl.Uint) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewUint(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Float: func(a vertex.Attribute) (t dsl.Float) {
+		Float: func(a dsl.Attribute) (t dsl.Float) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewFloat(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Vec2: func(a vertex.Attribute) (t dsl.Vec2) {
+		Vec2: func(a dsl.Attribute) (t dsl.Vec2) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewVec2(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Vec3: func(a vertex.Attribute) (t dsl.Vec3) {
+		Vec3: func(a dsl.Attribute) (t dsl.Vec3) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewVec3(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		Vec4: func(a vertex.Attribute) (t dsl.Vec4) {
+		Vec4: func(a dsl.Attribute) (t dsl.Vec4) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewVec4(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
-		RGB: func(a vertex.Attribute) (t dsl.RGB) {
+		RGB: func(a dsl.Attribute) (t dsl.RGB) {
 			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
 			return sl.NewRGB(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
-		},
-		RGBA: func(a vertex.Attribute) (t dsl.RGBA) {
-			fmt.Fprintf(w, fmt.Sprintf(aformat, a, sl.TypeOf(t)))
-			return sl.NewRGBA(fmt.Sprintf(vformat, a, sl.TypeOf(t)))
 		},
 	}
 }
@@ -189,9 +178,6 @@ func (s State) NewSetter(w io.Writer, format string) dsl.Setter {
 		RGB: func(a, b dsl.RGB) {
 			fmt.Fprintf(w, fmt.Sprintf(format, a.Value, b.Value))
 		},
-		RGBA: func(a, b dsl.RGBA) {
-			fmt.Fprintf(w, fmt.Sprintf(format, a.Value, b.Value))
-		},
 	}
 }
 
@@ -205,8 +191,7 @@ type Constructor struct {
 	Vec3 string
 	Vec4 string
 
-	RGB  string
-	RGBA string
+	RGB string
 }
 
 func (s State) NewConstructor(ts TypeSystem, helper Constructor) dsl.Constructor {
@@ -240,11 +225,8 @@ func (s State) NewConstructor(ts TypeSystem, helper Constructor) dsl.Constructor
 		Vec4: func(x, y, z, w dsl.Float) dsl.Vec4 {
 			return ts.NewVec4(fmt.Sprintf(helper.Vec4, x, y, z, w))
 		},
-		RGB: func(r, g, b dsl.Float) dsl.RGB {
-			return ts.NewRGB(fmt.Sprintf(helper.RGB, r, g, b))
-		},
-		RGBA: func(r, g, b, a dsl.Float) dsl.RGBA {
-			return ts.NewRGBA(fmt.Sprintf(helper.RGBA, r, g, b, a))
+		RGB: func(r, g, b, a dsl.Float) dsl.RGB {
+			return ts.NewRGB(fmt.Sprintf(helper.RGB, r, g, b, a))
 		},
 	}
 }
@@ -307,7 +289,6 @@ func (s *State) NewDefiner(w io.Writer, ts TypeSystem, format string) dsl.Define
 		Mat3:  func(m dsl.Mat3) dsl.Mat3 { return ts.NewMat3(definer(m)) },
 		Mat4:  func(m dsl.Mat4) dsl.Mat4 { return ts.NewMat4(definer(m)) },
 		RGB:   func(r dsl.RGB) dsl.RGB { return ts.NewRGB(definer(r)) },
-		RGBA:  func(r dsl.RGBA) dsl.RGBA { return ts.NewRGBA(definer(r)) },
 	}
 }
 
@@ -325,14 +306,16 @@ func (s *State) NewUniforms(w io.Writer, ts TypeSystem, uformat, vformat string)
 		Int:   func(v *int32) (t dsl.Int) { return ts.NewInt(uniform(v, t)) },
 		Uint:  func(v *uint32) (t dsl.Uint) { return ts.NewUint(uniform(v, t)) },
 		Float: func(v *float32) (t dsl.Float) { return ts.NewFloat(uniform(v, t)) },
-		Vec2:  func(v *vec2.Float32) (t dsl.Vec2) { return ts.NewVec2(uniform(v, t)) },
-		Vec3:  func(v *vec3.Float32) (t dsl.Vec3) { return ts.NewVec3(uniform(v, t)) },
-		Vec4:  func(v *vec4.Float32) (t dsl.Vec4) { return ts.NewVec4(uniform(v, t)) },
-		Mat2:  func(v *mat2.Float32) (t dsl.Mat2) { return ts.NewMat2(uniform(v, t)) },
-		Mat3:  func(v *mat3.Float32) (t dsl.Mat3) { return ts.NewMat3(uniform(v, t)) },
-		Mat4:  func(v *mat4.Float32) (t dsl.Mat4) { return ts.NewMat4(uniform(v, t)) },
-		RGB:   func(v *rgb.Color) (t dsl.RGB) { return ts.NewRGB(uniform(v, t)) },
-		RGBA:  func(v *rgba.Color) (t dsl.RGBA) { return ts.NewRGBA(uniform(v, t)) },
+		Vec2:  func(v *xy.Vector) (t dsl.Vec2) { return ts.NewVec2(uniform(v, t)) },
+		Vec3:  func(v *xyz.Vector) (t dsl.Vec3) { return ts.NewVec3(uniform(v, t)) },
+
+		//Vec4:  func(v *vec4.Float32) (t dsl.Vec4) { return ts.NewVec4(uniform(v, t)) },
+		//Mat2:  func(v *mat2.Float32) (t dsl.Mat2) { return ts.NewMat2(uniform(v, t)) },
+
+		Mat3: func(v *xy.Transform) (t dsl.Mat3) { return ts.NewMat3(uniform(v, t)) },
+		Mat4: func(v *xyz.Transform) (t dsl.Mat4) { return ts.NewMat4(uniform(v, t)) },
+
+		RGB: func(v *rgb.Color) (t dsl.RGB) { return ts.NewRGB(uniform(v, t)) },
 
 		Texture1D: func(v dsl.Texture) (t dsl.Texture1D) { return ts.NewTexture1D(uniform(v, t)) },
 		Texture2D: func(v dsl.Texture) (t dsl.Texture2D) { return ts.NewTexture2D(uniform(v, t)) },
@@ -617,8 +600,6 @@ func NewVec2(name string, sl TypeSystem, helper Vec2) dsl.Vec2 {
 type Vec3 struct {
 	X, Y, Z string
 
-	RGB string
-
 	Length    string
 	Distance  string
 	Dot       string
@@ -633,10 +614,6 @@ func NewVec3(name string, sl TypeSystem, helper Vec3) dsl.Vec3 {
 		X: sl.NewFloat(fmt.Sprintf(helper.X, name)),
 		Y: sl.NewFloat(fmt.Sprintf(helper.Y, name)),
 		Z: sl.NewFloat(fmt.Sprintf(helper.Z, name)),
-
-		RGB: func() dsl.RGB {
-			return sl.NewRGB(fmt.Sprintf(helper.RGB, name))
-		},
 
 		Length: func() dsl.Float {
 			return sl.NewFloat(fmt.Sprintf(helper.Length, name))
@@ -659,7 +636,7 @@ func NewVec3(name string, sl TypeSystem, helper Vec3) dsl.Vec3 {
 type Vec4 struct {
 	X, Y, Z, W string
 
-	RGBA string
+	RGB string
 
 	Length    string
 	Distance  string
@@ -676,8 +653,8 @@ func NewVec4(name string, sl TypeSystem, helper Vec4) dsl.Vec4 {
 		Z: sl.NewFloat(fmt.Sprintf(helper.Z, name)),
 		W: sl.NewFloat(fmt.Sprintf(helper.W, name)),
 
-		RGBA: func() dsl.RGBA {
-			return sl.NewRGBA(fmt.Sprintf(helper.RGBA, name))
+		RGB: func() dsl.RGB {
+			return sl.NewRGB(fmt.Sprintf(helper.RGB, name))
 		},
 
 		Length: func() dsl.Float {
@@ -728,8 +705,9 @@ func NewMat3(name string, sl TypeSystem, helper Mat3) dsl.Mat3 {
 }
 
 type Mat4 struct {
-	Times     string
-	Transform string
+	Times           string
+	Transform       string
+	TransformNormal string
 }
 
 func NewMat4(name string, sl TypeSystem, helper Mat4) dsl.Mat4 {
@@ -739,40 +717,23 @@ func NewMat4(name string, sl TypeSystem, helper Mat4) dsl.Mat4 {
 		Times: func(to dsl.Mat4) dsl.Mat4 {
 			return sl.NewMat4(fmt.Sprintf(helper.Times, name, to.Value))
 		},
-		Transform: func(to dsl.Vec4) dsl.Vec4 {
-			return sl.NewVec4(fmt.Sprintf(helper.Transform, name, to.Value))
+		Transform: func(to dsl.Vec3) dsl.Vec3 {
+			return sl.NewVec3(fmt.Sprintf(helper.Transform, name, to.Value))
+		},
+		TransformNormal: func(to dsl.Vec3) dsl.Vec3 {
+			return sl.NewVec3(fmt.Sprintf(helper.TransformNormal, name, to.Value))
 		},
 	}
 }
 
 type RGB struct {
-	R, G, B string
-
-	Vec3 string
-}
-
-func NewRGB(name string, sl TypeSystem, helper RGB) dsl.RGB {
-	return dsl.RGB{
-		Value: dsl.Value(name),
-
-		R: sl.NewFloat(fmt.Sprintf(helper.R, name)),
-		G: sl.NewFloat(fmt.Sprintf(helper.G, name)),
-		B: sl.NewFloat(fmt.Sprintf(helper.B, name)),
-
-		Vec3: func() dsl.Vec3 {
-			return sl.NewVec3(fmt.Sprintf(helper.Vec3, name))
-		},
-	}
-}
-
-type RGBA struct {
 	R, G, B, A string
 
 	Vec4 string
 }
 
-func NewRGBA(name string, sl TypeSystem, helper RGBA) dsl.RGBA {
-	return dsl.RGBA{
+func NewRGB(name string, sl TypeSystem, helper RGB) dsl.RGB {
+	return dsl.RGB{
 		Value: dsl.Value(name),
 
 		R: sl.NewFloat(fmt.Sprintf(helper.R, name)),
@@ -794,8 +755,8 @@ func NewTexture1D(name string, sl TypeSystem, helper Texture1D) dsl.Texture1D {
 	return dsl.Texture1D{
 		Value: dsl.Value(name),
 
-		Sample: func(to dsl.Float) dsl.RGBA {
-			return sl.NewRGBA(fmt.Sprintf(helper.Sample, name, to.Value))
+		Sample: func(to dsl.Float) dsl.RGB {
+			return sl.NewRGB(fmt.Sprintf(helper.Sample, name, to.Value))
 		},
 	}
 }
@@ -808,8 +769,8 @@ func NewTexture2D(name string, sl TypeSystem, helper Texture2D) dsl.Texture2D {
 	return dsl.Texture2D{
 		Value: dsl.Value(name),
 
-		Sample: func(to dsl.Vec2) dsl.RGBA {
-			return sl.NewRGBA(fmt.Sprintf(helper.Sample, name, to.Value))
+		Sample: func(to dsl.Vec2) dsl.RGB {
+			return sl.NewRGB(fmt.Sprintf(helper.Sample, name, to.Value))
 		},
 	}
 }
@@ -822,8 +783,8 @@ func NewTexture3D(name string, sl TypeSystem, helper Texture3D) dsl.Texture3D {
 	return dsl.Texture3D{
 		Value: dsl.Value(name),
 
-		Sample: func(to dsl.Vec3) dsl.RGBA {
-			return sl.NewRGBA(fmt.Sprintf(helper.Sample, name, to.Value))
+		Sample: func(to dsl.Vec3) dsl.RGB {
+			return sl.NewRGB(fmt.Sprintf(helper.Sample, name, to.Value))
 		},
 	}
 }
@@ -836,8 +797,8 @@ func NewTextureCube(name string, sl TypeSystem, helper TextureCube) dsl.TextureC
 	return dsl.TextureCube{
 		Value: dsl.Value(name),
 
-		Sample: func(to dsl.Vec3) dsl.RGBA {
-			return sl.NewRGBA(fmt.Sprintf(helper.Sample, name, to.Value))
+		Sample: func(to dsl.Vec3) dsl.RGB {
+			return sl.NewRGB(fmt.Sprintf(helper.Sample, name, to.Value))
 		},
 	}
 }

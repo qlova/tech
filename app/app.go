@@ -28,14 +28,14 @@ type Runtime struct {
 	systems []System
 }
 
-func (runtime Runtime) Launch() error {
-	open(runtime.name)
+func Open(name string, systems ...System) error {
+	open(name)
 
 	if err := gpu.Open(); err != nil {
 		return err
 	}
 
-	for i, system := range runtime.systems {
+	for i, system := range systems {
 		if loader, ok := system.(Loader); ok {
 			if err := loader.Load(); err != nil {
 				return err
@@ -55,17 +55,10 @@ func (runtime Runtime) Launch() error {
 			}
 		}
 
-		runtime.systems[i] = system
+		systems[i] = system
 	}
 
-	return launch(runtime.systems...)
-}
-
-func New(name string, systems ...System) Runtime {
-	return Runtime{
-		name:    name,
-		systems: systems,
-	}
+	return launch(systems...)
 }
 
 type Loader interface {
