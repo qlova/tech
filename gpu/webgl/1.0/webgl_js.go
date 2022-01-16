@@ -1,7 +1,6 @@
-//go:build !js
+//go:build js
 
-//Package provides an opengl 2.1 gpu driver.
-package opengl
+package webgl
 
 import (
 	"fmt"
@@ -10,22 +9,27 @@ import (
 	"runtime"
 	"sync"
 	"sync/atomic"
+	"syscall/js"
 	"unsafe"
-
-	"github.com/go-gl/gl/v2.1/gl"
 
 	"qlova.tech/app"
 	"qlova.tech/dsl"
 	"qlova.tech/dsl/dslutil"
-	"qlova.tech/dsl/glsl/glsl110"
 	"qlova.tech/gpu"
 	"qlova.tech/rgb"
 	"qlova.tech/xy"
 	"qlova.tech/xyz"
+
+	"qlova.tech/dsl/glsl/glsl100"
 )
 
+var queue = make(chan func(), 256)
+
+var window = js.Global()
+var gl js.Value
+
 func init() {
-	gpu.Register("OpenGL 2.1", func() (gpu.Driver, error) {
+	gpu.Register("WebGL 1.0", func() (gpu.Driver, error) {
 		if err := open(); err != nil {
 			return gpu.Driver{}, err
 		}
@@ -42,7 +46,7 @@ func init() {
 
 			Draw: draw,
 			Sync: func() {
-				gl.Finish()
+				gl.Call("finish")
 				for {
 					select {
 					case fn := <-queue:
@@ -56,28 +60,28 @@ func init() {
 	})
 }
 
-var opened int32
-
 func open() error {
-	if atomic.LoadInt32(&opened) == 1 {
-		return nil //if already opened, do nothing.
+	//look for a canvas with the id "gpu"
+
+	canvas := window.Get("document").Call("getElementById", "gpu")
+	if canvas.IsNull() {
+		return fmt.Errorf("webgl: no 'gpu 'canvas found")
 	}
 
-	if err := gl.Init(); err != nil {
-		return err
+	gl = canvas.Call("getContext", "webgl")
+	if gl.IsNull() {
+		return fmt.Errorf("webgl: a webgl context could not be instantiated")
 	}
 
-	gl.Enable(gl.DEPTH_TEST)
+	gl.Call("enable", gl.Get("DEPTH_TEST"))
 
-	atomic.StoreInt32(&opened, 1)
 	return nil
 }
 
 func newFrame(color rgb.Color) {
-	gl.Viewport(0, 0, int32(app.Width), int32(app.Height))
-
-	gl.ClearColor(float32(color.Red())/255, float32(color.Green())/255, float32(color.Blue())/255, 1)
-	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	gl.Call("viewport", 0, 0, app.Width, app.Height)
+	gl.Call("clearColor", float32(color.Red())/255, float32(color.Green())/255, float32(color.Blue())/255, 1)
+	gl.Call("clear", gl.Get("COLOR_BUFFER_BIT").Int()|gl.Get("DEPTH_BUFFER_BIT").Int())
 }
 
 type vertexAttributePointer struct {
@@ -87,7 +91,7 @@ type vertexAttributePointer struct {
 	kind    uint32
 	norm    bool
 	stride  int32
-	pointer uint32
+	pointer js.Value
 }
 
 type vertexAttributeObject struct {
@@ -99,12 +103,12 @@ type vertexAttributeObject struct {
 	pointers []vertexAttributePointer
 
 	//pointers to the buffers being used.
-	buffers []uint32
+	buffers []js.Value
 
 	count int
 
 	indexed  bool
-	indicies uint32
+	indicies js.Value
 }
 
 var vaos hotswapVAOs
@@ -169,50 +173,50 @@ func (vaos *hotswapVAOs) Write(vao vertexAttributeObject) int {
 	return index
 }
 
-var queue = make(chan func(), 256)
-
-// naive mesh loader, we make no transformation to the
-// vertex array and use it as is.
 func newMesh(vertices xyz.Vertices, hints ...gpu.MeshHint) (unsafe.Pointer, error) {
 	var buffers = vertices.Buffers()
 	var layout = vertices.Layout()
 	var indicies, indexed = vertices.Indexed()
 
-	var pointers = make([]uint32, len(buffers))
-	gl.GenBuffers(int32(len(pointers)), &pointers[0])
+	var pointers = make([]js.Value, len(buffers))
 
 	for i, buffer := range buffers {
+		pointers[i] = gl.Call("createBuffer")
+
+		var jsBuffer = window.Get("Uint8Array").New(len(buffer))
+		js.CopyBytesToJS(jsBuffer, buffer)
+
 		if indexed && i == indicies {
-			gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, pointers[i])
-			gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, len(buffer), gl.Ptr(&buffer[0]), gl.STATIC_DRAW)
+			gl.Call("bindBuffer", gl.Get("ELEMENT_ARRAY_BUFFER"), pointers[i])
+			gl.Call("bufferData", gl.Get("ELEMENT_ARRAY_BUFFER"), jsBuffer, gl.Get("STATIC_DRAW"))
 		} else {
-			gl.BindBuffer(gl.ARRAY_BUFFER, pointers[i])
-			gl.BufferData(gl.ARRAY_BUFFER, len(buffer), gl.Ptr(&buffer[0]), gl.STATIC_DRAW)
+			gl.Call("bindBuffer", gl.Get("ARRAY_BUFFER"), pointers[i])
+			gl.Call("bufferData", gl.Get("ARRAY_BUFFER"), jsBuffer, gl.Get("STATIC_DRAW"))
 		}
 	}
 
 	var attributes = make([]vertexAttributePointer, len(layout))
 	for i, attribute := range layout {
-		var kind uint32
+		var kind int
 		var size = attribute.Count
 
 		switch attribute.Kind {
 		case reflect.Bool, reflect.Int8:
-			kind = gl.BYTE
+			kind = gl.Get("BYTE").Int()
 		case reflect.Uint8:
-			kind = gl.UNSIGNED_BYTE
+			kind = gl.Get("UNSIGNED_BYTE").Int()
 		case reflect.Int16:
-			kind = gl.SHORT
+			kind = gl.Get("SHORT").Int()
 		case reflect.Uint16:
-			kind = gl.UNSIGNED_SHORT
+			kind = gl.Get("UNSIGNED_SHORT").Int()
 		case reflect.Int32:
-			kind = gl.INT
+			kind = gl.Get("INT").Int()
 		case reflect.Uint32:
-			kind = gl.UNSIGNED_INT
+			kind = gl.Get("UNSIGNED_INT").Int()
 		case reflect.Float32:
-			kind = gl.FLOAT
+			kind = gl.Get("FLOAT").Int()
 		case reflect.Complex64:
-			kind = gl.FLOAT
+			kind = gl.Get("FLOAT").Int()
 			size /= 2
 		default:
 			return nil, fmt.Errorf("unsupported vertex attribute kind: %s", attribute.Kind)
@@ -221,7 +225,7 @@ func newMesh(vertices xyz.Vertices, hints ...gpu.MeshHint) (unsafe.Pointer, erro
 		attributes[i] = vertexAttributePointer{
 			attribute: dsl.Attribute(attribute.Attribute),
 			size:      int32(size),
-			kind:      kind,
+			kind:      uint32(kind),
 			norm:      true,
 			stride:    int32(attribute.Stride),
 			pointer:   pointers[i],
@@ -248,7 +252,9 @@ func newMesh(vertices xyz.Vertices, hints ...gpu.MeshHint) (unsafe.Pointer, erro
 
 		//this needs to run on the main thread...
 		queue <- func() {
-			gl.DeleteBuffers(int32(len(buffers)), &buffers[0])
+			for _, buffer := range buffers {
+				gl.Call("deleteBuffer", buffer)
+			}
 		}
 
 		atomic.StoreUint32(&vaos[i].deleted, 1)
@@ -257,48 +263,31 @@ func newMesh(vertices xyz.Vertices, hints ...gpu.MeshHint) (unsafe.Pointer, erro
 	return unsafe.Pointer(&index), nil
 }
 
-func newTexture(tex image.Image, hints ...gpu.TextureHint) (unsafe.Pointer, error) {
-	width, height := tex.Bounds().Dx(), tex.Bounds().Dy()
-
-	var ptr uint32
-	gl.GenTextures(1, &ptr)
-	gl.BindTexture(gl.TEXTURE_2D, ptr)
-
-	switch v := tex.(type) {
-	case *image.NRGBA:
-		gl.TexImage2D(gl.TEXTURE_2D, 0, gl.RGBA, int32(width), int32(height), 0, gl.RGB, gl.UNSIGNED_BYTE, gl.Ptr(v.Pix))
-	default:
-		return nil, fmt.Errorf("unsupported image type: %T", tex)
-	}
-
-	runtime.SetFinalizer(&ptr, func(ptr *uint32) {
-		queue <- func() {
-			gl.DeleteTextures(1, ptr)
-		}
-	})
-
-	return unsafe.Pointer(&ptr), nil
+func newTexture(image image.Image, hints ...gpu.TextureHint) (unsafe.Pointer, error) {
+	return nil, nil
 }
 
-func compileError(shader uint32) error {
-	var logLength int32
-	gl.GetShaderiv(shader, gl.INFO_LOG_LENGTH, &logLength)
+func compileError(shader js.Value) error {
+	var log = gl.Call("getShaderInfoLog", shader).String()
 
-	if logLength > 0 {
-		var log = make([]byte, logLength)
-		gl.GetShaderInfoLog(shader, logLength, nil, &log[0])
+	if len(log) > 0 {
 		return fmt.Errorf("%s", log)
 	}
 
 	return nil
 }
 
-var programUniforms = make(map[uint32][]dslutil.Uniform)
+type shader struct {
+	program  js.Value
+	uniforms []dslutil.Uniform
+}
 
 func newProgram(v, f dsl.Shader, hints ...gpu.ProgramHint) (unsafe.Pointer, error) {
-	var program = gl.CreateProgram()
+	var s shader
 
-	var source glsl110.Source
+	var program = gl.Call("createProgram")
+
+	var source glsl100.Source
 
 	vert, frag := source.Cores()
 	v(vert)
@@ -314,81 +303,78 @@ func newProgram(v, f dsl.Shader, hints ...gpu.ProgramHint) (unsafe.Pointer, erro
 	//fmt.Println(string(vertSrc))
 	//fmt.Println(string(fragSrc))
 
-	programUniforms[program] = source.Uniforms
+	s.uniforms = source.Uniforms
 
-	var vertex = gl.CreateShader(gl.VERTEX_SHADER)
-	vsources, free := gl.Strs(string(vertSrc))
-	gl.ShaderSource(vertex, 1, vsources, nil)
-	gl.CompileShader(vertex)
-	free()
+	var vertex = gl.Call("createShader", gl.Get("VERTEX_SHADER"))
+	gl.Call("shaderSource", vertex, string(vertSrc))
+	gl.Call("compileShader", vertex)
 	if err := compileError(vertex); err != nil {
 		return nil, err
 	}
 
-	var fragment = gl.CreateShader(gl.FRAGMENT_SHADER)
-	fsources, free := gl.Strs(string(fragSrc))
-	gl.ShaderSource(fragment, 1, fsources, nil)
-	gl.CompileShader(fragment)
-	free()
+	var fragment = gl.Call("createShader", gl.Get("FRAGMENT_SHADER"))
+	gl.Call("shaderSource", fragment, string(fragSrc))
+	gl.Call("compileShader", fragment)
 	if err := compileError(fragment); err != nil {
 		return nil, err
 	}
 
-	gl.AttachShader(program, vertex)
-	gl.AttachShader(program, fragment)
-	gl.DeleteShader(vertex)
-	gl.DeleteShader(fragment)
+	gl.Call("attachShader", program, vertex)
+	gl.Call("attachShader", program, fragment)
+	gl.Call("deleteShader", vertex)
+	gl.Call("deleteShader", fragment)
 
-	gl.LinkProgram(program)
+	gl.Call("linkProgram", program)
 
-	var status int32
-	gl.GetProgramiv(program, gl.LINK_STATUS, &status)
-	if status == gl.FALSE {
-		var logLength int32
-		gl.GetProgramiv(program, gl.INFO_LOG_LENGTH, &logLength)
-		if logLength > 0 {
-			var log = make([]byte, logLength)
-			gl.GetProgramInfoLog(program, logLength, nil, &log[0])
-			return nil, fmt.Errorf("%s", log)
-		}
+	var status = gl.Call("getProgramParameter",
+		program, gl.Get("LINK_STATUS")).Bool()
+	if !status {
+		return nil, fmt.Errorf("program link failed: %s",
+			gl.Call("getProgramInfoLog", program))
 	}
 
-	runtime.SetFinalizer(&program, func(program *uint32) {
+	runtime.SetFinalizer(&s, func(s *shader) {
+		program := s.program
 		queue <- func() {
-			gl.DeleteProgram(*program)
+			gl.Call("deleteProgram", program)
 		}
 	})
 
-	return unsafe.Pointer(&program), nil
+	s.program = program
+
+	return unsafe.Pointer(&s), nil
 }
 
 func draw(program, mesh unsafe.Pointer) {
-	gl.UseProgram(*(*uint32)(program))
-	var vao = vaos.Read()[*(*uint32)(mesh)]
+	var s = *(*shader)(program)
+	var idx = *(*uint32)(mesh)
+
+	gl.Call("useProgram", s.program)
+	var vao = vaos.Read()[idx]
 
 	//load uniforms
-	var uniforms = programUniforms[*(*uint32)(program)]
+	var uniforms = s.uniforms
 	for _, uniform := range uniforms {
-		var location = gl.GetUniformLocation(*(*uint32)(program), gl.Str(uniform.Name+"\x00"))
+		var location = gl.Call("getUniformLocation", s.program, uniform.Name)
 
 		switch v := uniform.Pointer.(type) {
 		case *bool:
 			if *v {
-				gl.Uniform1i(location, 1)
+				gl.Call("uniform1i", location, 1)
 			} else {
-				gl.Uniform1i(location, 0)
+				gl.Call("uniform1i", location, 0)
 			}
 		case int32:
-			gl.Uniform1i(location, int32(v))
+			gl.Call("uniform1i", location, int32(v))
 		case uint32:
-			gl.Uniform1i(location, int32(v))
+			gl.Call("uniform1i", location, int32(v))
 		case *float32:
-			gl.Uniform1f(location, *v)
+			gl.Call("uniform1f", location, *v)
 
 		case *xy.Vector:
-			gl.Uniform2fv(location, 1, &v[0])
+			gl.Call("uniform2f", location, v[0], v[1])
 		case *xyz.Vector:
-			gl.Uniform3fv(location, 1, &v[0])
+			gl.Call("uniform3f", location, v[0], v[1], v[2])
 		//case *vec4.Float32:
 		//	gl.Uniform4fv(location, 1, &v[0])
 
@@ -399,35 +385,39 @@ func draw(program, mesh unsafe.Pointer) {
 				float32(v.Blue()) / 255,
 				float32(v.Alpha()) / 255,
 			}
-			gl.Uniform4fv(location, 1, &a[0])
+			gl.Call("uniform4f", location, a[0], a[1], a[2], a[3])
 
 		//case *mat2.Float32:
 		//	gl.UniformMatrix2fv(location, 1, false, &v[0])
 		case *xy.Transform:
-			gl.UniformMatrix3fv(location, 1, false, &v[0])
+			gl.Call("uniformMatrix3fv", location, false, v)
 		case *xyz.Transform:
-			gl.UniformMatrix4fv(location, 1, false, &v[0])
+			var array = js.Global().Get("Float32Array").New(16)
+			for i := 0; i < 16; i++ {
+				array.SetIndex(i, v[i])
+			}
+			gl.Call("uniformMatrix4fv", location, false, array)
 		}
 	}
 
 	for _, pointer := range vao.pointers {
-		if index := gl.GetAttribLocation(*(*uint32)(program), gl.Str(string(pointer.attribute+"\x00"))); index >= 0 {
-			gl.EnableVertexAttribArray(uint32(index))
-			gl.BindBuffer(gl.ARRAY_BUFFER, pointer.pointer)
-			gl.VertexAttribPointerWithOffset(uint32(index), pointer.size, pointer.kind, pointer.norm, pointer.stride, 0)
+		if index := gl.Call("getAttribLocation", s.program, string(pointer.attribute)).Int(); index >= 0 {
+			gl.Call("enableVertexAttribArray", uint32(index))
+			gl.Call("bindBuffer", gl.Get("ARRAY_BUFFER"), pointer.pointer)
+			gl.Call("vertexAttribPointer", uint32(index), pointer.size, pointer.kind, pointer.norm, pointer.stride, 0)
 		}
 	}
 
 	if vao.indexed {
-		gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, vao.indicies)
-		gl.DrawElementsWithOffset(gl.TRIANGLES, int32(vao.count), gl.UNSIGNED_SHORT, 0)
+		gl.Call("bindBuffer", gl.Get("ELEMENT_ARRAY_BUFFER"), vao.indicies)
+		gl.Call("drawElements", gl.Get("TRIANGLES"), int32(vao.count), gl.Get("UNSIGNED_SHORT"), 0)
 	} else {
-		gl.DrawArrays(gl.TRIANGLES, 0, int32(vao.count))
+		gl.Call("drawArrays", gl.Get("TRIANGLES"), 0, int32(vao.count))
 	}
 
 	for _, pointer := range vao.pointers {
-		if index := gl.GetAttribLocation(*(*uint32)(program), gl.Str(string(pointer.attribute+"\x00"))); index >= 0 {
-			gl.DisableVertexAttribArray(uint32(index))
+		if index := gl.Call("getAttribLocation", s.program, string(pointer.attribute)).Int(); index >= 0 {
+			gl.Call("disableVertexAttribArray", uint32(index))
 		}
 	}
 }

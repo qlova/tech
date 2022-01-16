@@ -78,8 +78,8 @@ func (p *Source) Files() (vert []byte, frag []byte, err error) {
 
 	frag = append(frag, p.fragmentHead.Bytes()...)
 	frag = append(frag, "\nvoid main() {\n"...)
-	frag = append(frag, "vec4 lighting_albedo;\n"...)
-	frag = append(frag, "vec4 lighting_normal;\n"...)
+	frag = append(frag, "vec4 lighting_albedo = vec4(0);\n"...)
+	frag = append(frag, "vec4 lighting_normal = vec4(0,0,-1,0);\n"...)
 	frag = append(frag, p.fragmentBody.Bytes()...)
 
 	//Basic lighting shader.
