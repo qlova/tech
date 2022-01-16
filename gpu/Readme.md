@@ -1,23 +1,9 @@
 # GPU
-PLEASE NOTE: this package has recently gone through a complete redesign and the opengl driver needs
-to be rewritten.
-
-A high-level Go module for high-performance GPU operations.
-This package currently is being developed against OpenGL 4.6 
-\+ `ARB_bindless_texture`, however this package 
-has been built so that other GPU drivers can be developed.
-
-This package aims to be as performant as possible by
-minimizing the number of C drawcalls being made (multidraw 
-indirect) and aims to use cache-friendly data structures and 
-patterns. At the same-time, this package is meant to be 
-easier to work with than low-level GPU drivers such as 
-`OpenGL`/`Vulkan`. Common 3D workflows are
-standardised and opionated.
+A high-level Go module for cross-platform GPU operations.
 
 ## Shaders
 Shaders are written in Go using DSL that will be translated
-into the appropriate shading language for any supported gpu drivers, currently bare-bones GLSL is supported.
+into the appropriate shading language for any supported gpu drivers, currently bare-bones GLSL (100/110) is supported.
 
 (Check out the source for the `gpu.Textured` type, which implements
 a basic texturing shader)
@@ -29,8 +15,7 @@ Things that we would love to see in the future with this module:
 
 * Vulkan driver
 * Order-independent transparency
-* WebGL/WebGPU driver
-* OpenGLES driver
+* WebGPU driver
 * GPU Skeletal Animations
 * CPU/GPU Frustum Culling
 * Proper shadow rendering
