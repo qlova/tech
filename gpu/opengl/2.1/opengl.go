@@ -386,7 +386,7 @@ func draw(program, mesh unsafe.Pointer) {
 			gl.Uniform1f(location, *v)
 
 		case *xy.Vector:
-			gl.Uniform2fv(location, 1, &v[0])
+			gl.Uniform2fv(location, 1, &v.Array()[0])
 		case *xyz.Vector:
 			gl.Uniform3fv(location, 1, &v[0])
 		//case *vec4.Float32:
@@ -404,7 +404,7 @@ func draw(program, mesh unsafe.Pointer) {
 		//case *mat2.Float32:
 		//	gl.UniformMatrix2fv(location, 1, false, &v[0])
 		case *xy.Transform:
-			gl.UniformMatrix3fv(location, 1, false, &v[0])
+			gl.UniformMatrix3fv(location, 1, false, &v.Array()[0])
 		case *xyz.Transform:
 			gl.UniformMatrix4fv(location, 1, false, &v[0])
 		}
