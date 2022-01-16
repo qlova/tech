@@ -309,8 +309,8 @@ func newProgram(v, f dsl.Shader, hints ...gpu.ProgramHint) (unsafe.Pointer, erro
 	vertSrc = append(vertSrc, 0)
 	fragSrc = append(fragSrc, 0)
 
-	fmt.Println(string(vertSrc))
-	fmt.Println(string(fragSrc))
+	//fmt.Println(string(vertSrc))
+	//fmt.Println(string(fragSrc))
 
 	programUniforms[program] = source.Uniforms
 

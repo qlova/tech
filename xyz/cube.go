@@ -1,7 +1,6 @@
 package xyz
 
 import (
-	"fmt"
 	"reflect"
 
 	"qlova.tech/xy"
@@ -142,8 +141,6 @@ func newSegmentedBox(width, height, length float32, widthSegments, heightSegment
 	buildPlane(x, z, 1, -1, width, length, -hHalf, 3)  // ny
 	buildPlane(x, y, 1, -1, width, height, lHalf, 4)   // pz
 	buildPlane(x, y, -1, -1, width, height, -lHalf, 5) // nz
-
-	fmt.Println(len(box.indices))
 
 	return box
 }
