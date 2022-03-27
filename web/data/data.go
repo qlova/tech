@@ -15,12 +15,10 @@ import (
 	"qlova.tech/web/tree"
 )
 
-type specialPath string
-
-const (
-	Value  specialPath = "..v"
-	Index  specialPath = "..i"
-	Offset specialPath = "..o"
+var (
+	Value = new(any)
+	Index = new(int)
+	Offse = new(int)
 )
 
 type Patch struct{}
@@ -78,8 +76,13 @@ func Use(data any, seed tree.Seed) any {
 }
 
 var paths = map[any]string{
-	Index: "..i",
-	Value: "..v",
+	Index: "..index",
+	Value: "..value",
+}
+
+var values = map[any]string{
+	Index: "this.index",
+	Value: "this.value",
 }
 
 func register(value reflect.Value, path string) {
@@ -90,7 +93,7 @@ func register(value reflect.Value, path string) {
 		}
 	}
 	key := value.Addr().Interface()
-	paths[key] = path
+	paths[key] = strings.ToLower(path)
 }
 
 // Register the value, so that field
@@ -117,6 +120,13 @@ func PathOf(value any) string {
 	return paths[value]
 }
 
+func ValueOf(value any) string {
+	if v, ok := values[value]; ok {
+		return v
+	}
+	return "data.get('" + PathOf(value) + "')"
+}
+
 func View(data any) html.Attribute {
 	if data == nil {
 		return html.Attr("data-view", "..")
@@ -125,7 +135,7 @@ func View(data any) html.Attribute {
 }
 
 func Scan(data any) html.Attribute {
-	return html.Attr("oninput", fmt.Sprintf("data.set('%s', this.value);", PathOf(data)))
+	return html.Attr("oninput", fmt.Sprintf("data.edit('%s', this.value);", PathOf(data)))
 }
 
 func Sync(data any) []any {
@@ -143,6 +153,9 @@ func when(condition Condition, args ...any) []any {
 		}
 	}
 
+	var hasAttr bool
+	var dataArgs = html.Attr("data-args", strings.Join(condition.args, ","))
+
 	for i, arg := range args {
 		if renderer, ok := arg.(attributes.Renderer); ok {
 			attr := renderer.RenderAttr()
@@ -153,8 +166,18 @@ func when(condition Condition, args ...any) []any {
 				a += html.Attribute(fmt.Sprintf("=%v", value))
 			}
 			args[i] = a
+			hasAttr = true
+		}
+
+		if node, ok := arg.(tree.Node); ok {
+			args[i] = append(node, html.Attribute("hidden"), html.Attribute(condition.attr+"-hidden"), dataArgs)
 		}
 	}
+
+	if hasAttr {
+		args = append(args, dataArgs)
+	}
+
 	return args
 }
 
@@ -186,7 +209,7 @@ func When(ptr any, args ...any) []any {
 		cond = notZero(ptr)
 	}
 
-	return append(when(cond, args...), html.Attr("data-args", strings.Join(cond.args, " ")))
+	return when(cond, args...)
 }
 
 func Echo(format string, args ...any) []any {
@@ -213,5 +236,9 @@ func Feed(ptr any, args ...any) tree.Node {
 }
 
 func Push[T any](slice *[]T, value *T) js.String {
-	return js.String(fmt.Sprintf("data.push('%v', data.get('%v'));", PathOf(slice), PathOf(value)))
+	return js.String(fmt.Sprintf("data.push('%v', %v);", PathOf(slice), ValueOf(value)))
+}
+
+func Pull[T any](slice *[]T, index *int) js.String {
+	return js.String(fmt.Sprintf("data.pull('%v', %v);", PathOf(slice), ValueOf(index)))
 }

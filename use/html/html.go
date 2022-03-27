@@ -70,6 +70,16 @@ func New(args ...any) tree.Node {
 	return append(args, Tag("html"))
 }
 
+func get[T any](node tree.Node) T {
+	var empty T
+	for _, arg := range node {
+		if v, ok := arg.(T); ok {
+			return v
+		}
+	}
+	return empty
+}
+
 func renderAttributes(nodes []any, s *strings.Builder) {
 	for _, arg := range nodes {
 		if v, ok := arg.(attributes.Renderer); ok {
@@ -82,14 +92,23 @@ func renderAttributes(nodes []any, s *strings.Builder) {
 	}
 }
 
-func get[T any](node tree.Node) T {
-	var empty T
-	for _, arg := range node {
-		if v, ok := arg.(T); ok {
-			return v
+func renderChildren(nodes []any, s *strings.Builder) {
+	raw := get[String](nodes)
+	if raw != "" {
+		s.WriteString(string(raw))
+	}
+
+	for _, arg := range nodes {
+		if v, ok := arg.(tree.Node); ok {
+			s.WriteString(string(Render(v)))
+		}
+		if v, ok := arg.(Renderer); ok {
+			s.Write(v.RenderHTML())
+		}
+		if v, ok := arg.([]any); ok {
+			renderChildren(v, s)
 		}
 	}
-	return empty
 }
 
 func Render(html tree.Node) String {
@@ -112,20 +131,7 @@ func Render(html tree.Node) String {
 	s.WriteByte('>')
 
 	if !isVoid {
-		raw := get[String](html)
-		if raw != "" {
-			s.WriteString(string(raw))
-		}
-
-		for _, arg := range html {
-			if v, ok := arg.(tree.Node); ok {
-				s.WriteString(string(Render(v)))
-			}
-			if v, ok := arg.(Renderer); ok {
-				s.Write(v.RenderHTML())
-			}
-		}
-
+		renderChildren(html, &s)
 		s.WriteByte('<')
 		s.WriteByte('/')
 		s.WriteString(string(tag))

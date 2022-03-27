@@ -3,13 +3,9 @@ page.goto = function (name) {
     var page = document.querySelector('[data-type="' + name + '"]');
     if (page) {
         document.querySelector('main').replaceChildren(page.content.cloneNode(true));
-        history.pushState({}, "", `/`+name);
+        history.pushState({}, "", `/` + name);
         data.sync();
     }
-}
-
-title = function (s) {
-    return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 data = {};
@@ -17,7 +13,7 @@ data.root = {};
 data.load = function () {
     var root = localStorage.getItem('data');
     if (root) {
-        data.set("", JSON.parse(root));
+        data.edit("", JSON.parse(root));
     } else {
         ajax.get("")
     }
@@ -36,9 +32,6 @@ data.get = function (path) {
 
     let data = window.data.root;
     for (let field of path.split('.')) {
-        if (!(field in data) && title(field) in data) {
-            field = title(field);
-        }
         if (!(field in data)) {
             console.log(data);
             console.error(`${field} not found in ${path}`);
@@ -48,29 +41,52 @@ data.get = function (path) {
     }
     return data;
 }
-data.set = function (path, value) {
-    if (path === "") {
-        window.data.root = value;
-        data.sync();
-        data.save();
+data.edit = function (path, value) {
+    if (typeof value == 'object' && !Array.isArray(value) && value != null) {
+        if (path != "") {
+            path += ".";
+        }
+        for (let key in value) {
+            data.edit(path + key.toLowerCase(), value[key]);
+        }
+        data.sync(path.slice(0, -1));
         return;
     }
-    let split = path.split('.')
-    if (split.length == 1) {
-        data.root[split[0]] = value;
-    } else {
-        let base = split.slice(0, -1).join('.');
-        data.get(base)[split[split.length - 1]] = value;
+
+    let head = data.root;
+    let keys = path.split('.');
+    for (let i = 0; i < keys.length - 1; i++) {
+        let key = keys[i];
+        if (key in head) {
+            head = head[key];
+        } else {
+            head = head[key] = {};
+        }
     }
+    head[keys[keys.length - 1]] = value;
+
     data.sync(path);
     data.save();
 }
 data.push = function (path, value) {
     let slice = data.get(path);
     if (!slice) {
-        data.set(path, [value]);
+        data.edit(path, [value]);
     } else {
         slice.push(value);
+    }
+    data.sync(path);
+    data.save();
+}
+data.pull = function (path, index) {
+    let slice = data.get(path);
+    if (!slice) {
+        return;
+    } else {
+        slice.splice(index - 1, 1);
+        if (slice.length == 0) {
+            data.edit(path, null);
+        }
     }
     data.sync(path);
     data.save();
@@ -90,16 +106,19 @@ data.feed = function (path) {
 
         let list = data.get(feed.dataset.feed);
         if (!list) {
+            feed.length = 0;
+            feed.innerHTML = "";
             continue;
         }
 
+
         if (feed.length == list.length) {
-            return; //TODO refresh
+            return;
         }
         feed.innerHTML = "";
 
         for (let i = 0; i < list.length; i++) {
-            let item = feed.dataset.feed+"."+i;
+            let item = feed.dataset.feed + "." + i;
 
             for (let j = 0; j < feed.template.length; j++) {
                 let element = feed.template[j].cloneNode(true);
@@ -111,20 +130,21 @@ data.feed = function (path) {
                         case 'view':
                         case 'args':
                         case 'scan':
-                            element.dataset[name] = element.dataset[name].replace('..v', item)
-                            element.dataset[name] = element.dataset[name].replace('..o', i)
-                            element.dataset[name] = element.dataset[name].replace('..i', i+1)
+                            element.dataset[name] = element.dataset[name].replace('..value', item)
+                            element.dataset[name] = element.dataset[name].replace('..index', i + 1)
                     }
-    
-                    let rename = name.replace('..v', item);
-                    rename = rename.replace('..o', i);
-                    rename = rename.replace('..i', i+1);
+
+                    let rename = name.replace('..value', item);
+                    rename = rename.replace('..index', i + 1);
                     if (rename != name) {
                         element.dataset[rename] = element.dataset[name];
                         delete element.dataset[name];
                     }
+
+                    element.index = i + 1;
+                    element.value = item;
                 }
-    
+
                 data.calc(element);
                 feed.appendChild(element);
             }
@@ -169,22 +189,19 @@ data.calc = function (element) {
     let change = function (condition, element, attr, value) {
         let backup = "backup:" + attr;
 
-        if (!element.dataset[backup] && !(backup + ":0" in element.dataset)) {
+        if (!(backup in element.dataset) && !(backup + ":0" in element.dataset)) {
             if (element.hasAttribute(attr)) {
                 element.dataset[backup] = element.getAttribute(attr);
             } else {
                 element.dataset[backup + ":0"] = "";
             }
         }
+
         if (condition) {
-            element.setAttribute(attr, value);
-        } else {
-            if (backup in element.dataset) {
-                element.setAttribute(attr, element.dataset[backup]);
-                delete element.dataset[backup];
-            } else if (backup + ":0" in element.dataset) {
+            if (value == null) {
                 element.removeAttribute(attr);
-                delete element.dataset[backup + ":0"];
+            } else {
+                element.setAttribute(attr, value);
             }
         }
     }
@@ -201,6 +218,7 @@ data.calc = function (element) {
         element.innerText = text;
     }
 
+    let touching = {};
     for (let name in element.dataset) {
         if (name.startsWith('when:')) {
             let split = name.substring(5).split(':');
@@ -211,6 +229,13 @@ data.calc = function (element) {
             let args = split.slice(1, split.length - 1);
             let attr = split[split.length - 1];
             let condition = false;
+            let value = element.dataset[name];
+
+            if (attr.charAt(0).toLowerCase() !== attr.charAt(0)) {
+                attr = attr.toLowerCase();
+                value = null;
+            }
+            
 
             if (args.length > 0) {
                 if (args[0] == '0') {
@@ -221,7 +246,28 @@ data.calc = function (element) {
             } else {
                 condition = Boolean(data.get(path));
             }
-            change(condition, element, attr, element.dataset[name]);
+
+            //console.log(condition, path, args, attr, value);
+            change(condition, element, attr, value);
+            if (condition) {
+                touching[attr] = true;
+            } else if (!(attr in touching)) {
+                touching[attr] = false;
+            }
+        }
+    }
+    for (let attr in touching) {
+        if (touching[attr]) {
+            continue;
+        }
+        let backup = "backup:" + attr;
+
+        if (backup in element.dataset) {
+            element.setAttribute(attr, element.getAttribute["data-"+backup]);
+            delete element.dataset[backup];
+        } else if (backup + ":0" in element.dataset) {
+            element.removeAttribute(attr);
+            delete element.dataset[backup + ":0"];
         }
     }
 }
@@ -232,7 +278,7 @@ ajax.get = function (pointer) {
     xhr.open('GET', "/data/" + pointer, true);
     xhr.onload = function () {
         if (xhr.status == 200) {
-            data.set(pointer, JSON.parse(xhr.responseText));
+            data.edit(pointer, JSON.parse(xhr.responseText));
             data.sync();
         }
     };
@@ -243,7 +289,7 @@ ajax.search = function (pointer) {
     xhr.open('SEARCH', "/data/" + pointer, true);
     xhr.onload = function () {
         if (xhr.status == 200) {
-            data.set(pointer, JSON.parse(xhr.responseText));
+            data.edit(pointer, JSON.parse(xhr.responseText));
             data.sync();
         }
     };
@@ -255,7 +301,7 @@ ajax.post = function (pointer) {
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.onload = function () {
         if (xhr.status == 200) {
-            data.set(pointer, JSON.parse(xhr.responseText));
+            data.edit(pointer, JSON.parse(xhr.responseText));
             data.sync();
         }
     };

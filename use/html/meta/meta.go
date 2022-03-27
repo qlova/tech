@@ -195,7 +195,7 @@ type Viewport struct {
 	// Defines the minimum zoom level. It must be smaller or equal to the
 	// maximum-scale or the behavior is undefined. Browser settings can
 	// ignore this rule and iOS10+ ignores it by default.
-	MinumumScale float64
+	MinimumScale float64
 
 	// If set to false, the user is not able to zoom in the webpage.
 	// Browser settings can ignore this rule, and iOS10+ ignores it by default.
@@ -227,8 +227,8 @@ func (v Viewport) RenderHTML() []byte {
 	if v.MaximumScale > 0 {
 		buf.WriteString("maximum-scale=" + strconv.FormatFloat(v.MaximumScale, 'f', -1, 64) + ",")
 	}
-	if v.MinumumScale > 0 {
-		buf.WriteString("minimum-scale=" + strconv.FormatFloat(v.MinumumScale, 'f', -1, 64) + ",")
+	if v.MinimumScale > 0 {
+		buf.WriteString("minimum-scale=" + strconv.FormatFloat(v.MinimumScale, 'f', -1, 64) + ",")
 	}
 	if !v.UserScalable {
 		buf.WriteString("user-scalable=no,")

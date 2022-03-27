@@ -14,6 +14,7 @@ import (
 	"qlova.tech/use/html"
 	"qlova.tech/use/html/body"
 	"qlova.tech/use/html/head"
+	"qlova.tech/use/html/meta"
 	"qlova.tech/use/html/script"
 	"qlova.tech/use/html/template"
 	"qlova.tech/use/html/title"
@@ -122,6 +123,13 @@ func Open(root any) error {
 	var document = html.Render(html.New(
 		head.New(
 			title.Set(name),
+			meta.Viewport{
+				DeviceWidth: true,
+
+				InitialScale: 1,
+				MinimumScale: 1,
+				MaximumScale: 5,
+			},
 			script.New(
 				script.Source("/index.js"),
 			),
