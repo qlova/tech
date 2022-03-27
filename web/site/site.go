@@ -111,27 +111,25 @@ func Open(root tree.Renderer) error {
 	))
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/" {
-			w.Header().Set("Content-Type", "text/html")
-			fmt.Fprint(w, document)
-		} else {
-			if r.URL.Path == "/index.js" {
-				w.Header().Set("Content-Type", "application/javascript")
-				fmt.Fprint(w, js)
-				return
-			}
-
-			if r.URL.Path == "/data" || r.URL.Path == "/data/" {
-				w.Header().Set("Content-Type", "application/json")
-				fmt.Fprint(w, string(b))
-				return
-			}
-
-			if handler, ok := handlers[r.URL.Path]; ok {
-				handler.ServeHTTP(w, r)
-				return
-			}
+		if r.URL.Path == "/index.js" {
+			w.Header().Set("Content-Type", "application/javascript")
+			fmt.Fprint(w, js)
+			return
 		}
+
+		if r.URL.Path == "/data" || r.URL.Path == "/data/" {
+			w.Header().Set("Content-Type", "application/json")
+			fmt.Fprint(w, string(b))
+			return
+		}
+
+		if handler, ok := handlers[r.URL.Path]; ok {
+			handler.ServeHTTP(w, r)
+			return
+		}
+
+		w.Header().Set("Content-Type", "text/html")
+		fmt.Fprint(w, document)
 	})
 
 	return listenAndServe(name, handler)
