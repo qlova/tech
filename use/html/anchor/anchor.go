@@ -17,9 +17,9 @@ package anchor
 import (
 	"strings"
 
-	"qlova.tech/new/tree"
 	"qlova.tech/use/html"
 	"qlova.tech/use/html/link"
+	"qlova.tech/web/tree"
 )
 
 // Tag is the html <a> tag.

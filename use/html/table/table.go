@@ -11,8 +11,8 @@
 package table
 
 import (
-	"qlova.tech/new/tree"
 	"qlova.tech/use/html"
+	"qlova.tech/web/tree"
 )
 
 // Tag is the html <table> tag.

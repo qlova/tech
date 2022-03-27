@@ -10,9 +10,9 @@
 package body
 
 import (
-	"qlova.tech/new/tree"
 	"qlova.tech/use/html"
 	"qlova.tech/use/js"
+	"qlova.tech/web/tree"
 )
 
 // Tag is the html <body> tag.

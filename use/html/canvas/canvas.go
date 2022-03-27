@@ -12,8 +12,8 @@ package canvas
 import (
 	"fmt"
 
-	"qlova.tech/new/tree"
 	"qlova.tech/use/html"
+	"qlova.tech/web/tree"
 )
 
 // Tag is the html <canvas> tag.

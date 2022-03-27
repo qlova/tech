@@ -12,9 +12,8 @@
 package script
 
 import (
-	"qlova.tech/new/tree"
 	"qlova.tech/use/html"
-	"qlova.tech/use/js"
+	"qlova.tech/web/tree"
 )
 
 // Tag is the html <script> tag.
@@ -22,12 +21,6 @@ const Tag = html.Tag("script")
 
 // New returns a <script> html tree node.
 func New(args ...any) tree.Node {
-	for i, arg := range args {
-		if v, ok := arg.(string); ok {
-			args[i] = js.String(v)
-		}
-	}
-
 	return html.New(append(args, Tag)...)
 }
 

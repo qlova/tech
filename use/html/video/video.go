@@ -28,9 +28,9 @@ package video
 import (
 	"fmt"
 
-	"qlova.tech/new/tree"
 	"qlova.tech/use/html"
 	"qlova.tech/use/html/attributes"
+	"qlova.tech/web/tree"
 )
 
 // Tag is the html <video> tag.

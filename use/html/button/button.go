@@ -17,9 +17,12 @@
 package button
 
 import (
-	"qlova.tech/new/tree"
+	"strings"
+
 	"qlova.tech/use/html"
 	"qlova.tech/use/html/link"
+	"qlova.tech/use/js"
+	"qlova.tech/web/tree"
 )
 
 // Tag is the html <button> tag.
@@ -27,11 +30,23 @@ const Tag = html.Tag("button")
 
 // New returns an html <button> tree node.
 func New(args ...any) tree.Node {
+	var scripts []js.Renderer
+	for _, arg := range args {
+		if script, ok := arg.(js.Renderer); ok {
+			scripts = append(scripts, script)
+		}
+	}
+	args = append(args, OnClick(scripts...))
+
 	return html.New(append(args, Tag)...)
 }
 
-func OnClick(actions ...any) html.Attribute {
-	return html.Attr("onclick", "")
+func OnClick(actions ...js.Renderer) html.Attribute {
+	var s []string
+	for _, action := range actions {
+		s = append(s, string(action.RenderJS()))
+	}
+	return html.Attr("onclick", strings.Join(s, ";"))
 }
 
 const (

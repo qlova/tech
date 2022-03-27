@@ -1,6 +1,6 @@
 package node
 
-import "qlova.tech/new/tree"
+import "qlova.tech/web/tree"
 
 func Get[T any](node tree.Node) T {
 	var empty T

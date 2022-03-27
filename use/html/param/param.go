@@ -10,8 +10,8 @@
 package param
 
 import (
-	"qlova.tech/new/tree"
 	"qlova.tech/use/html"
+	"qlova.tech/web/tree"
 )
 
 func Set(name, value string) tree.Node {

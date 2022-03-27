@@ -12,8 +12,8 @@
 package subscript
 
 import (
-	"qlova.tech/new/tree"
 	"qlova.tech/use/html"
+	"qlova.tech/web/tree"
 )
 
 // Tag is the html <sub> tag.

@@ -24,9 +24,9 @@
 package audio
 
 import (
-	"qlova.tech/new/tree"
 	"qlova.tech/use/html"
 	"qlova.tech/use/html/attributes"
+	"qlova.tech/web/tree"
 )
 
 // Tag is the HTML <audio> element.

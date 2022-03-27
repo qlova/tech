@@ -1,14 +1,16 @@
 package html
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
 	"html"
 
 	"qlova.tech/new/node"
-	"qlova.tech/new/tree"
+	"qlova.tech/rgb"
 	"qlova.tech/use/html/attributes"
+	"qlova.tech/web/tree"
 )
 
 // Renderer is any declarative element that can be render itself as HTML.
@@ -62,9 +64,23 @@ func New(args ...any) tree.Node {
 		switch v := arg.(type) {
 		case string:
 			args[i] = String(v)
+		case rgb.Color:
+			args[i] = Attr("style", fmt.Sprintf("background-color: #%06x;", v))
 		}
 	}
 	return append(args, Tag("html"))
+}
+
+func renderAttributes(nodes []any, s *strings.Builder) {
+	for _, arg := range nodes {
+		if v, ok := arg.(attributes.Renderer); ok {
+			s.WriteByte(' ')
+			s.Write(v.RenderAttr())
+		}
+		if v, ok := arg.([]any); ok {
+			renderAttributes(v, s)
+		}
+	}
 }
 
 func Render(html tree.Node) String {
@@ -83,18 +99,7 @@ func Render(html tree.Node) String {
 
 	s.WriteByte('<')
 	s.WriteString(string(tag))
-
-	for _, arg := range html {
-		if v, ok := arg.(Attribute); ok {
-			s.WriteByte(' ')
-			s.WriteString(string(v))
-		}
-		if v, ok := arg.(attributes.Renderer); ok {
-			s.WriteByte(' ')
-			s.Write(v.RenderAttr())
-		}
-	}
-
+	renderAttributes(html, &s)
 	s.WriteByte('>')
 
 	if !isVoid {
