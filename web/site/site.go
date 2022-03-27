@@ -72,13 +72,31 @@ var js string
 // website will be server over HTTP on the
 // port, otherwise it will open the website
 // in a browser.
-func Open(root tree.Renderer) error {
-	name := reflect.TypeOf(root).Elem().Name()
+func Open(root any) error {
+	rtype := reflect.TypeOf(root)
 
-	data.Register(root)
+	if rtype.Kind() == reflect.Ptr {
+		data.Register(root)
+	}
+	for rtype.Kind() == reflect.Ptr {
+		rtype = rtype.Elem()
+	}
+
+	name := rtype.Name()
+	switch root.(type) {
+	case string:
+		name = root.(string)
+	}
 
 	var seed = tree.NewSeed()
-	content := tree.Render(root, seed)
+
+	var content = tree.Node{
+		html.New(root),
+	}
+
+	if renderer, ok := root.(tree.Renderer); ok {
+		content = tree.Render(renderer, seed)
+	}
 
 	// Extract templates.
 	var templates []any
@@ -89,6 +107,7 @@ func Open(root tree.Renderer) error {
 	}
 
 	var init = make(map[string]any)
+	init[strings.TrimPrefix(data.PathOf(root), "/")] = root
 	for _, p := range seed.TreeRenderers {
 		init[strings.TrimPrefix(data.PathOf(p), "/")] = p
 	}

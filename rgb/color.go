@@ -1,3 +1,4 @@
+//Package rgb is a color package with support for constants.
 package rgb
 
 // Color is a four-component (red, green, blue, alpha) color.

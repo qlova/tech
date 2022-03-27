@@ -11,6 +11,7 @@ import (
 	"qlova.tech/use/html"
 	"qlova.tech/use/html/attributes"
 	"qlova.tech/use/html/division"
+	"qlova.tech/use/js"
 	"qlova.tech/web/tree"
 )
 
@@ -209,4 +210,8 @@ func Feed(ptr any, args ...any) tree.Node {
 	return division.New(
 		append(args, html.Attr("data-feed", PathOf(ptr)))...,
 	)
+}
+
+func Push[T any](slice *[]T, value *T) js.String {
+	return js.String(fmt.Sprintf("data.push('%v', data.get('%v'));", PathOf(slice), PathOf(value)))
 }

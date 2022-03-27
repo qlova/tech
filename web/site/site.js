@@ -65,6 +65,16 @@ data.set = function (path, value) {
     data.sync(path);
     data.save();
 }
+data.push = function (path, value) {
+    let slice = data.get(path);
+    if (!slice) {
+        data.set(path, [value]);
+    } else {
+        slice.push(value);
+    }
+    data.sync(path);
+    data.save();
+}
 data.feed = function (path) {
     let suffix = "";
     if (path) suffix = `="${path}"`;
@@ -86,6 +96,7 @@ data.feed = function (path) {
         if (feed.length == list.length) {
             return; //TODO refresh
         }
+        feed.innerHTML = "";
 
         for (let i = 0; i < list.length; i++) {
             let item = feed.dataset.feed+"."+i;
@@ -131,13 +142,7 @@ data.sync = function (path) {
 
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
-        let value = data.get(element.dataset.view || element.dataset.sync);
-
-        if (element.tagName == 'INPUT') {
-            element.value = value;
-        } else {
-            element.innerHTML = value;
-        }
+        data.calc(element);
     }
 
     if (path) {
@@ -150,6 +155,17 @@ data.sync = function (path) {
     }
 }
 data.calc = function (element) {
+    let path = element.dataset.view || element.dataset.sync;
+    if (path) {
+        let value = data.get(element.dataset.view || element.dataset.sync);
+
+        if (element.tagName == 'INPUT') {
+            element.value = value;
+        } else {
+            element.innerHTML = value;
+        }
+    }
+
     let change = function (condition, element, attr, value) {
         let backup = "backup:" + attr;
 
