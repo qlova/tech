@@ -1,12 +1,19 @@
 //Package rgb is a color package with support for constants.
 package rgb
 
+import "image/color"
+
 // Color is a four-component (red, green, blue, alpha) color.
 type Color uint32
 
 // Bytes returns a Color from the given (red, green, blue, alpha) bytes.
 func Bytes(r, g, b, a uint8) Color {
 	return Color(uint32(r)<<24 | uint32(g)<<16 | uint32(b)<<8 | uint32(a))
+}
+
+func FromColor(c color.Color) Color {
+	r, g, b, a := c.RGBA()
+	return Bytes(uint8(r>>8), uint8(g>>8), uint8(b>>8), uint8(a>>8))
 }
 
 func (c Color) Red() uint8 {
