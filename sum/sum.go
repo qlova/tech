@@ -1,7 +1,7 @@
 /*
-	 Package sum provides sum types / enumerated types / tagged unions / variants / discriminated unions.
+	Package sum provides sum types / enumerated types / tagged unions / variants / discriminated unions.
 
-	 Sum Types
+	Sum Types
 
 		type SVGPathCommand struct {
 			Line       sum.Add[SVGPathCommand, struct{X float64; Y float64}]
@@ -25,9 +25,9 @@
 			}),
 		})
 
-	 Enumerated Sum Types
+	Enumerated Sum Types
 
-	 	type Weekday struct {
+		type Weekday struct {
 			Monday,
 			Tuesday,
 			Wednesday,
