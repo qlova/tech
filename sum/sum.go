@@ -105,27 +105,29 @@ func (sum Type[Sum]) MarshalJSON() ([]byte, error) {
 }
 
 // MarshalJSON implements json.Unmarshaler.
-func (sum *Type[Sum]) UmarshalJSON(data []byte) error {
+func (sum *Type[Sum]) UnmarshalJSON(data []byte) error {
 	var container struct { // TODO configurable container? struct tags?
 		Type string          `json:"type"`
 		Data json.RawMessage `json:"data"`
+	}
+	if err := json.Unmarshal(data, &container); err != nil {
+		fmt.Println(err)
+		return err
 	}
 	if container.Data == nil {
 		*sum = Type[Sum]{}
 		return nil
 	}
-	if err := json.Unmarshal(data, &container); err != nil {
-		return err
-	}
+
 	var fields Sum
-	rtype := reflect.TypeOf(fields).Elem()
+	rtype := reflect.TypeOf(fields)
 	for i := 0; i < rtype.NumField(); i++ {
 		if rtype.Field(i).Name == container.Type {
-			var zero = reflect.New(rtype.Field(i).Type).Elem()
+			var zero = reflect.New(rtype.Field(i).Type.Field(0).Type.Elem())
 			if err := json.Unmarshal(container.Data, zero.Interface()); err != nil {
 				return err
 			}
-			sum.any = zero.Interface()
+			sum.any = zero.Elem().Interface()
 			sum.tag = i
 			return nil
 		}
@@ -135,8 +137,18 @@ func (sum *Type[Sum]) UmarshalJSON(data []byte) error {
 
 // Add is used to add fixed types to the Fields of a Type.
 type Add[Sum Fields, T any] struct {
+	typ *T
 	tag int
 	fun func(Type[Sum])
+}
+
+func (field *Add[Sum, T]) unmarshalJSON(data []byte, into *Type[Sum]) error {
+	var zero T
+	if err := json.Unmarshal(data, &zero); err != nil {
+		return err
+	}
+	into.any = zero
+	return nil
 }
 
 func (field *Add[Sum, T]) init(index int) { field.tag = index } // used by Type.Sum
@@ -246,7 +258,7 @@ func (enum Int[Sum]) MarshalJSON() ([]byte, error) {
 }
 
 // MarshalJSON implements json.Unmarshaler.
-func (enum Int[Sum]) UmarshalJSON(data []byte) error {
+func (enum Int[Sum]) UnmarshalJSON(data []byte) error {
 	s, err := strconv.Unquote(string(data))
 	if err != nil {
 		return err
