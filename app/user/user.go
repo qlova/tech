@@ -72,6 +72,7 @@ func Pick[T Pickable](pickable *T, args ...any) show.Picker[T] {
 func List[T any](list *[]T, fn func(*T) show.Layout, args ...any) show.Looped {
 
 	return show.Looped{
+		Value: list,
 		Loops: func(s data.Sync) (data.Sync, show.Layout) {
 			var zero T
 			return s.With(&zero, list), fn(&zero)

@@ -65,6 +65,7 @@ type Viewer[T any] struct {
 type Looped struct {
 	isNode
 
+	Value any
 	Loops func(data.Sync) (data.Sync, Layout)
 	Hints struct {
 	}

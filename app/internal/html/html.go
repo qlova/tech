@@ -79,9 +79,11 @@ func render(w *bufio.Writer, node show.Node, sync data.Sync) {
 			w.WriteString("</button>")
 		}
 	case show.Looped:
-		w.WriteString("<div>")
-		w.WriteString("<template>")
 		sync, layout := elem.Loops(sync)
+		w.WriteString("<div ")
+		w.WriteString(`data-list="` + data.Path(sync, elem.Value) + `[*]">`)
+		w.WriteString("<template>")
+
 		render(w, layout, sync)
 		w.WriteString("</template>")
 		w.WriteString("</div>")
