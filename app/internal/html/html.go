@@ -29,9 +29,9 @@ func renderJS(w *bufio.Writer, step then.Step, sync data.Sync) {
 			renderJS(w, step, sync)
 		}
 	case then.Append:
-		fmt.Fprintf(w, `append(%v, %v);`, deref(sync, step.List), deref(sync, step.Item))
+		fmt.Fprintf(w, `append(%v,%v);`, deref(sync, step.List), deref(sync, step.Item))
 	case then.Set:
-		fmt.Fprintf(w, `set(%v, %v);`, deref(sync, step.Variable), deref(sync, step.Value))
+		fmt.Fprintf(w, `set(%v,%v);`, deref(sync, step.Variable), deref(sync, step.Value))
 	default:
 		fmt.Println("unknown type", reflect.TypeOf(step))
 	}
@@ -40,12 +40,12 @@ func renderJS(w *bufio.Writer, step then.Step, sync data.Sync) {
 func render(w *bufio.Writer, node show.Node, sync data.Sync) {
 	switch elem := node.(type) {
 	case page.View:
-		w.WriteString("<DOCTYPE html><html><head></head><body>")
+		w.WriteString("<!DOCTYPE html><html><head></head><body>")
 		for _, node := range elem.Nodes {
 			render(w, node, sync)
 		}
 		w.WriteString("</body></html>")
-	case show.View:
+	case show.Layout:
 		w.WriteString("<div")
 		if elem.Hints.Row {
 			w.WriteString(` class="row"`)
@@ -63,8 +63,11 @@ func render(w *bufio.Writer, node show.Node, sync data.Sync) {
 		w.WriteString("<" + tag + ">")
 		w.WriteString(html.EscapeString(elem.Value))
 		w.WriteString("</" + tag + ">")
+	case show.Viewer[string]:
+		w.WriteString(`<p data-view="` + data.Path(sync, elem.Value) + `"></p>`)
 	case show.Picker[string]:
 		w.WriteString(`<input type="text" data-edit="` + data.Path(sync, elem.Value) + `">`)
+
 	case show.Choice:
 		if elem.Hints.Button != "" {
 			w.WriteString("<button")
@@ -75,6 +78,14 @@ func render(w *bufio.Writer, node show.Node, sync data.Sync) {
 			w.WriteString(html.EscapeString(elem.Hints.Button))
 			w.WriteString("</button>")
 		}
+	case show.Looped:
+		w.WriteString("<div>")
+		w.WriteString("<template>")
+		sync, layout := elem.Loops(sync)
+		render(w, layout, sync)
+		w.WriteString("</template>")
+		w.WriteString("</div>")
+
 	default:
 		fmt.Println("unknown type", reflect.TypeOf(elem))
 	}

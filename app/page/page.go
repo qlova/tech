@@ -6,7 +6,7 @@ type Renderer interface {
 	RenderPage() View
 }
 
-type isView = show.View
+type isView = show.Layout
 
 type View struct {
 	isView
@@ -14,7 +14,7 @@ type View struct {
 
 func New(nodes ...show.Node) View {
 	return View{
-		isView: show.View{
+		isView: show.Layout{
 			Nodes: nodes,
 		},
 	}

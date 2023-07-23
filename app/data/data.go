@@ -6,6 +6,8 @@ import (
 )
 
 type Sync struct {
+	parent   *Sync
+	base     string
 	pointers map[any]string
 }
 
@@ -28,10 +30,30 @@ func New(value any) Sync {
 	_, name, _ := strings.Cut(reflect.TypeOf(value).String(), ".")
 	mirror(reflect.ValueOf(value), pointers, name)
 	return Sync{
+		base:     name,
 		pointers: pointers,
 	}
 }
 
 func Path(sync Sync, ptr any) string {
-	return sync.pointers[ptr]
+	path, ok := sync.pointers[ptr]
+	if ok {
+		return path
+	}
+	if sync.parent == nil {
+		return ""
+	}
+	return Path(*sync.parent, ptr)
+}
+
+func (s Sync) With(ptr any, indexing any) Sync {
+
+	var pointers = make(map[any]string)
+	mirror(reflect.ValueOf(ptr), pointers, Path(s, indexing)+"[*]")
+	child := Sync{
+		base:     s.base + "[i]",
+		pointers: pointers,
+	}
+	child.parent = &s
+	return child
 }

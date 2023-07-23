@@ -1,6 +1,7 @@
 package user
 
 import (
+	"qlova.tech/app/data"
 	"qlova.tech/app/show"
 	"qlova.tech/app/then"
 	"qlova.tech/app/user/hint"
@@ -10,13 +11,13 @@ type Data interface{}
 
 type Interface = show.Node
 
-func View(hints ...hint.View) func(ndoes ...show.Node) show.View {
-	return func(nodes ...show.Node) show.View {
-		node := show.View{
+func View(hints ...hint.Layout) func(ndoes ...show.Node) show.Layout {
+	return func(nodes ...show.Node) show.Layout {
+		node := show.Layout{
 			Nodes: nodes,
 		}
 		for _, hint := range hints {
-			hint.HintView(&node)
+			hint.HintLayout(&node)
 		}
 		return node
 	}
@@ -68,14 +69,22 @@ func Pick[T Pickable](pickable *T, args ...any) show.Picker[T] {
 	}
 }
 
-func List[T any](list *[]T, fn func(*T) Interface, args ...any) show.Node {
-	return nil
+func List[T any](list *[]T, fn func(*T) show.Layout, args ...any) show.Looped {
+
+	return show.Looped{
+		Loops: func(s data.Sync) (data.Sync, show.Layout) {
+			var zero T
+			return s.With(&zero, list), fn(&zero)
+		},
+	}
 }
 
 type Showable interface {
-	~*string
+	~string
 }
 
-func Show[T Showable](viewable T, args ...any) show.Node {
-	return nil
+func Show[T Showable](viewable *T, args ...any) show.Viewer[T] {
+	return show.Viewer[T]{
+		Value: viewable,
+	}
 }

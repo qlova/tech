@@ -5,6 +5,7 @@ import (
 
 	"qlova.tech/app"
 	"qlova.tech/app/page"
+	"qlova.tech/app/show"
 	"qlova.tech/app/user"
 	"qlova.tech/app/user/hint"
 	"qlova.tech/app/user/they"
@@ -32,7 +33,7 @@ func (list *TodoList) RenderPage() page.View {
 		),
 		user.View()(
 			user.Read("Items:"),
-			user.List(&list.Items, func(item *string) user.Interface {
+			user.List(&list.Items, func(item *string) show.Layout {
 				return user.View()(
 					user.Show(item),
 					user.Path(they.Remove(item, &list.Items), hint.OnClick),

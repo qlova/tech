@@ -1,13 +1,16 @@
 // Package show provides user interface tree nodes.
 package show
 
-import "qlova.tech/app/then"
+import (
+	"qlova.tech/app/data"
+	"qlova.tech/app/then"
+)
 
 type Node interface {
 	node()
 }
 
-type View struct {
+type Layout struct {
 	isNode
 
 	Nodes []Node
@@ -48,5 +51,21 @@ type Choice struct {
 		OnClick bool
 		OnTouch bool
 		OnHover bool
+	}
+}
+
+type Viewer[T any] struct {
+	isNode
+
+	Value *T
+	Hints struct {
+	}
+}
+
+type Looped struct {
+	isNode
+
+	Loops func(data.Sync) (data.Sync, Layout)
+	Hints struct {
 	}
 }
