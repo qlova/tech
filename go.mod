@@ -1,3 +1,3 @@
 module qlova.tech
 
-go 1.18
+go 1.20
