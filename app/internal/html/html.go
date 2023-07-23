@@ -29,9 +29,9 @@ func renderJS(w *bufio.Writer, step then.Step, sync data.Sync) {
 			renderJS(w, step, sync)
 		}
 	case then.Append:
-		fmt.Fprintf(w, `append(%v,%v);`, deref(sync, step.List), deref(sync, step.Item))
+		fmt.Fprintf(w, `data.append(%v,%v);`, deref(sync, step.List), deref(sync, step.Item))
 	case then.Set:
-		fmt.Fprintf(w, `set(%v,%v);`, deref(sync, step.Variable), deref(sync, step.Value))
+		fmt.Fprintf(w, `data.set(%v,%v);`, deref(sync, step.Variable), deref(sync, step.Value))
 	default:
 		fmt.Println("unknown type", reflect.TypeOf(step))
 	}
