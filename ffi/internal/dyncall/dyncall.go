@@ -12,6 +12,10 @@ func NewVM(size int) *VM {
 	return (*VM)(C.dcNewCallVM(C.size_t(size)))
 }
 
+func (vm *VM) Reset() {
+	C.dcReset((*C.DCCallVM)(vm))
+}
+
 func (vm *VM) Free() {
 	C.dcFree((*C.DCCallVM)(vm))
 }
@@ -24,7 +28,7 @@ func (vm *VM) PushBool(value bool) {
 	C.dcArgBool((*C.DCCallVM)(vm), v)
 }
 
-func (vm *VM) PushByte(value byte) {
+func (vm *VM) PushInt8(value int8) {
 	C.dcArgChar((*C.DCCallVM)(vm), C.DCchar(value))
 }
 

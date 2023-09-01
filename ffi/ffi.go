@@ -1,10 +1,12 @@
-package cgo
+package ffi
 
 import (
 	"errors"
 	"reflect"
+	"sync"
+	"unsafe"
 
-	"qlova.tech/cgo/internal/dyncall"
+	"qlova.tech/ffi/internal/dyncall"
 )
 
 // #include <internal/dyncall/dyncall.h>
@@ -12,6 +14,18 @@ import "C"
 
 type Header interface {
 	header()
+}
+
+var vm4096 sync.Pool
+var vm8 sync.Pool
+
+func init() {
+	vm8.New = func() any {
+		return dyncall.NewVM(8)
+	}
+	vm4096.New = func() any {
+		return dyncall.NewVM(4096)
+	}
 }
 
 func Set(header Header, library string) error {
@@ -45,10 +59,11 @@ func Set(header Header, library string) error {
 		case *func(float64) float64:
 			*fn = func(a float64) float64 {
 				vm := dyncall.NewVM(8)
-				vm.PushFloat64(a)
+				defer vm.Free()
 				return vm.CallFloat64(symbol)
 			}
 		default:
+			_ = fn
 			value.Set(reflect.MakeFunc(field.Type, func(args []reflect.Value) []reflect.Value {
 				var vm = dyncall.NewVM(4096)
 				defer vm.Free()
@@ -57,13 +72,25 @@ func Set(header Header, library string) error {
 					case reflect.Bool:
 						vm.PushBool(value.Bool())
 					case reflect.Int8:
-						vm.PushByte(byte(value.Int()))
+						vm.PushInt8(int8(value.Int()))
 					case reflect.Int16:
 						vm.PushInt16(int16(value.Int()))
 					case reflect.Int32:
 						vm.PushInt32(int32(value.Int()))
 					case reflect.Int64:
 						vm.PushInt64(value.Int())
+					case reflect.Uint8:
+						u8 := uint8(value.Uint())
+						vm.PushInt8(*(*int8)(unsafe.Pointer(&u8)))
+					case reflect.Uint16:
+						u16 := uint16(value.Uint())
+						vm.PushInt16(*(*int16)(unsafe.Pointer(&u16)))
+					case reflect.Uint32:
+						u32 := uint32(value.Uint())
+						vm.PushInt32(*(*int32)(unsafe.Pointer(&u32)))
+					case reflect.Uint64:
+						u64 := uint64(value.Uint())
+						vm.PushInt64(*(*int64)(unsafe.Pointer(&u64)))
 					case reflect.Float32:
 						vm.PushFloat32(float32(value.Float()))
 					case reflect.Float64:

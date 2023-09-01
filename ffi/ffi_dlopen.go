@@ -1,4 +1,4 @@
-package cgo
+package ffi
 
 /*
 #include <dlfcn.h>

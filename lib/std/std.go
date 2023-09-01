@@ -3,11 +3,12 @@ package std
 import (
 	"unsafe"
 
-	"qlova.tech/cgo"
+	"qlova.tech/abi"
+	"qlova.tech/ffi"
 )
 
 var Char struct {
-	cgo.Header
+	ffi.Header `linux:"libc.so.6"`
 
 	IsAlpha        func(rune) bool `cgo:"isalpha"`
 	IsAlphaNumeric func(rune) bool `cgo:"isalnum"`
@@ -26,7 +27,7 @@ var Char struct {
 }
 
 var Math struct {
-	cgo.Header
+	ffi.Header `linux:"libm.so.6"`
 
 	Acos  func(float64) float64            `cgo:"acos"`
 	Asin  func(float64) float64            `cgo:"asin"`
@@ -51,13 +52,13 @@ var Math struct {
 	Fmod  func(float64, float64) float64   `cgo:"fmod"`
 }
 
-type File cgo.Pointer
+type File abi.Pointer
 type FilePos int
 
 type Error int32
 
 var IO struct {
-	cgo.Header
+	ffi.Header `linux:"libc.so.6"`
 
 	Close         func(File) Error                                      `cgo:"fclose"`
 	ClearError    func(File)                                            `cgo:"clearerr"`
@@ -100,7 +101,7 @@ var IO struct {
 }
 
 var String struct {
-	cgo.Header
+	ffi.Header `linux:"libc.so.6"`
 
 	ToFloat64    func(string) float64          `cgo:"atof"`
 	ToInt32      func(string) int32            `cgo:"atoi"`
@@ -130,7 +131,7 @@ var String struct {
 }
 
 var Lib struct {
-	cgo.Header
+	ffi.Header `linux:"libc.so.6"`
 
 	Calloc  func(uintptr, uintptr) unsafe.Pointer        `cgo:"calloc"`
 	Free    func(unsafe.Pointer)                         `cgo:"free"`
@@ -154,7 +155,7 @@ var Lib struct {
 }
 
 var I32 struct {
-	cgo.Header
+	ffi.Header `linux:"libc.so.6"`
 
 	Abs         func(int32) int32             `cgo:"abs"`
 	Div         func(int32, int32) Div[int32] `cgo:"div"`
@@ -163,7 +164,7 @@ var I32 struct {
 }
 
 var Int struct {
-	cgo.Header
+	ffi.Header `linux:"libc.so.6"`
 
 	Abs func(int) int           `cgo:"labs"`
 	Div func(int, int) Div[int] `cgo:"ldiv"`
@@ -173,7 +174,7 @@ type Time int32
 type Ticks int32
 
 var Clock struct {
-	cgo.Header
+	ffi.Header `linux:"libc.so.6"`
 
 	String func(Time) string        `cgo:"asctime"`
 	Local  func(Time) string        `cgo:"ctime"`

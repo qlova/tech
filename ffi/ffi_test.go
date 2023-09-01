@@ -1,22 +1,22 @@
-package cgo_test
+package ffi_test
 
 import (
 	"fmt"
 	"math"
 	"testing"
 
-	"qlova.tech/cgo"
-	"qlova.tech/cgo/std"
+	"qlova.tech/ffi"
+	"qlova.tech/lib/std"
 )
 
 func init() {
-	if err := cgo.Set(&std.Math, "libm.so.6"); err != nil {
+	if err := ffi.Set(&std.Math, "libm.so.6"); err != nil {
 		panic(err)
 	}
-	if err := cgo.Set(&std.Char, "libc.so.6"); err != nil {
+	if err := ffi.Set(&std.Char, "libc.so.6"); err != nil {
 		panic(err)
 	}
-	if err := cgo.Set(&std.Clock, "libc.so.6"); err != nil {
+	if err := ffi.Set(&std.Clock, "libc.so.6"); err != nil {
 		panic(err)
 	}
 }

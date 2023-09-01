@@ -1,11 +1,7 @@
-package cgo
+package ffi
 
 import "C"
 import "unsafe"
-
-type Pointer struct {
-	uintptr
-}
 
 type String struct {
 	ptr *byte
