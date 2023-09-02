@@ -41,7 +41,7 @@ const (
 )
 
 var Hints struct {
-	ffi.Header `linux:"libSDL2-2.0.so.0" darwin:"libSDL2.dylib"`
+	ffi.Library `linux:"libSDL2-2.0.so.0" darwin:"libSDL2.dylib"`
 
 	AddHintCallback     func(Hint, callback HintCallback, userdata Userdata) `ffi:"SDL_AddHintCallback"`     // AddHintCallback adds a function to watch a particular hint.
 	ClearHints          func()                                               `ffi:"SDL_ClearHints"`          // ClearHints clears all hints.

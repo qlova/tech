@@ -8,7 +8,7 @@ import (
 )
 
 var Int struct {
-	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Abs func(abi.Int) abi.Int               `ffi:"abs"`
 	Div func(abi.Int, abi.Int) Div[abi.Int] `ffi:"div"`
@@ -18,7 +18,7 @@ var Int struct {
 }
 
 var Long struct {
-	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Abs func(abi.Long) abi.Long                `ffi:"labs"`
 	Div func(abi.Long, abi.Long) Div[abi.Long] `ffi:"ldiv"`
@@ -29,7 +29,7 @@ var Long struct {
 }
 
 var LongLong struct {
-	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Abs func(abi.LongLong) abi.LongLong                    `ffi:"llabs"`
 	Div func(abi.LongLong, abi.LongLong) Div[abi.LongLong] `ffi:"lldiv"`
@@ -40,14 +40,14 @@ var LongLong struct {
 }
 
 var IntMax struct {
-	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Abs func(abi.IntMax) abi.IntMax                  `ffi:"imaxabs"`
 	Div func(abi.IntMax, abi.IntMax) Div[abi.IntMax] `ffi:"imaxdiv"`
 }
 
 var Double struct {
-	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Abs                func(abi.Double) abi.Double                         `ffi:"fabs"`
 	Mod                func(abi.Double, abi.Double) abi.Double             `ffi:"fmod"`
@@ -114,7 +114,7 @@ var Double struct {
 }
 
 var Float struct {
-	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Abs                func(abi.Float) abi.Float                       `ffi:"fabsf"`
 	Mod                func(abi.Float, abi.Float) abi.Float            `ffi:"fmodf"`
@@ -181,7 +181,7 @@ var Float struct {
 }
 
 var DoubleLong struct {
-	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Abs                func(abi.DoubleLong) abi.DoubleLong                                 `ffi:"fabsl"`
 	Mod                func(abi.DoubleLong, abi.DoubleLong) abi.DoubleLong                 `ffi:"fmodl"`

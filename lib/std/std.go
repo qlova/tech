@@ -39,7 +39,7 @@ func FloatRoundingMode() abi.Int {
 }
 
 var Char struct {
-	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	IsAlphaNumeric func(abi.Int) abi.Int `ffi:"isalnum"`
 	IsAlpha        func(abi.Int) abi.Int `ffi:"isalpha"`
@@ -59,7 +59,7 @@ var Char struct {
 }
 
 var FloatingPoint struct {
-	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	ClearExceptions   func(abi.FloatException) abi.Error                                `ffi:"feclearexcept"`
 	Exceptions        func(abi.FloatException) abi.FloatException                       `ffi:"fetestexcept"`
@@ -75,14 +75,14 @@ var FloatingPoint struct {
 }
 
 var Locale struct {
-	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Set func(abi.LocaleCategory, *abi.Locale) abi.String `ffi:"setlocale"`
 	Get func() *abi.Locale                               `ffi:"localeconv"`
 }
 
 var Program struct {
-	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Abort              func()                             `ffi:"abort"`
 	Exit               func(abi.Int)                      `ffi:"exit"`
@@ -96,7 +96,7 @@ var Program struct {
 }
 
 var Files struct {
-	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Open          func(abi.String, abi.String) *abi.File                               `ffi:"fopen"`
 	Reopen        func(abi.String, abi.String, *abi.File) *abi.File                    `ffi:"freopen"`
@@ -143,7 +143,7 @@ var Files struct {
 }
 
 var IO struct {
-	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	GetChar   func() abi.Int                                              `ffi:"getchar"`
 	GetString func(abi.Pointer[abi.Char], abi.Size) abi.Pointer[abi.Char] `ffi:"gets_s"`
@@ -160,7 +160,7 @@ var IO struct {
 }
 
 var String struct {
-	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Error func(abi.Error) abi.String `ffi:"strerror"`
 
@@ -204,7 +204,7 @@ var String struct {
 }
 
 var Lib struct {
-	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Calloc  func(abi.Size, abi.Size) abi.UnsafePointer          `ffi:"calloc"`
 	Free    func(abi.UnsafePointer)                             `ffi:"free"`
@@ -228,7 +228,7 @@ var Lib struct {
 }
 
 var Time struct {
-	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Diff          func(abi.Time, abi.Time) abi.Double       `ffi:"difftime"`
 	Now           func(*abi.Time) abi.Time                  `ffi:"time"`

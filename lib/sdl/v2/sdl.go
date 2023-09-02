@@ -31,7 +31,7 @@ import (
 )
 
 type Lib struct {
-	ffi.Header `linux:"libSDL2-2.0.so.0" darwin:"libSDL2.dylib"`
+	ffi.Library `linux:"libSDL2-2.0.so.0" darwin:"libSDL2.dylib"`
 }
 
 func Link() error {

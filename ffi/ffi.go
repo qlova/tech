@@ -15,8 +15,11 @@ import (
 // #include <internal/dyncall/dyncall.h>
 import "C"
 
-type Header interface {
-	header()
+// Library can be embedded inside of a struct to
+// mark it as a library interface structure. Each
+// other field in the struct must be a func.
+type Library interface {
+	library()
 }
 
 var vm4096 sync.Pool
@@ -31,8 +34,10 @@ func init() {
 	}
 }
 
-func Link(headers ...Header) error {
-	for _, library := range headers {
+// Link dynamically links the given libraries, based on
+// the platform struct tags of the embedded [Library] field.
+func Link(libraries ...Library) error {
+	for _, library := range libraries {
 		var header = reflect.TypeOf(library).Elem().Field(0)
 		for header.Type.Kind() == reflect.Struct {
 			header = header.Type.Field(0)
@@ -44,14 +49,17 @@ func Link(headers ...Header) error {
 	return nil
 }
 
-func Set(header Header, library string) error {
-	lib := dlopen(library)
+// Set links the given library using the specified shared
+// library file name. The system linker will look for this
+// file in the system library paths.
+func Set(library Library, file string) error {
+	lib := dlopen(file)
 	if lib == nil {
 		return errors.New(dlerror())
 	}
 
-	rtype := reflect.TypeOf(header).Elem()
-	rvalue := reflect.ValueOf(header).Elem()
+	rtype := reflect.TypeOf(library).Elem()
+	rvalue := reflect.ValueOf(library).Elem()
 
 	for i := 0; i < rtype.NumField(); i++ {
 		field := rtype.Field(i)

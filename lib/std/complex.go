@@ -6,7 +6,7 @@ import (
 )
 
 var Complex struct {
-	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Real func(abi.ComplexDouble) abi.Double        `ffi:"creal"`
 	Imag func(abi.ComplexDouble) abi.Double        `ffi:"cimag"`
@@ -36,7 +36,7 @@ var Complex struct {
 }
 
 var ComplexFloat struct {
-	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Real func(abi.ComplexFloat) abi.Float        `ffi:"crealf"`
 	Imag func(abi.ComplexFloat) abi.Float        `ffi:"cimagf"`
@@ -66,7 +66,7 @@ var ComplexFloat struct {
 }
 
 var ComplexDoubleLong struct {
-	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Real func(abi.ComplexDoubleLong) abi.DoubleLong        `ffi:"creall"`
 	Imag func(abi.ComplexDoubleLong) abi.DoubleLong        `ffi:"cimagl"`
