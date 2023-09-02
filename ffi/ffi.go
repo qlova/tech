@@ -32,7 +32,11 @@ func init() {
 
 func Link(headers ...Header) error {
 	for _, library := range headers {
-		if err := Set(library, reflect.TypeOf(library).Elem().Field(0).Tag.Get(runtime.GOOS)); err != nil {
+		var header = reflect.TypeOf(library).Elem().Field(0)
+		for header.Type.Kind() == reflect.Struct {
+			header = header.Type.Field(0)
+		}
+		if err := Set(library, header.Tag.Get(runtime.GOOS)); err != nil {
 			return err
 		}
 	}
@@ -63,7 +67,7 @@ func Set(header Header, library string) error {
 
 		symbol := dlsym(lib, name)
 		if symbol == nil {
-			return errors.New(dlerror())
+			continue
 		}
 
 		getErr := rvalue.FieldByName("Error")
@@ -111,8 +115,8 @@ func Set(header Header, library string) error {
 					case reflect.Pointer, reflect.UnsafePointer:
 						vm.PushPointer(value.UnsafePointer())
 					case reflect.String:
-						s := NewString(value.String())
-						vm.PushPointer(unsafe.Pointer(s.ptr))
+						s := abi.NewString(value.String())
+						vm.PushPointer(unsafe.Pointer(s.Pointer()))
 					case reflect.Struct:
 						if value.Type().Implements(reflect.TypeOf([0]abi.IsPointer{}).Elem()) {
 							vm.PushPointer(unsafe.Pointer(value.Interface().(abi.IsPointer).Pointer()))
@@ -173,6 +177,8 @@ func Set(header Header, library string) error {
 						results[0].SetFloat(float64(vm.CallFloat32(symbol)))
 					case reflect.Float64:
 						results[0].SetFloat(float64(vm.CallFloat64(symbol)))
+					case reflect.String:
+						results[0].SetString(C.GoString((*C.char)(vm.CallPointer(symbol))))
 					case reflect.UnsafePointer:
 						results[0].SetPointer(vm.CallPointer(symbol))
 					case reflect.Pointer:

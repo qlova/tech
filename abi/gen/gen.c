@@ -441,7 +441,6 @@ int main(int argc, char *argv[]) {
     printf("\tAtomicUIntMax          atomic.Uint%d\n", (unsigned)sizeof(atomic_uintmax_t) * CHAR_BIT);
 
     printf("\tSize                uint%d\n", (unsigned)sizeof(size_t) * CHAR_BIT);
-    printf("\tString              struct{uint%d}\n", (unsigned)sizeof(char*) * CHAR_BIT);
     printf("\tStringWide          struct{uint%d}\n", (unsigned)sizeof(wchar_t*) * CHAR_BIT);
 
     printf("\tPtrdiff             int%d\n", (unsigned)sizeof(ptrdiff_t) * CHAR_BIT);

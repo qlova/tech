@@ -15,6 +15,10 @@ func init() {
 }
 
 func main() {
+	if err := sdl.System.Init(sdl.Modules); err != 0 {
+		panic(sdl.Errors.Get())
+	}
+
 	window, err := sdl.Windows.Create("Hello Triangle", sdl.WindowCentered,
 		sdl.WindowCentered, 640, 480, sdl.WindowOpenGL|sdl.WindowShown)
 	if err != nil {
@@ -28,6 +32,8 @@ func main() {
 	}
 	sdl.Draw.FilledRect(surface, nil, 0xFFFFFF)
 	sdl.Windows.UpdateSurface(window)
+
+	fmt.Println(sdl.Audio.Driver())
 
 	var event sdl.Event
 	for ; true; sdl.Events.Poll(&event) {
