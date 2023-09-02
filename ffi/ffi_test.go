@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"qlova.tech/abi"
+	"qlova.tech/ffi"
 	"qlova.tech/lib/std"
 )
 
@@ -22,7 +23,7 @@ func TestMain(m *testing.M) {
 func TestLibc(t *testing.T) {
 	fmt.Println(std.Char.IsAlphaNumeric('a'))
 
-	fmt.Println(std.Float.Sqrt(2))
+	fmt.Println(std.Double.Sqrt(2))
 
 	fmt.Println(std.Float.Frexp(2.2))
 
@@ -43,6 +44,12 @@ func BenchmarkGo(b *testing.B) {
 
 func BenchmarkC(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		std.Float.Sqrt(2)
+		std.Double.Sqrt(2)
+	}
+}
+
+func BenchmarkCgo(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		ffi.Sqrt(2)
 	}
 }

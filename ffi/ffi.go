@@ -12,8 +12,13 @@ import (
 	"qlova.tech/ffi/internal/dyncall"
 )
 
+// #include <math.h>
 // #include <internal/dyncall/dyncall.h>
 import "C"
+
+func Sqrt(a float64) float64 {
+	return float64(C.sqrt(C.double(a)))
+}
 
 // Library can be embedded inside of a struct to
 // mark it as a library interface structure. Each
@@ -244,11 +249,18 @@ func Set(library Library, file string) error {
 		getErr := rvalue.FieldByName("Error")
 
 		switch fn := value.Addr().Interface().(type) {
-		case *func(float64) float64:
-			*fn = func(a float64) float64 {
-				vm := dyncall.NewVM(8)
+		case *func(abi.Double) abi.Double:
+			*fn = func(a abi.Double) abi.Double {
+				vm := vm8.Get().(*dyncall.VM)
+				defer vm8.Put(vm)
+				vm.PushFloat64(float64(a))
+				return abi.Double(vm.CallFloat64(symbol))
+			}
+		case *func():
+			*fn = func() {
+				vm := dyncall.NewVM(0)
 				defer vm.Free()
-				return vm.CallFloat64(symbol)
+				vm.Call(symbol)
 			}
 		default:
 			_ = fn
@@ -370,7 +382,6 @@ func Set(library Library, file string) error {
 				case 0:
 					vm.Call(symbol)
 				}
-
 				if returnsError {
 					if results[0].IsZero() {
 						if !getErr.IsValid() {
@@ -382,7 +393,6 @@ func Set(library Library, file string) error {
 						}
 					}
 				}
-
 				return results
 			}))
 		}
