@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"runtime"
 
 	"qlova.tech/lib/sdl"
@@ -30,9 +31,11 @@ func main() {
 
 	var event sdl.Event
 	for ; true; sdl.Events.Poll(&event) {
-		if event.Type == sdl.Quit {
-			break
+		switch data := event.Data().(type) {
+		case *sdl.Quit:
+			fmt.Println(data.Timestamp)
+			sdl.System.Quit()
+			return
 		}
 	}
-	sdl.System.Quit()
 }

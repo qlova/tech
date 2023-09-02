@@ -68,15 +68,31 @@ var System struct {
 	Quit func() `ffi:"SDL_Quit"`
 }
 
-type EventType abi.Uint32
+type eventType abi.Uint32
 
 const (
-	Quit EventType = 0x100
+	eventQuit eventType = 0x100
 )
 
 type Event struct {
-	Type EventType
-	Data [56 - unsafe.Sizeof(abi.Uint32(0))]byte
+	etype eventType
+	data  [max(
+		unsafe.Sizeof(Quit{}),
+	) - unsafe.Sizeof(abi.Uint32(0))]byte
+}
+
+func (ev *Event) Data() any {
+	switch ev.etype {
+	case eventQuit:
+		return (*Quit)(unsafe.Pointer(ev))
+	default:
+		return nil
+	}
+}
+
+type Quit struct {
+	_         eventType
+	Timestamp abi.Uint32
 }
 
 var Events struct {
