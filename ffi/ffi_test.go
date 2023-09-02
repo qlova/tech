@@ -5,19 +5,18 @@ import (
 	"math"
 	"testing"
 
-	"qlova.tech/ffi"
+	"qlova.tech/abi"
 	"qlova.tech/lib/std"
 )
 
 func init() {
-	if err := ffi.Link(
-		&std.Float,
-		&std.Char,
-		&std.Time,
-		&std.Locale,
-	); err != nil {
+	if err := std.Link(); err != nil {
 		panic(err)
 	}
+}
+
+func TestMain(m *testing.M) {
+	std.Program.Exit(abi.Int(m.Run()))
 }
 
 func TestLibc(t *testing.T) {
@@ -31,6 +30,9 @@ func TestLibc(t *testing.T) {
 
 	fmt.Println(std.Locale.Get())
 
+	std.Program.OnExit(func() {
+		fmt.Println("exiting...")
+	})
 }
 
 func BenchmarkGo(b *testing.B) {

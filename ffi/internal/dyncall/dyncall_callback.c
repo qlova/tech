@@ -2,11 +2,11 @@
 
  Package: dyncall
  Library: dyncallback
- File: dyncallback/dyncall_alloc_wx.c
- Description: Allocate write/executable memory - Implementation back-end selector (mmap or win32)
+ File: dyncallback/dyncall_callback.c
+ Description: Callback - Implementation back-end selector
  License:
 
-   Copyright (c) 2007-2018 Daniel Adler <dadler@uni-goettingen.de>,
+   Copyright (c) 2007-2022 Daniel Adler <dadler@uni-goettingen.de>,
                            Tassilo Philipp <tphilipp@potion-studios.com>
 
    Permission to use, copy, modify, and distribute this software for any
@@ -23,14 +23,19 @@
 
 */
 
-
+#include "../dyncall/dyncall_callback.h"
 #include "../dyncall/dyncall_macros.h"
+#include "../dyncall/dyncall_aggregate.h"
 
-#if defined(DC_WINDOWS)
-#include "dyncall_alloc_wx_win32.c"
-#elif defined(DC_UNIX)
-#include "dyncall_alloc_wx_mmap.c"
-#else
-#include "dyncall_alloc_wx_malloc.c"
-#endif
+
+void dcbInitCallback(DCCallback* pcb, const DCsigchar* signature, DCCallbackHandler* handler, void* userdata)
+{
+  dcbInitCallback2(pcb, signature, handler, userdata, NULL);
+}
+
+
+DCCallback* dcbNewCallback(const DCsigchar* signature, DCCallbackHandler* handler, void* userdata)
+{
+  return dcbNewCallback2(signature, handler, userdata, NULL);
+}
 

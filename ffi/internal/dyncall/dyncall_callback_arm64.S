@@ -33,7 +33,7 @@ BEGIN_ASM
 //   handler  |  32  |   8
 //   userdata |  40  |   8
 
-TEXTAREA
+ TEXTAREA
 
 GLOBAL_C(dcCallbackThunkEntry)
 ENTRY_C(dcCallbackThunkEntry)

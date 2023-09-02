@@ -112,6 +112,10 @@ func (p pointer) UnsafePointer() unsafe.Pointer {
 	return p.val
 }
 
+func (p *pointer) SetPointer(val unsafe.Pointer) {
+	p.val = val
+}
+
 func (s String) Pointer() unsafe.Pointer {
 	return unsafe.Pointer(s.ptr)
 }

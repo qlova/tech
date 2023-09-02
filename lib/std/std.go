@@ -7,6 +7,38 @@ import (
 	"qlova.tech/ffi"
 )
 
+func Link() error {
+	return ffi.Link(
+		&Char,
+		&FloatingPoint,
+		&Locale,
+		&Program,
+		&Files,
+		&IO,
+		&String,
+		&Memory,
+		&Time,
+		&Complex,
+		&ComplexFloat,
+		&ComplexDoubleLong,
+		&Int,
+		&Long,
+		&LongLong,
+		&IntMax,
+		&Double,
+		&DoubleLong,
+		&Float,
+	)
+}
+
+type LibC struct {
+	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
+}
+
+type LibM struct {
+	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
+}
+
 // Assert aborts the program if val is zero.
 func Assert[T comparable](val T) {
 	var zero T
@@ -39,7 +71,7 @@ func FloatRoundingMode() abi.Int {
 }
 
 var Char struct {
-	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	LibC
 
 	IsAlphaNumeric func(abi.Int) abi.Int `ffi:"isalnum"`
 	IsAlpha        func(abi.Int) abi.Int `ffi:"isalpha"`
@@ -59,7 +91,7 @@ var Char struct {
 }
 
 var FloatingPoint struct {
-	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	LibC
 
 	ClearExceptions   func(abi.FloatException) abi.Error                                `ffi:"feclearexcept"`
 	Exceptions        func(abi.FloatException) abi.FloatException                       `ffi:"fetestexcept"`
@@ -75,14 +107,14 @@ var FloatingPoint struct {
 }
 
 var Locale struct {
-	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	LibC
 
 	Set func(abi.LocaleCategory, *abi.Locale) abi.String `ffi:"setlocale"`
 	Get func() *abi.Locale                               `ffi:"localeconv"`
 }
 
 var Program struct {
-	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	LibC
 
 	Abort              func()                             `ffi:"abort"`
 	Exit               func(abi.Int)                      `ffi:"exit"`
@@ -93,10 +125,12 @@ var Program struct {
 	LongJump           func(abi.JumpBuffer, abi.Int)      `ffi:"longjmp"`
 	OnSignal           func(abi.Signal, func(abi.Signal)) `ffi:"signal"`
 	Raise              func(abi.Signal)                   `ffi:"raise"`
+	Getenv             func(abi.String) abi.String        `ffi:"getenv"`
+	Exec               func(abi.String) abi.Error         `ffi:"system"`
 }
 
 var Files struct {
-	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	LibC
 
 	Open          func(abi.String, abi.String) *abi.File                               `ffi:"fopen"`
 	Reopen        func(abi.String, abi.String, *abi.File) *abi.File                    `ffi:"freopen"`
@@ -143,7 +177,7 @@ var Files struct {
 }
 
 var IO struct {
-	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	LibC
 
 	GetChar   func() abi.Int                                              `ffi:"getchar"`
 	GetString func(abi.Pointer[abi.Char], abi.Size) abi.Pointer[abi.Char] `ffi:"gets_s"`
@@ -160,7 +194,7 @@ var IO struct {
 }
 
 var String struct {
-	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	LibC
 
 	Error func(abi.Error) abi.String `ffi:"strerror"`
 
@@ -203,32 +237,27 @@ var String struct {
 	ScanToken       func(abi.String, abi.Size, abi.String, abi.Size) *abi.Char `ffi:"strtok_s"`
 }
 
-var Lib struct {
-	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
+var Memory struct {
+	LibC
 
 	Calloc  func(abi.Size, abi.Size) abi.UnsafePointer          `ffi:"calloc"`
 	Free    func(abi.UnsafePointer)                             `ffi:"free"`
 	Malloc  func(abi.Size) abi.UnsafePointer                    `ffi:"malloc"`
 	Realloc func(abi.UnsafePointer, abi.Size) abi.UnsafePointer `ffi:"realloc"`
-	Abort   func()                                              `ffi:"abort"`
-	AtExit  func(func()) abi.Error                              `ffi:"atexit"`
-	Exit    func(abi.Int)                                       `ffi:"exit"`
-	Getenv  func(abi.String) abi.String                         `ffi:"getenv"`
-	System  func(abi.String) abi.Error                          `ffi:"system"`
 
 	BinarySearch func(abi.UnsafePointer, abi.UnsafePointer, abi.Size, abi.Size, func(abi.UnsafePointer, abi.UnsafePointer) abi.Int) abi.UnsafePointer `ffi:"bsearch"`
 
 	Sort func(abi.UnsafePointer, abi.Size, abi.Size, func(abi.UnsafePointer, abi.UnsafePointer) abi.Int) abi.UnsafePointer `ffi:"qsort"`
 
-	MemoryCompare func(abi.UnsafePointer, abi.UnsafePointer, abi.Size) abi.Int                     `ffi:"memcmp"`
-	MemoryCopy    func(abi.UnsafePointer, abi.Size, abi.UnsafePointer, abi.Size) abi.UnsafePointer `ffi:"memcpy_s"`
-	MemoryMove    func(abi.UnsafePointer, abi.Size, abi.UnsafePointer, abi.Size) abi.UnsafePointer `ffi:"memmove_s"`
-	MemorySet     func(abi.UnsafePointer, abi.Size, abi.Int, abi.Size) abi.UnsafePointer           `ffi:"memset_s"`
-	MemoryFind    func(abi.UnsafePointer, abi.Int, abi.Size) abi.UnsafePointer                     `ffi:"memchr"`
+	Compare func(abi.UnsafePointer, abi.UnsafePointer, abi.Size) abi.Int                     `ffi:"memcmp"`
+	Copy    func(abi.UnsafePointer, abi.Size, abi.UnsafePointer, abi.Size) abi.UnsafePointer `ffi:"memcpy_s"`
+	Move    func(abi.UnsafePointer, abi.Size, abi.UnsafePointer, abi.Size) abi.UnsafePointer `ffi:"memmove_s"`
+	Set     func(abi.UnsafePointer, abi.Size, abi.Int, abi.Size) abi.UnsafePointer           `ffi:"memset_s"`
+	Find    func(abi.UnsafePointer, abi.Int, abi.Size) abi.UnsafePointer                     `ffi:"memchr"`
 }
 
 var Time struct {
-	ffi.Library `linux:"libc.so.6" darwin:"libSystem.dylib"`
+	LibC
 
 	Diff          func(abi.Time, abi.Time) abi.Double       `ffi:"difftime"`
 	Now           func(*abi.Time) abi.Time                  `ffi:"time"`

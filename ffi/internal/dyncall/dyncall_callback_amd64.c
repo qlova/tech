@@ -114,3 +114,12 @@ DCCallback* dcbNewCallback2(const DCsigchar* signature, DCCallbackHandler* handl
   return pcb;
 }
 
+void dcbFreeCallback(DCCallback* pcb)
+{
+  dcFreeWX(pcb, sizeof(DCCallback));
+}
+
+void* dcbGetUserData(DCCallback* pcb)
+{
+  return pcb->userdata;
+}

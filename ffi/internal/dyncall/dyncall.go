@@ -1,101 +1,100 @@
 package dyncall
 
-// #include <dyncall.h>
+/*
+#include <dyncall.h>
+#include <dyncall_callback.h>
+*/
 import "C"
 import (
 	"unsafe"
 )
 
-type VM C.DCCallVM
+const (
+	Void             = C.DC_SIGCHAR_VOID
+	Bool             = C.DC_SIGCHAR_BOOL
+	Char             = C.DC_SIGCHAR_CHAR
+	UnsignedChar     = C.DC_SIGCHAR_UCHAR
+	Short            = C.DC_SIGCHAR_SHORT
+	UnsignedShort    = C.DC_SIGCHAR_USHORT
+	Int              = C.DC_SIGCHAR_INT
+	Uint             = C.DC_SIGCHAR_UINT
+	Long             = C.DC_SIGCHAR_LONG
+	UnsignedLong     = C.DC_SIGCHAR_ULONG
+	LongLong         = C.DC_SIGCHAR_LONGLONG
+	UnsignedLongLong = C.DC_SIGCHAR_ULONGLONG
+	Float            = C.DC_SIGCHAR_FLOAT
+	Double           = C.DC_SIGCHAR_DOUBLE
+	Pointer          = C.DC_SIGCHAR_POINTER
+	String           = C.DC_SIGCHAR_STRING
+	Aggregate        = C.DC_SIGCHAR_AGGREGATE
+)
 
-func NewVM(size int) *VM {
-	return (*VM)(C.dcNewCallVM(C.size_t(size)))
+type Signature struct {
+	Args    []rune
+	Returns rune
 }
 
-func (vm *VM) Reset() {
-	C.dcReset((*C.DCCallVM)(vm))
+var functions []CallbackHandler
+
+//export bridge_callback
+func bridge_callback(cb *C.DCCallback, args *C.DCArgs, result unsafe.Pointer, userdata uintptr) C.DCsigchar {
+	return C.DCsigchar(functions[userdata-1]((*Callback)(cb), (*Args)(args), result))
 }
 
-func (vm *VM) Free() {
-	C.dcFree((*C.DCCallVM)(vm))
+type Args C.DCArgs
+
+func (args *Args) Bool() C.DCbool {
+	return C.dcbArgBool((*C.DCArgs)(args))
 }
 
-func (vm *VM) PushBool(value bool) {
-	var v C.DCbool
-	if value {
-		v = 1
-	}
-	C.dcArgBool((*C.DCCallVM)(vm), v)
+func (args *Args) Char() C.DCchar {
+	return C.dcbArgChar((*C.DCArgs)(args))
 }
 
-func (vm *VM) PushInt8(value int8) {
-	C.dcArgChar((*C.DCCallVM)(vm), C.DCchar(value))
+func (args *Args) Short() C.DCshort {
+	return C.dcbArgShort((*C.DCArgs)(args))
 }
 
-func (vm *VM) PushInt16(value int16) {
-	C.dcArgShort((*C.DCCallVM)(vm), C.DCshort(value))
+func (args *Args) Int() C.DCint {
+	return C.dcbArgInt((*C.DCArgs)(args))
 }
 
-func (vm *VM) PushInt32(value int32) {
-	C.dcArgInt((*C.DCCallVM)(vm), C.DCint(value))
+func (args *Args) Long() C.DClong {
+	return C.dcbArgLong((*C.DCArgs)(args))
 }
 
-func (vm *VM) PushInt(value int) {
-	C.dcArgLong((*C.DCCallVM)(vm), C.DClong(value))
+func (args *Args) LongLong() C.DClonglong {
+	return C.dcbArgLongLong((*C.DCArgs)(args))
 }
 
-func (vm *VM) PushInt64(value int64) {
-	C.dcArgLongLong((*C.DCCallVM)(vm), C.DClonglong(value))
+func (args *Args) UnsignedChar() C.DCuchar {
+	return C.dcbArgUChar((*C.DCArgs)(args))
 }
 
-func (vm *VM) PushFloat32(value float32) {
-	C.dcArgFloat((*C.DCCallVM)(vm), C.float(value))
+func (args *Args) UnsignedShort() C.DCushort {
+	return C.dcbArgUShort((*C.DCArgs)(args))
 }
 
-func (vm *VM) PushFloat64(value float64) {
-	C.dcArgDouble((*C.DCCallVM)(vm), C.double(value))
+func (args *Args) UnsignedInt() C.DCuint {
+	return C.dcbArgUInt((*C.DCArgs)(args))
 }
 
-func (vm *VM) PushPointer(value unsafe.Pointer) {
-	C.dcArgPointer((*C.DCCallVM)(vm), (C.DCpointer)(C.DCpointer(value)))
+func (args *Args) UnsignedLong() C.DCulong {
+	return C.dcbArgULong((*C.DCArgs)(args))
 }
 
-func (vm *VM) Call(address unsafe.Pointer) {
-	C.dcCallVoid((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address)))
+func (args *Args) UnsignedLongLong() C.DCulonglong {
+	return C.dcbArgULongLong((*C.DCArgs)(args))
 }
 
-func (vm *VM) CallBool(address unsafe.Pointer) bool {
-	return C.dcCallBool((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))) != 0
+func (args *Args) Float() C.DCfloat {
+	return C.dcbArgFloat((*C.DCArgs)(args))
 }
 
-func (vm *VM) CallInt8(address unsafe.Pointer) int8 {
-	return int8(C.dcCallChar((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
+func (args *Args) Double() C.DCdouble {
+	return C.dcbArgDouble((*C.DCArgs)(args))
 }
 
-func (vm *VM) CallInt16(address unsafe.Pointer) int16 {
-	return int16(C.dcCallShort((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
-}
-
-func (vm *VM) CallInt32(address unsafe.Pointer) int32 {
-	return int32(C.dcCallInt((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
-}
-
-func (vm *VM) CallInt(address unsafe.Pointer) int {
-	return int(C.dcCallLong((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
-}
-
-func (vm *VM) CallInt64(address unsafe.Pointer) int64 {
-	return int64(C.dcCallLongLong((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
-}
-
-func (vm *VM) CallFloat32(address unsafe.Pointer) float32 {
-	return float32(C.dcCallFloat((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
-}
-
-func (vm *VM) CallFloat64(address unsafe.Pointer) float64 {
-	return float64(C.dcCallDouble((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
-}
-
-func (vm *VM) CallPointer(address unsafe.Pointer) unsafe.Pointer {
-	return unsafe.Pointer(C.dcCallPointer((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
+func (args *Args) Pointer() C.DCpointer {
+	return C.dcbArgPointer((*C.DCArgs)(args))
 }

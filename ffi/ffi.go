@@ -49,6 +49,168 @@ func Link(libraries ...Library) error {
 	return nil
 }
 
+func sigRune(t reflect.Type) rune {
+	switch t.Kind() {
+	case reflect.TypeOf(abi.Bool(false)).Kind():
+		return dyncall.Bool
+	case reflect.TypeOf(abi.Char(0)).Kind():
+		return dyncall.Char
+	case reflect.TypeOf(abi.CharUnsigned(0)).Kind():
+		return dyncall.UnsignedChar
+	case reflect.TypeOf(abi.Short(0)).Kind():
+		return dyncall.Short
+	case reflect.TypeOf(abi.ShortUnsigned(0)).Kind():
+		return dyncall.UnsignedShort
+	case reflect.TypeOf(abi.Int(0)).Kind():
+		return dyncall.Int
+	case reflect.TypeOf(abi.IntUnsigned(0)).Kind():
+		return dyncall.Uint
+	case reflect.TypeOf(abi.Long(0)).Kind():
+		return dyncall.Long
+	case reflect.TypeOf(abi.LongUnsigned(0)).Kind():
+		return dyncall.UnsignedLong
+	case reflect.TypeOf(abi.LongLong(0)).Kind():
+		return dyncall.LongLong
+	case reflect.TypeOf(abi.LongLongUnsigned(0)).Kind():
+		return dyncall.UnsignedLongLong
+	case reflect.TypeOf(abi.Float(0)).Kind():
+		return dyncall.Float
+	case reflect.TypeOf(abi.Double(0)).Kind():
+		return dyncall.Double
+	case reflect.String:
+		return dyncall.String
+	case reflect.Pointer:
+		return dyncall.Pointer
+	case reflect.Struct:
+		if t.Implements(reflect.TypeOf([0]abi.IsPointer{}).Elem()) {
+			return dyncall.Pointer
+		} else {
+			panic("unsupported struct " + t.String())
+		}
+	default:
+		panic("unsupported type " + t.String())
+	}
+}
+
+func newSignature(ftype reflect.Type) dyncall.Signature {
+	var sig dyncall.Signature
+	for i := 0; i < ftype.NumIn(); i++ {
+		sig.Args = append(sig.Args, sigRune(ftype.In(i)))
+	}
+	if ftype.NumOut() > 1 {
+		sig.Returns = sigRune(ftype.Out(0))
+	} else {
+		sig.Returns = dyncall.Void
+	}
+	return sig
+}
+
+func newCallback(signature dyncall.Signature, function reflect.Value) dyncall.CallbackHandler {
+	return func(cb *dyncall.Callback, args *dyncall.Args, result unsafe.Pointer) rune {
+		var values = make([]reflect.Value, len(signature.Args))
+		for i := range values {
+			values[i] = reflect.New(function.Type().In(i)).Elem()
+		}
+		for i := 0; i < len(signature.Args); i++ {
+			switch signature.Args[i] {
+			case dyncall.Bool:
+				switch args.Bool() {
+				case 0:
+					values[i].SetBool(false)
+				case 1:
+					values[i].SetBool(true)
+				}
+			case dyncall.Char:
+				values[i].SetInt(int64(args.Char()))
+			case dyncall.UnsignedChar:
+				values[i].SetUint(uint64(args.UnsignedChar()))
+			case dyncall.Short:
+				values[i].SetInt(int64(args.Short()))
+			case dyncall.UnsignedShort:
+				values[i].SetUint(uint64(args.UnsignedShort()))
+			case dyncall.Int:
+				values[i].SetInt(int64(args.Int()))
+			case dyncall.Uint:
+				values[i].SetUint(uint64(args.UnsignedInt()))
+			case dyncall.Long:
+				values[i].SetInt(int64(args.Long()))
+			case dyncall.UnsignedLong:
+				values[i].SetUint(uint64(args.UnsignedLong()))
+			case dyncall.LongLong:
+				values[i].SetInt(int64(args.LongLong()))
+			case dyncall.UnsignedLongLong:
+				values[i].SetUint(uint64(args.UnsignedLongLong()))
+			case dyncall.Float:
+				values[i].SetFloat(float64(args.Float()))
+			case dyncall.Double:
+				values[i].SetFloat(float64(args.Double()))
+			case dyncall.String:
+				ptr := args.Pointer()
+				switch values[i].Kind() {
+				case reflect.String:
+					values[i].SetString(C.GoString((*C.char)(ptr)))
+				case reflect.Struct:
+					values[i].Set(reflect.ValueOf(*(*abi.String)(unsafe.Pointer(&ptr))))
+				default:
+					panic("unsupported type " + values[i].Type().String())
+				}
+			case dyncall.Pointer:
+				switch values[i].Kind() {
+				case reflect.UnsafePointer:
+					values[i].SetPointer(unsafe.Pointer(args.Pointer()))
+				default:
+					settable, ok := values[i].Addr().Interface().(interface {
+						SetPointer(unsafe.Pointer)
+					})
+					if !ok {
+						panic("unsupported type " + values[i].Type().String())
+					}
+					settable.SetPointer(unsafe.Pointer(args.Pointer()))
+				}
+			default:
+				panic("unsupported type " + string(signature.Args[i]))
+			}
+		}
+		results := function.Call(values)
+		switch signature.Returns {
+		case dyncall.Void:
+		case dyncall.Bool:
+			*(*abi.Bool)(result) = abi.Bool(results[0].Bool())
+		case dyncall.Char:
+			*(*abi.Char)(result) = abi.Char(results[0].Int())
+		case dyncall.UnsignedChar:
+			*(*abi.CharUnsigned)(result) = abi.CharUnsigned(results[0].Uint())
+		case dyncall.Short:
+			*(*abi.Short)(result) = abi.Short(results[0].Int())
+		case dyncall.UnsignedShort:
+			*(*abi.ShortUnsigned)(result) = abi.ShortUnsigned(results[0].Uint())
+		case dyncall.Int:
+			*(*abi.Int)(result) = abi.Int(results[0].Int())
+		case dyncall.Uint:
+			*(*abi.IntUnsigned)(result) = abi.IntUnsigned(results[0].Uint())
+		case dyncall.Long:
+			*(*abi.Long)(result) = abi.Long(results[0].Int())
+		case dyncall.UnsignedLong:
+			*(*abi.LongUnsigned)(result) = abi.LongUnsigned(results[0].Uint())
+		case dyncall.LongLong:
+			*(*abi.LongLong)(result) = abi.LongLong(results[0].Int())
+		case dyncall.UnsignedLongLong:
+			*(*abi.LongLongUnsigned)(result) = abi.LongLongUnsigned(results[0].Uint())
+		case dyncall.Float:
+			*(*abi.Float)(result) = abi.Float(results[0].Float())
+		case dyncall.Double:
+			*(*abi.Double)(result) = abi.Double(results[0].Float())
+		case dyncall.String:
+			*(*abi.String)(result) = abi.NewString(results[0].String()) // FIXME allocate in C memory?
+		case dyncall.Pointer:
+			*(*unsafe.Pointer)(result) = results[0].UnsafePointer()
+		default:
+			panic("unsupported type " + results[0].Type().String())
+		}
+		return signature.Returns
+	}
+}
+
 // Set links the given library using the specified shared
 // library file name. The system linker will look for this
 // file in the system library paths.
@@ -132,6 +294,10 @@ func Set(library Library, file string) error {
 						} else {
 							panic("unsupported struct " + value.Type().String())
 						}
+					case reflect.Func:
+						signature := newSignature(value.Type())
+						ptr := dyncall.NewCallback(signature, newCallback(signature, value))
+						vm.PushPointer(unsafe.Pointer(ptr))
 					default:
 						panic("unsupported type " + value.Type().String())
 					}

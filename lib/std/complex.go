@@ -2,11 +2,10 @@ package std
 
 import (
 	"qlova.tech/abi"
-	"qlova.tech/ffi"
 )
 
 var Complex struct {
-	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	LibM
 
 	Real func(abi.ComplexDouble) abi.Double        `ffi:"creal"`
 	Imag func(abi.ComplexDouble) abi.Double        `ffi:"cimag"`
@@ -36,7 +35,7 @@ var Complex struct {
 }
 
 var ComplexFloat struct {
-	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	LibM
 
 	Real func(abi.ComplexFloat) abi.Float        `ffi:"crealf"`
 	Imag func(abi.ComplexFloat) abi.Float        `ffi:"cimagf"`
@@ -66,7 +65,7 @@ var ComplexFloat struct {
 }
 
 var ComplexDoubleLong struct {
-	ffi.Library `linux:"libm.so.6" darwin:"libSystem.dylib"`
+	LibM
 
 	Real func(abi.ComplexDoubleLong) abi.DoubleLong        `ffi:"creall"`
 	Imag func(abi.ComplexDoubleLong) abi.DoubleLong        `ffi:"cimagl"`
