@@ -1,16 +1,90 @@
 package dyncall
 
-// #include <dyncall.h>
-// #include <dyncall_callback.h>
-// #include <stdlib.h>
-//
-// extern DCsigchar bridge_callback(DCCallback*, DCArgs*, DCValue*, uintptr_t);
-//
-// DCCallback *goNewCallback(const DCsigchar * signature, uintptr_t userdata) {
-//	return dcbNewCallback(signature, (DCCallbackHandler*)bridge_callback, (void*)userdata);
-// }
+/*
+#include <assert.h>
+#include <dyncall.h>
+#include <dyncall_callback.h>
+#include <stdlib.h>
+
+extern DCsigchar bridge_callback(DCCallback*, DCArgs*, DCValue*, uintptr_t);
+
+DCCallback *goNewCallback(const DCsigchar * signature, uintptr_t userdata) {
+	return dcbNewCallback(signature, (DCCallbackHandler*)bridge_callback, (void*)userdata);
+}
+
+typedef struct {
+	DCsigchar vtype;
+	DCValue value;
+} GoArg;
+
+void goArgs(DCCallVM *vm, GoArg *arg, int argc) {
+	dcReset(vm);
+	DCValue value;
+	for (int i = 0; i < argc; i++) {
+		value = arg[i].value;
+		switch (arg[i].vtype) {
+		case DC_SIGCHAR_BOOL:
+			dcArgBool(vm, value.B);
+			break;
+		case DC_SIGCHAR_CHAR:
+			dcArgChar(vm, value.c);
+			break;
+		case DC_SIGCHAR_UCHAR:
+			dcArgChar(vm, value.c);
+			break;
+		case DC_SIGCHAR_SHORT:
+			dcArgShort(vm, value.s);
+			break;
+		case DC_SIGCHAR_USHORT:
+			dcArgShort(vm, value.s);
+			break;
+		case DC_SIGCHAR_INT:
+			dcArgInt(vm, value.i);
+			break;
+		case DC_SIGCHAR_UINT:
+			dcArgInt(vm, value.i);
+			break;
+		case DC_SIGCHAR_LONG:
+			dcArgLong(vm, value.l);
+			break;
+		case DC_SIGCHAR_ULONG:
+			dcArgLong(vm, value.J);
+			break;
+		case DC_SIGCHAR_LONGLONG:
+			dcArgLongLong(vm, value.l);
+			break;
+		case DC_SIGCHAR_ULONGLONG:
+			dcArgLongLong(vm, value.l);
+			break;
+		case DC_SIGCHAR_FLOAT:
+			dcArgFloat(vm, value.f);
+			break;
+		case DC_SIGCHAR_DOUBLE:
+			dcArgDouble(vm, value.d);
+			break;
+		case DC_SIGCHAR_POINTER:
+			dcArgPointer(vm, value.p);
+			break;
+		case DC_SIGCHAR_STRING:
+			dcArgPointer(vm, value.p);
+			break;
+		case DC_SIGCHAR_AGGREGATE:
+			assert(0); // FIXME
+			break;
+		}
+	}
+}
+
+double goCallDouble(DCCallVM *vm, DCpointer funcptr, GoArg *arg, int argc) {
+	goArgs(vm, arg, argc);
+	return dcCallDouble(vm, funcptr);
+}
+
+*/
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+)
 
 type Callback C.DCCallback
 
@@ -28,96 +102,156 @@ func (callback *Callback) Free() {
 	C.dcbFreeCallback((*C.DCCallback)(callback))
 }
 
-type VM C.DCCallVM
+type VM struct {
+	ptr *C.DCCallVM
+	buf []C.GoArg
+}
 
 func NewVM(size int) *VM {
-	return (*VM)(C.dcNewCallVM(C.size_t(size)))
+	return &VM{
+		ptr: C.dcNewCallVM(C.size_t(size)),
+		buf: make([]C.GoArg, 0),
+	}
 }
 
 func (vm *VM) Reset() {
-	C.dcReset((*C.DCCallVM)(vm))
+	vm.buf = vm.buf[:0]
 }
 
 func (vm *VM) Free() {
-	C.dcFree((*C.DCCallVM)(vm))
+	C.dcFree((*C.DCCallVM)(vm.ptr))
 }
 
 func (vm *VM) PushBool(value bool) {
-	var v C.DCbool
+	var val C.DCValue
 	if value {
-		v = 1
+		*(*C.DCbool)(unsafe.Pointer(&val)) = C.DCbool(1)
+	} else {
+		*(*C.DCbool)(unsafe.Pointer(&val)) = C.DCbool(0)
 	}
-	C.dcArgBool((*C.DCCallVM)(vm), v)
+	vm.buf = append(vm.buf, C.GoArg{
+		vtype: C.DC_SIGCHAR_BOOL,
+		value: val,
+	})
 }
 
 func (vm *VM) PushInt8(value int8) {
-	C.dcArgChar((*C.DCCallVM)(vm), C.DCchar(value))
+	var val C.DCValue
+	*(*C.DCchar)(unsafe.Pointer(&val)) = C.DCchar(value)
+	vm.buf = append(vm.buf, C.GoArg{
+		vtype: C.DC_SIGCHAR_CHAR,
+		value: val,
+	})
 }
 
 func (vm *VM) PushInt16(value int16) {
-	C.dcArgShort((*C.DCCallVM)(vm), C.DCshort(value))
+	var val C.DCValue
+	*(*C.DCshort)(unsafe.Pointer(&val)) = C.DCshort(value)
+	vm.buf = append(vm.buf, C.GoArg{
+		vtype: C.DC_SIGCHAR_SHORT,
+		value: val,
+	})
 }
 
 func (vm *VM) PushInt32(value int32) {
-	C.dcArgInt((*C.DCCallVM)(vm), C.DCint(value))
+	var val C.DCValue
+	*(*C.DCint)(unsafe.Pointer(&val)) = C.DCint(value)
+	vm.buf = append(vm.buf, C.GoArg{
+		vtype: C.DC_SIGCHAR_INT,
+		value: val,
+	})
 }
 
 func (vm *VM) PushInt(value int) {
-	C.dcArgLong((*C.DCCallVM)(vm), C.DClong(value))
+	var val C.DCValue
+	*(*C.DClong)(unsafe.Pointer(&val)) = C.DClong(value)
+	vm.buf = append(vm.buf, C.GoArg{
+		vtype: C.DC_SIGCHAR_LONG,
+		value: val,
+	})
 }
 
 func (vm *VM) PushInt64(value int64) {
-	C.dcArgLongLong((*C.DCCallVM)(vm), C.DClonglong(value))
+	var val C.DCValue
+	*(*C.DClonglong)(unsafe.Pointer(&val)) = C.DClonglong(value)
+	vm.buf = append(vm.buf, C.GoArg{
+		vtype: C.DC_SIGCHAR_LONGLONG,
+		value: val,
+	})
 }
 
 func (vm *VM) PushFloat32(value float32) {
-	C.dcArgFloat((*C.DCCallVM)(vm), C.float(value))
+	var val C.DCValue
+	*(*C.DCfloat)(unsafe.Pointer(&val)) = C.DCfloat(value)
+	vm.buf = append(vm.buf, C.GoArg{
+		vtype: C.DC_SIGCHAR_FLOAT,
+		value: val,
+	})
 }
 
 func (vm *VM) PushFloat64(value float64) {
-	C.dcArgDouble((*C.DCCallVM)(vm), C.double(value))
+	var val C.DCValue
+	*(*C.DCdouble)(unsafe.Pointer(&val)) = C.DCdouble(value)
+	vm.buf = append(vm.buf, C.GoArg{
+		vtype: C.DC_SIGCHAR_DOUBLE,
+		value: val,
+	})
 }
 
 func (vm *VM) PushPointer(value unsafe.Pointer) {
-	C.dcArgPointer((*C.DCCallVM)(vm), (C.DCpointer)(C.DCpointer(value)))
+	var val C.DCValue
+	*(*C.DCpointer)(unsafe.Pointer(&val)) = C.DCpointer(value)
+	vm.buf = append(vm.buf, C.GoArg{
+		vtype: C.DC_SIGCHAR_POINTER,
+		value: val,
+	})
 }
 
 func (vm *VM) Call(address unsafe.Pointer) {
-	C.dcCallVoid((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address)))
+	C.goArgs((*C.DCCallVM)(vm.ptr), unsafe.SliceData(vm.buf), C.int(len(vm.buf)))
+	C.dcCallVoid((*C.DCCallVM)(vm.ptr), (C.DCpointer)(unsafe.Pointer(address)))
 }
 
 func (vm *VM) CallBool(address unsafe.Pointer) bool {
-	return C.dcCallBool((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))) != 0
+	C.goArgs((*C.DCCallVM)(vm.ptr), unsafe.SliceData(vm.buf), C.int(len(vm.buf)))
+	return C.dcCallBool((*C.DCCallVM)(vm.ptr), (C.DCpointer)(unsafe.Pointer(address))) != 0
 }
 
 func (vm *VM) CallInt8(address unsafe.Pointer) int8 {
-	return int8(C.dcCallChar((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
+	C.goArgs((*C.DCCallVM)(vm.ptr), unsafe.SliceData(vm.buf), C.int(len(vm.buf)))
+	return int8(C.dcCallChar((*C.DCCallVM)(vm.ptr), (C.DCpointer)(unsafe.Pointer(address))))
 }
 
 func (vm *VM) CallInt16(address unsafe.Pointer) int16 {
-	return int16(C.dcCallShort((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
+	C.goArgs((*C.DCCallVM)(vm.ptr), unsafe.SliceData(vm.buf), C.int(len(vm.buf)))
+	return int16(C.dcCallShort((*C.DCCallVM)(vm.ptr), (C.DCpointer)(unsafe.Pointer(address))))
 }
 
 func (vm *VM) CallInt32(address unsafe.Pointer) int32 {
-	return int32(C.dcCallInt((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
+	C.goArgs((*C.DCCallVM)(vm.ptr), unsafe.SliceData(vm.buf), C.int(len(vm.buf)))
+	return int32(C.dcCallInt((*C.DCCallVM)(vm.ptr), (C.DCpointer)(unsafe.Pointer(address))))
 }
 
 func (vm *VM) CallInt(address unsafe.Pointer) int {
-	return int(C.dcCallLong((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
+	C.goArgs((*C.DCCallVM)(vm.ptr), unsafe.SliceData(vm.buf), C.int(len(vm.buf)))
+	return int(C.dcCallLong((*C.DCCallVM)(vm.ptr), (C.DCpointer)(unsafe.Pointer(address))))
 }
 
 func (vm *VM) CallInt64(address unsafe.Pointer) int64 {
-	return int64(C.dcCallLongLong((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
+	C.goArgs((*C.DCCallVM)(vm.ptr), unsafe.SliceData(vm.buf), C.int(len(vm.buf)))
+	return int64(C.dcCallLongLong((*C.DCCallVM)(vm.ptr), (C.DCpointer)(unsafe.Pointer(address))))
 }
 
 func (vm *VM) CallFloat32(address unsafe.Pointer) float32 {
-	return float32(C.dcCallFloat((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
+	C.goArgs((*C.DCCallVM)(vm.ptr), unsafe.SliceData(vm.buf), C.int(len(vm.buf)))
+	return float32(C.dcCallFloat((*C.DCCallVM)(vm.ptr), (C.DCpointer)(unsafe.Pointer(address))))
 }
 
 func (vm *VM) CallFloat64(address unsafe.Pointer) float64 {
-	return float64(C.dcCallDouble((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
+	return float64(C.goCallDouble((*C.DCCallVM)(vm.ptr), (C.DCpointer)(unsafe.Pointer(address)), unsafe.SliceData(vm.buf), C.int(len(vm.buf))))
 }
 
 func (vm *VM) CallPointer(address unsafe.Pointer) unsafe.Pointer {
-	return unsafe.Pointer(C.dcCallPointer((*C.DCCallVM)(vm), (C.DCpointer)(unsafe.Pointer(address))))
+	C.goArgs((*C.DCCallVM)(vm.ptr), unsafe.SliceData(vm.buf), C.int(len(vm.buf)))
+	return unsafe.Pointer(C.dcCallPointer((*C.DCCallVM)(vm.ptr), (C.DCpointer)(unsafe.Pointer(address))))
 }

@@ -252,6 +252,7 @@ func Set(library Library, file string) error {
 		case *func(abi.Double) abi.Double:
 			*fn = func(a abi.Double) abi.Double {
 				vm := vm8.Get().(*dyncall.VM)
+				vm.Reset()
 				defer vm8.Put(vm)
 				vm.PushFloat64(float64(a))
 				return abi.Double(vm.CallFloat64(symbol))
