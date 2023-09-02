@@ -1,11 +1,16 @@
 package main
 
 import (
+	"runtime"
+
 	"qlova.tech/lib/sdl"
 )
 
 func init() {
-	sdl.Link()
+	runtime.LockOSThread()
+	if err := sdl.Link(); err != nil {
+		panic(err)
+	}
 }
 
 func main() {
@@ -22,6 +27,12 @@ func main() {
 	}
 	sdl.Draw.FilledRect(surface, nil, 0xFFFFFF)
 	sdl.Windows.UpdateSurface(window)
-	sdl.Timer.Delay(2000)
+
+	var event sdl.Event
+	for ; true; sdl.Events.Poll(&event) {
+		if event.Type == sdl.Quit {
+			break
+		}
+	}
 	sdl.System.Quit()
 }

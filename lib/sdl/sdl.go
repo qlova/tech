@@ -1,6 +1,8 @@
 package sdl
 
 import (
+	"unsafe"
+
 	"qlova.tech/abi"
 	"qlova.tech/ffi"
 )
@@ -11,6 +13,7 @@ func Link() error {
 		&Draw,
 		&Timer,
 		&System,
+		&Events,
 	)
 }
 
@@ -28,7 +31,7 @@ const (
 )
 
 var Windows struct {
-	ffi.Header `linux:"libSDL2-2.0.so.0"`
+	ffi.Header `linux:"libSDL2-2.0.so.0" darwin:"libSDL2.dylib" windows:"SDL2.dll"`
 
 	Error func() string `ffi:"SDL_GetError"`
 
@@ -48,19 +51,36 @@ type Rect struct {
 }
 
 var Draw struct {
-	ffi.Header `linux:"libSDL2-2.0.so.0"`
+	ffi.Header `linux:"libSDL2-2.0.so.0" darwin:"libSDL2.dylib"`
 
 	FilledRect func(Surface, *Rect, Color) `ffi:"SDL_FillRect"`
 }
 
 var Timer struct {
-	ffi.Header `linux:"libSDL2-2.0.so.0"`
+	ffi.Header `linux:"libSDL2-2.0.so.0" darwin:"libSDL2.dylib"`
 
 	Delay func(ms abi.Uint32) `ffi:"SDL_Delay"`
 }
 
 var System struct {
-	ffi.Header `linux:"libSDL2-2.0.so.0"`
+	ffi.Header `linux:"libSDL2-2.0.so.0" darwin:"libSDL2.dylib"`
 
 	Quit func() `ffi:"SDL_Quit"`
+}
+
+type EventType abi.Uint32
+
+const (
+	Quit EventType = 0x100
+)
+
+type Event struct {
+	Type EventType
+	Data [56 - unsafe.Sizeof(abi.Uint32(0))]byte
+}
+
+var Events struct {
+	ffi.Header `linux:"libSDL2-2.0.so.0" darwin:"libSDL2.dylib"`
+
+	Poll func(*Event) abi.Int `ffi:"SDL_PollEvent"`
 }

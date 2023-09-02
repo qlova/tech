@@ -5,10 +5,12 @@ package ffi
 #include <stdlib.h>
 */
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+)
 
 func dlopen(filename string) (handle unsafe.Pointer) {
-	s := C.CString(filename)
+	s := C.CString(filename + "\x00")
 	defer C.free(unsafe.Pointer(s))
 	return C.dlopen(s, C.RTLD_NOW)
 }
@@ -18,7 +20,7 @@ func dlerror() string {
 }
 
 func dlsym(handle unsafe.Pointer, symbol string) unsafe.Pointer {
-	s := C.CString(symbol)
+	s := C.CString(symbol + "\x00")
 	defer C.free(unsafe.Pointer(s))
 	return C.dlsym(handle, s)
 }
