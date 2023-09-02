@@ -55,7 +55,7 @@ func Set(header Header, library string) error {
 			continue
 		}
 
-		name := field.Tag.Get("cgo")
+		name := field.Tag.Get("ffi")
 		if name == "" {
 			name = field.Name
 		}
