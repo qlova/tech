@@ -1,0 +1,7 @@
+/abi/gen/gen
+/.vscode/settings.json
+/Readme.md
+/run/.DS_Store
+/run/HelloSquare/hello
+/run/HelloSquare/libSDL2.dylib
+/.DS_Store
