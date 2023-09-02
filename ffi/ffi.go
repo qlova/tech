@@ -95,7 +95,7 @@ func Set(header Header, library string) error {
 						vm.PushFloat32(float32(value.Float()))
 					case reflect.Float64:
 						vm.PushFloat64(value.Float())
-					case reflect.Pointer:
+					case reflect.Pointer, reflect.UnsafePointer:
 						vm.PushPointer(value.UnsafePointer())
 					default:
 						panic("unsupported type " + value.Type().String())
@@ -128,10 +128,24 @@ func Set(header Header, library string) error {
 						results[0].SetInt(int64(vm.CallInt32(symbol)))
 					case reflect.Int64:
 						results[0].SetInt(int64(vm.CallInt64(symbol)))
+					case reflect.Uint8:
+						u8 := vm.CallInt8(symbol)
+						results[0].SetUint(uint64(*(*uint8)(unsafe.Pointer(&u8))))
+					case reflect.Uint16:
+						u16 := vm.CallInt16(symbol)
+						results[0].SetUint(uint64(*(*uint16)(unsafe.Pointer(&u16))))
+					case reflect.Uint32:
+						u32 := vm.CallInt32(symbol)
+						results[0].SetUint(uint64(*(*uint32)(unsafe.Pointer(&u32))))
+					case reflect.Uint64:
+						u64 := vm.CallInt64(symbol)
+						results[0].SetUint(uint64(*(*uint64)(unsafe.Pointer(&u64))))
 					case reflect.Float32:
 						results[0].SetFloat(float64(vm.CallFloat32(symbol)))
 					case reflect.Float64:
 						results[0].SetFloat(float64(vm.CallFloat64(symbol)))
+					case reflect.UnsafePointer:
+						results[0].SetPointer(vm.CallPointer(symbol))
 					default:
 						panic("unsupported type " + field.Type.Out(0).String())
 					}
