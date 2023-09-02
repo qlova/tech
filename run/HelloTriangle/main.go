@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"qlova.tech/lib/sdl"
+	"qlova.tech/lib/sdl/v2"
 )
 
 func init() {
