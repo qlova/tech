@@ -314,10 +314,6 @@ func HugeDouble() abi.Double {
 	return abi.Double(math.Inf(1))
 }
 
-func HugeDoubleLong() abi.DoubleLong {
-	return abi.DoubleLong(math.Inf(1))
-}
-
 func NaN() abi.Float {
 	return abi.Float(math.NaN())
 }

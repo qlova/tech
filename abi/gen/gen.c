@@ -368,7 +368,11 @@ int main(int argc, char *argv[]) {
 
     printf("\tFloat               float%d\n", (unsigned)sizeof(float) * CHAR_BIT);
     printf("\tDouble              float%d\n", (unsigned)sizeof(double) * CHAR_BIT);
-    printf("\tDoubleLong          float%d\n", (unsigned)sizeof(long double) * CHAR_BIT);
+    if ((unsigned)sizeof(long double) * CHAR_BIT > 64) {
+        printf("\tDoubleLong          [%d]byte\n", (unsigned)sizeof(long double));
+    } else {
+        printf("\tDoubleLong          float%d\n", (unsigned)sizeof(long double) * CHAR_BIT);
+    }
 
     printf("\tComplexFloat        [2]Float\n");
     printf("\tComplexDouble       [2]Double\n");
