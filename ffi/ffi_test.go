@@ -11,9 +11,10 @@ import (
 
 func init() {
 	if err := ffi.Link(
-		&std.Math,
+		&std.Float,
 		&std.Char,
-		&std.Clock,
+		&std.Time,
+		&std.Locale,
 	); err != nil {
 		panic(err)
 	}
@@ -22,11 +23,14 @@ func init() {
 func TestLibc(t *testing.T) {
 	fmt.Println(std.Char.IsAlphaNumeric('a'))
 
-	fmt.Println(std.Math.Sqrt(2))
+	fmt.Println(std.Float.Sqrt(2))
 
-	fmt.Println(std.Math.Frexp(2.2))
+	fmt.Println(std.Float.Frexp(2.2))
 
-	fmt.Println(std.Clock.Time(nil))
+	fmt.Println(std.Time.Now(nil))
+
+	fmt.Println(std.Locale.Get())
+
 }
 
 func BenchmarkGo(b *testing.B) {
@@ -37,6 +41,6 @@ func BenchmarkGo(b *testing.B) {
 
 func BenchmarkC(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		std.Math.Sqrt(2)
+		std.Float.Sqrt(2)
 	}
 }

@@ -39,8 +39,4 @@ type (
 	ComplexDouble     = [2]float64
 	ComplexFloat      = [2]float32
 	ComplexDoubleLong = [2][16]byte
-
-	ImaginaryDouble     = float64
-	ImaginaryDoubleLong = [16]byte
-	ImaginaryFloat      = float32
 )

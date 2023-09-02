@@ -156,6 +156,8 @@ func Set(header Header, library string) error {
 						results[0].SetFloat(float64(vm.CallFloat64(symbol)))
 					case reflect.UnsafePointer:
 						results[0].SetPointer(vm.CallPointer(symbol))
+					case reflect.Pointer:
+						results[0] = reflect.NewAt(field.Type.Out(0).Elem(), unsafe.Pointer(vm.CallPointer(symbol)))
 					default:
 						panic("unsupported type " + field.Type.Out(0).String())
 					}
