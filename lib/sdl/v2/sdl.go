@@ -126,14 +126,14 @@ var System struct {
 	Revision func() string  `ffi:"SDL_GetRevision"` // Revision returns the revision number of SDL that is linked against your program.
 	Version  func(*Version) `ffi:"SDL_GetVersion"`  // Version returns the version of SDL that is linked against your program.
 
-	DefaultAssertionHandler func() AssertionHandler             `ffi:"SDL_GetAssertionHandler"`  // AssertionHandler returns the current assertion handler.
-	SetAssertionHandler     func(AssertionHandler)              `ffi:"SDL_SetAssertionHandler"`  // SetAssertionHandler sets a new assertion handler.
-	GetAssertionHandler     func(*abi.Pointer) AssertionHandler `ffi:"SDL_GetAssertionHandler"`  // GetAssertionHandler returns the current assertion handler.
-	GetAssertionReport      func() *AssertionData               `ffi:"SDL_GetAssertionReport"`   // GetAssertionReport returns the last assertion reported, or nil if there weren't any.
-	ResetAssertionReport    func()                              `ffi:"SDL_ResetAssertionReport"` // ResetAssertionReport clears the list of all assertion failures.
+	DefaultAssertionHandler func() AssertionHandler                   `ffi:"SDL_GetAssertionHandler"`  // AssertionHandler returns the current assertion handler.
+	SetAssertionHandler     func(AssertionHandler)                    `ffi:"SDL_SetAssertionHandler"`  // SetAssertionHandler sets a new assertion handler.
+	GetAssertionHandler     func(*abi.UnsafePointer) AssertionHandler `ffi:"SDL_GetAssertionHandler"`  // GetAssertionHandler returns the current assertion handler.
+	GetAssertionReport      func() *AssertionData                     `ffi:"SDL_GetAssertionReport"`   // GetAssertionReport returns the last assertion reported, or nil if there weren't any.
+	ResetAssertionReport    func()                                    `ffi:"SDL_ResetAssertionReport"` // ResetAssertionReport clears the list of all assertion failures.
 }
 
-type AssertionHandler abi.Func[func(*AssertionData, abi.Pointer) AssertionState]
+type AssertionHandler abi.Func[func(*AssertionData, abi.UnsafePointer) AssertionState]
 
 type AssertionState abi.Enum
 
@@ -155,7 +155,7 @@ type AssertionData struct {
 	Next         *AssertionData
 }
 
-type Window abi.Pointer
+type Window abi.Opaque[Window]
 
 type WindowFlags abi.Uint32
 
@@ -180,7 +180,7 @@ var Windows struct {
 	Destroy       func(Window)                  `ffi:"SDL_DestroyWindow"`
 }
 
-type Surface abi.Pointer
+type Surface abi.Opaque[Surface]
 
 type Color abi.Uint32
 
@@ -208,7 +208,7 @@ type Version struct {
 	Patch abi.Uint8
 }
 
-type Userdata abi.Pointer
+type Userdata abi.Opaque[Userdata]
 
 type Bool abi.Enum
 
@@ -253,8 +253,8 @@ var Events struct {
 var Errors struct {
 	Lib
 
-	Clear           func()                                     `ffi:"SDL_ClearError"`
-	Get             func() string                              `ffi:"SDL_GetError"`
-	GetErrorMessage func(abi.String, abi.Int) abi.String       `ffi:"SDL_GetErrorMessage"`
-	SetError        func(abi.String, ...abi.Pointer) abi.Error `ffi:"SDL_SetError"`
+	Clear           func()                                           `ffi:"SDL_ClearError"`
+	Get             func() string                                    `ffi:"SDL_GetError"`
+	GetErrorMessage func(abi.String, abi.Int) abi.String             `ffi:"SDL_GetErrorMessage"`
+	SetError        func(abi.String, ...abi.UnsafePointer) abi.Error `ffi:"SDL_SetError"`
 }

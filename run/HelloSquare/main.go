@@ -19,7 +19,7 @@ func main() {
 		panic(sdl.Errors.Get())
 	}
 
-	window, err := sdl.Windows.Create("Hello Triangle", sdl.WindowCentered,
+	window, err := sdl.Windows.Create("Hello Square", sdl.WindowCentered,
 		sdl.WindowCentered, 640, 480, sdl.WindowOpenGL|sdl.WindowShown)
 	if err != nil {
 		panic(err)
@@ -31,6 +31,9 @@ func main() {
 		panic(err)
 	}
 	sdl.Draw.FilledRect(surface, nil, 0xFFFFFF)
+	sdl.Draw.FilledRect(surface, &sdl.Rect{
+		X: 640/2 - 50, Y: 480/2 - 50, W: 100, H: 100,
+	}, 0xFF0000)
 	sdl.Windows.UpdateSurface(window)
 
 	fmt.Println(sdl.Audio.Driver())

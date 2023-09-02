@@ -58,11 +58,11 @@ var AudioStreams struct {
 
 	New func(src_format AudioFormat, src_channels abi.Uint8, src_rate abi.Int, dst_format AudioFormat, dst_channels abi.Uint8, dst_rate abi.Int) (AudioStream, error) `ffi:"SDL_NewAudioStream"` // Create a new audio stream.
 
-	Put   func(stream AudioStream, buf abi.Pointer, len abi.Int) abi.Error `ffi:"SDL_AudioStreamPut"`   // Write data to a stream.
-	Get   func(stream AudioStream) abi.Int                                 `ffi:"SDL_AudioStreamGet"`   // Read data from a stream.
-	Flush func(stream AudioStream) abi.Int                                 `ffi:"SDL_AudioStreamFlush"` // Flush any pending data in the stream.
-	Clear func(stream AudioStream)                                         `ffi:"SDL_AudioStreamClear"` // Clear any pending data in the stream, without flushing.
-	Free  func(stream AudioStream)                                         `ffi:"SDL_FreeAudioStream"`  // Free an audio stream.
+	Put   func(stream AudioStream, buf abi.Pointer[abi.Uint8], len abi.Int) abi.Error `ffi:"SDL_AudioStreamPut"`   // Write data to a stream.
+	Get   func(stream AudioStream) abi.Int                                            `ffi:"SDL_AudioStreamGet"`   // Read data from a stream.
+	Flush func(stream AudioStream) abi.Int                                            `ffi:"SDL_AudioStreamFlush"` // Flush any pending data in the stream.
+	Clear func(stream AudioStream)                                                    `ffi:"SDL_AudioStreamClear"` // Clear any pending data in the stream, without flushing.
+	Free  func(stream AudioStream)                                                    `ffi:"SDL_FreeAudioStream"`  // Free an audio stream.
 }
 
 var AudioDevices struct {
@@ -80,15 +80,15 @@ var AudioDevices struct {
 	Unlock func(AudioDevice)                                                                                    `ffi:"SDL_UnlockAudioDevice"`    // Unlock the audio device mutex.
 	Close  func(AudioDevice)                                                                                    `ffi:"SDL_CloseAudioDevice"`     // Close a specific audio device.
 
-	Queue      func(device AudioDevice, data abi.Pointer, len abi.Uint32) abi.Error `ffi:"SDL_QueueAudio"`         // Queue more audio to playback on a specific device.
-	Dequeue    func(device AudioDevice, data abi.Pointer, len abi.Uint32) abi.Error `ffi:"SDL_DequeueAudio"`       // Dequeue more audio for playback on a specific device.
-	QueuedSuze func(device AudioDevice) abi.Uint32                                  `ffi:"SDL_GetQueuedAudioSize"` // Get the number of bytes of still-queued audio.
-	ClearQueue func(device AudioDevice)                                             `ffi:"SDL_ClearQueuedAudio"`   // Drop any queued audio data.
+	Queue      func(device AudioDevice, data abi.Pointer[abi.Uint8], len abi.Uint32) abi.Error `ffi:"SDL_QueueAudio"`         // Queue more audio to playback on a specific device.
+	Dequeue    func(device AudioDevice, data abi.Pointer[abi.Uint8], len abi.Uint32) abi.Error `ffi:"SDL_DequeueAudio"`       // Dequeue more audio for playback on a specific device.
+	QueuedSuze func(device AudioDevice) abi.Uint32                                             `ffi:"SDL_GetQueuedAudioSize"` // Get the number of bytes of still-queued audio.
+	ClearQueue func(device AudioDevice)                                                        `ffi:"SDL_ClearQueuedAudio"`   // Drop any queued audio data.
 }
 
 type AudioDriver string
 
-type AudioStream abi.Pointer
+type AudioStream abi.Opaque[AudioStream]
 
 type AudioDevice abi.Uint32
 type AudioDeviceIndex abi.Int
@@ -172,18 +172,18 @@ const (
 	AudioAllowAnyChange       AudioAllowedChanges = AudioAllowFrequencyChange | AudioAllowFormatChange | AudioAllowChannelsChange | AudioAllowSamplesChange
 )
 
-type AudioCallback abi.Func[func(abi.Pointer, abi.Buffer)]
+type AudioCallback abi.Func[func(abi.UnsafePointer, abi.Buffer)]
 
 type AudioSpec struct {
-	Freq     abi.Int       /**< DSP frequency -- samples per second */
-	Format   AudioFormat   /**< Audio data format */
-	Channels abi.Uint8     /**< Number of channels: 1 mono, 2 stereo */
-	Silence  abi.Uint8     /**< Audio buffer silence value (calculated) */
-	Samples  abi.Uint16    /**< Audio buffer size in samples (power of 2) */
-	Padding  abi.Uint16    /**< Necessary for some compile environments */
-	Size     abi.Uint32    /**< Audio buffer size in bytes (calculated) */
-	Callback AudioCallback /**< Callback that feeds the audio device (NULL to use SDL_QueueAudio()). */
-	Userdata abi.Pointer   /**< Userdata passed to callback (ignored for NULL callbacks). */
+	Freq     abi.Int           /**< DSP frequency -- samples per second */
+	Format   AudioFormat       /**< Audio data format */
+	Channels abi.Uint8         /**< Number of channels: 1 mono, 2 stereo */
+	Silence  abi.Uint8         /**< Audio buffer silence value (calculated) */
+	Samples  abi.Uint16        /**< Audio buffer size in samples (power of 2) */
+	Padding  abi.Uint16        /**< Necessary for some compile environments */
+	Size     abi.Uint32        /**< Audio buffer size in bytes (calculated) */
+	Callback AudioCallback     /**< Callback that feeds the audio device (NULL to use SDL_QueueAudio()). */
+	Userdata abi.UnsafePointer /**< Userdata passed to callback (ignored for NULL callbacks). */
 }
 
 type AudioFilter abi.Func[func(*AudioCVT, AudioFormat)]

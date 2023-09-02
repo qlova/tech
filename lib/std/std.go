@@ -98,21 +98,21 @@ var Program struct {
 var Files struct {
 	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
-	Open          func(abi.String, abi.String) *abi.File                         `ffi:"fopen"`
-	Reopen        func(abi.String, abi.String, *abi.File) *abi.File              `ffi:"freopen"`
-	Flush         func(*abi.File) abi.Int                                        `ffi:"fflush"`
-	SetBuffer     func(*abi.File, abi.Pointer) abi.Int                           `ffi:"setbuf"`
-	SetBufferMode func(*abi.File, abi.Pointer, abi.BufferMode, abi.Size) abi.Int `ffi:"setvbuf"`
-	SetCharWide   func(*abi.File, abi.Int) abi.Int                               `ffi:"fwide"`
+	Open          func(abi.String, abi.String) *abi.File                               `ffi:"fopen"`
+	Reopen        func(abi.String, abi.String, *abi.File) *abi.File                    `ffi:"freopen"`
+	Flush         func(*abi.File) abi.Int                                              `ffi:"fflush"`
+	SetBuffer     func(*abi.File, abi.UnsafePointer) abi.Int                           `ffi:"setbuf"`
+	SetBufferMode func(*abi.File, abi.UnsafePointer, abi.BufferMode, abi.Size) abi.Int `ffi:"setvbuf"`
+	SetCharWide   func(*abi.File, abi.Int) abi.Int                                     `ffi:"fwide"`
 
-	Read  func(abi.Pointer, abi.Size, abi.Size, *abi.File) abi.Int `ffi:"fread"`
-	Write func(abi.Pointer, abi.Size, abi.Size, *abi.File) abi.Int `ffi:"fwrite"`
+	Read  func(abi.Pointer[abi.Char], abi.Size, abi.Size, *abi.File) abi.Int `ffi:"fread"`
+	Write func(abi.Pointer[abi.Char], abi.Size, abi.Size, *abi.File) abi.Int `ffi:"fwrite"`
 
-	GetChar   func(*abi.File) abi.Int                           `ffi:"fgetc"`
-	GetString func(abi.Pointer, abi.Int, *abi.File) abi.Pointer `ffi:"fgets"`
-	PutChar   func(abi.Int, *abi.File) abi.Int                  `ffi:"fputc"`
-	PutString func(abi.String, *abi.File) abi.Int               `ffi:"fputs"`
-	UngetChar func(abi.Int, *abi.File) abi.Int                  `ffi:"ungetc"`
+	GetChar   func(*abi.File) abi.Int                                               `ffi:"fgetc"`
+	GetString func(abi.Pointer[abi.Char], abi.Int, *abi.File) abi.Pointer[abi.Char] `ffi:"fgets"`
+	PutChar   func(abi.Int, *abi.File) abi.Int                                      `ffi:"fputc"`
+	PutString func(abi.String, *abi.File) abi.Int                                   `ffi:"fputs"`
+	UngetChar func(abi.Int, *abi.File) abi.Int                                      `ffi:"ungetc"`
 
 	GetCharWide   func(*abi.File) abi.CharWide                            `ffi:"fgetwc"`
 	GetStringWide func(abi.StringWide, abi.Int, *abi.File) abi.StringWide `ffi:"fgetws"`
@@ -120,10 +120,10 @@ var Files struct {
 	PutStringWide func(abi.StringWide, *abi.File) abi.Int                 `ffi:"fputws"`
 	UngetCharWide func(abi.CharWide, *abi.File) abi.CharWide              `ffi:"ungetwc"`
 
-	Scanf      func(*abi.File, abi.String, ...abi.Pointer) abi.Int     `ffi:"fscanf_s"`
-	Printf     func(*abi.File, abi.String, ...abi.Pointer) abi.Int     `ffi:"fprintf_s"`
-	ScanWidef  func(*abi.File, abi.StringWide, ...abi.Pointer) abi.Int `ffi:"fwscanf_s"`
-	PrintWidef func(*abi.File, abi.StringWide, ...abi.Pointer) abi.Int `ffi:"fwprintf_s"`
+	Scanf      func(*abi.File, abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"fscanf_s"`
+	Printf     func(*abi.File, abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"fprintf_s"`
+	ScanWidef  func(*abi.File, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"fwscanf_s"`
+	PrintWidef func(*abi.File, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"fwprintf_s"`
 
 	Tell   func(*abi.File) abi.Long                        `ffi:"ftell"`
 	GetPos func(*abi.File, *abi.FilePosition) abi.Int      `ffi:"fgetpos"`
@@ -145,18 +145,18 @@ var Files struct {
 var IO struct {
 	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
-	GetChar   func() abi.Int                          `ffi:"getchar"`
-	GetString func(abi.Pointer, abi.Size) abi.Pointer `ffi:"gets_s"`
-	PutChar   func(abi.Int) abi.Int                   `ffi:"putchar"`
-	PutString func(abi.String) abi.Int                `ffi:"puts"`
+	GetChar   func() abi.Int                                              `ffi:"getchar"`
+	GetString func(abi.Pointer[abi.Char], abi.Size) abi.Pointer[abi.Char] `ffi:"gets_s"`
+	PutChar   func(abi.Int) abi.Int                                       `ffi:"putchar"`
+	PutString func(abi.String) abi.Int                                    `ffi:"puts"`
 
 	GetCharWide func() abi.CharWide             `ffi:"getwchar"`
 	PutCharWide func(abi.CharWide) abi.CharWide `ffi:"putwchar"`
 
-	Scanf      func(abi.String, ...abi.Pointer) abi.Int     `ffi:"scanf_s"`
-	Printf     func(abi.String, ...abi.Pointer) abi.Int     `ffi:"printf_s"`
-	ScanWidef  func(abi.StringWide, ...abi.Pointer) abi.Int `ffi:"wscanf_s"`
-	PrintWidef func(abi.StringWide, ...abi.Pointer) abi.Int `ffi:"wprintf_s"`
+	Scanf      func(abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"scanf_s"`
+	Printf     func(abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"printf_s"`
+	ScanWidef  func(abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"wscanf_s"`
+	PrintWidef func(abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"wprintf_s"`
 }
 
 var String struct {
@@ -164,10 +164,10 @@ var String struct {
 
 	Error func(abi.Error) abi.String `ffi:"strerror"`
 
-	Scanf      func(abi.String, abi.String, ...abi.Pointer) abi.Int         `ffi:"sscanf_s"`
-	Printf     func(abi.String, abi.String, ...abi.Pointer) abi.Int         `ffi:"sprintf_s"`
-	ScanWidef  func(abi.StringWide, abi.StringWide, ...abi.Pointer) abi.Int `ffi:"swscanf_s"`
-	PrintWidef func(abi.StringWide, abi.StringWide, ...abi.Pointer) abi.Int `ffi:"swprintf_s"`
+	Scanf      func(abi.String, abi.String, ...abi.UnsafePointer) abi.Int         `ffi:"sscanf_s"`
+	Printf     func(abi.String, abi.String, ...abi.UnsafePointer) abi.Int         `ffi:"sprintf_s"`
+	ScanWidef  func(abi.StringWide, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"swscanf_s"`
+	PrintWidef func(abi.StringWide, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"swprintf_s"`
 
 	ToFloat               func(abi.String) abi.Float                                `ffi:"atof"`
 	ToInt                 func(abi.String) abi.Int                                  `ffi:"atoi"`
@@ -206,25 +206,25 @@ var String struct {
 var Lib struct {
 	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
-	Calloc  func(abi.Size, abi.Size) abi.Pointer    `ffi:"calloc"`
-	Free    func(abi.Pointer)                       `ffi:"free"`
-	Malloc  func(abi.Size) abi.Pointer              `ffi:"malloc"`
-	Realloc func(abi.Pointer, abi.Size) abi.Pointer `ffi:"realloc"`
-	Abort   func()                                  `ffi:"abort"`
-	AtExit  func(func()) abi.Error                  `ffi:"atexit"`
-	Exit    func(abi.Int)                           `ffi:"exit"`
-	Getenv  func(abi.String) abi.String             `ffi:"getenv"`
-	System  func(abi.String) abi.Error              `ffi:"system"`
+	Calloc  func(abi.Size, abi.Size) abi.UnsafePointer          `ffi:"calloc"`
+	Free    func(abi.UnsafePointer)                             `ffi:"free"`
+	Malloc  func(abi.Size) abi.UnsafePointer                    `ffi:"malloc"`
+	Realloc func(abi.UnsafePointer, abi.Size) abi.UnsafePointer `ffi:"realloc"`
+	Abort   func()                                              `ffi:"abort"`
+	AtExit  func(func()) abi.Error                              `ffi:"atexit"`
+	Exit    func(abi.Int)                                       `ffi:"exit"`
+	Getenv  func(abi.String) abi.String                         `ffi:"getenv"`
+	System  func(abi.String) abi.Error                          `ffi:"system"`
 
-	BinarySearch func(abi.Pointer, abi.Pointer, abi.Size, abi.Size, func(abi.Pointer, abi.Pointer) abi.Int) abi.Pointer `ffi:"bsearch"`
+	BinarySearch func(abi.UnsafePointer, abi.UnsafePointer, abi.Size, abi.Size, func(abi.UnsafePointer, abi.UnsafePointer) abi.Int) abi.UnsafePointer `ffi:"bsearch"`
 
-	Sort func(abi.Pointer, abi.Size, abi.Size, func(abi.Pointer, abi.Pointer) abi.Int) abi.Pointer `ffi:"qsort"`
+	Sort func(abi.UnsafePointer, abi.Size, abi.Size, func(abi.UnsafePointer, abi.UnsafePointer) abi.Int) abi.UnsafePointer `ffi:"qsort"`
 
-	MemoryCompare func(abi.Pointer, abi.Pointer, abi.Size) abi.Int               `ffi:"memcmp"`
-	MemoryCopy    func(abi.Pointer, abi.Size, abi.Pointer, abi.Size) abi.Pointer `ffi:"memcpy_s"`
-	MemoryMove    func(abi.Pointer, abi.Size, abi.Pointer, abi.Size) abi.Pointer `ffi:"memmove_s"`
-	MemorySet     func(abi.Pointer, abi.Size, abi.Int, abi.Size) abi.Pointer     `ffi:"memset_s"`
-	MemoryFind    func(abi.Pointer, abi.Int, abi.Size) abi.Pointer               `ffi:"memchr"`
+	MemoryCompare func(abi.UnsafePointer, abi.UnsafePointer, abi.Size) abi.Int                     `ffi:"memcmp"`
+	MemoryCopy    func(abi.UnsafePointer, abi.Size, abi.UnsafePointer, abi.Size) abi.UnsafePointer `ffi:"memcpy_s"`
+	MemoryMove    func(abi.UnsafePointer, abi.Size, abi.UnsafePointer, abi.Size) abi.UnsafePointer `ffi:"memmove_s"`
+	MemorySet     func(abi.UnsafePointer, abi.Size, abi.Int, abi.Size) abi.UnsafePointer           `ffi:"memset_s"`
+	MemoryFind    func(abi.UnsafePointer, abi.Int, abi.Size) abi.UnsafePointer                     `ffi:"memchr"`
 }
 
 var Time struct {

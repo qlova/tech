@@ -54,15 +54,15 @@ const (
 var Log struct {
 	Lib
 
-	Printf         func(string, ...abi.Pointer)                           `ffi:"SDL_LogPrintf"`
-	Message        func(LogCategory, LogPriority, string, ...abi.Pointer) `ffi:"SDL_LogMessage"`
-	SetAllPriority func(LogPriority)                                      `ffi:"SDL_LogSetAllPriority"`
-	SetPriority    func(LogCategory, LogPriority)                         `ffi:"SDL_LogSetPriority"`
+	Printf         func(string, ...abi.UnsafePointer)                           `ffi:"SDL_LogPrintf"`
+	Message        func(LogCategory, LogPriority, string, ...abi.UnsafePointer) `ffi:"SDL_LogMessage"`
+	SetAllPriority func(LogPriority)                                            `ffi:"SDL_LogSetAllPriority"`
+	SetPriority    func(LogCategory, LogPriority)                               `ffi:"SDL_LogSetPriority"`
 
-	Verbose  func(string, ...abi.Pointer) `ffi:"SDL_LogVerbose"`
-	Debug    func(string, ...abi.Pointer) `ffi:"SDL_LogDebug"`
-	Info     func(string, ...abi.Pointer) `ffi:"SDL_LogInfo"`
-	Warn     func(string, ...abi.Pointer) `ffi:"SDL_LogWarn"`
-	Error    func(string, ...abi.Pointer) `ffi:"SDL_LogError"`
-	Critical func(string, ...abi.Pointer) `ffi:"SDL_LogCritical"`
+	Verbose  func(string, ...abi.UnsafePointer) `ffi:"SDL_LogVerbose"`
+	Debug    func(string, ...abi.UnsafePointer) `ffi:"SDL_LogDebug"`
+	Info     func(string, ...abi.UnsafePointer) `ffi:"SDL_LogInfo"`
+	Warn     func(string, ...abi.UnsafePointer) `ffi:"SDL_LogWarn"`
+	Error    func(string, ...abi.UnsafePointer) `ffi:"SDL_LogError"`
+	Critical func(string, ...abi.UnsafePointer) `ffi:"SDL_LogCritical"`
 }

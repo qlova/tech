@@ -1,3 +1,4 @@
+// Package ffi provides an interface for loading C shared libraries dynamically.
 package ffi
 
 import (

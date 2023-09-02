@@ -42,10 +42,10 @@ type DisplayMode struct {
 	W           abi.Int
 	H           abi.Int
 	RefreshRate abi.Int
-	DriverData  abi.Pointer
+	DriverData  abi.UnsafePointer
 }
 
-type Renderer abi.Pointer
+type Renderer abi.Opaque[Renderer]
 
 var Video struct {
 	Lib

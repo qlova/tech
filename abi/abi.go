@@ -1,3 +1,4 @@
+// Package abi provides C ABI types for interoperability with shared C libraries.
 package abi
 
 import "unsafe"
@@ -28,9 +29,17 @@ type (
 	TimeType          Int
 )
 
-type Func[T any] Pointer
+type Func[T any] Pointer[T]
 
-type Pointer struct {
+type UnsafePointer unsafe.Pointer
+
+type Pointer[T any] struct {
+	_ [0]*T
+	pointer
+}
+
+type Opaque[T any] struct {
+	_ [0]*T
 	pointer
 }
 
@@ -42,6 +51,10 @@ type IsPointer interface {
 
 func (p pointer) Pointer() uintptr {
 	return uintptr(p)
+}
+
+func (p pointer) UnsafePointer() unsafe.Pointer {
+	return unsafe.Pointer(p)
 }
 
 type String struct {

@@ -42,7 +42,7 @@ var Atomics struct {
 	Get            func(*AtomicInt) abi.Int                `ffi:"SDL_AtomicGet"` // Get the value of an atomic variable.
 	Add            func(*AtomicInt, abi.Int) abi.Int       `ffi:"SDL_AtomicAdd"` // Add to an atomic variable.
 
-	CompareAndSwapPointer func(*abi.AtomicUintptr, abi.Pointer, abi.Pointer) Bool `ffi:"SDL_AtomicCASPtr"` // Set an atomic variable to a new value if it is currently an old value.
-	SetPointer            func(*abi.AtomicUintptr, abi.Pointer)                   `ffi:"SDL_AtomicSetPtr"` // Set an atomic variable to a value.
-	GetPointer            func(*abi.AtomicUintptr) abi.Pointer                    `ffi:"SDL_AtomicGetPtr"` // Get the value of an atomic variable.
+	CompareAndSwapPointer func(*abi.AtomicUintptr, abi.UnsafePointer, abi.UnsafePointer) Bool `ffi:"SDL_AtomicCASPtr"` // Set an atomic variable to a new value if it is currently an old value.
+	SetPointer            func(*abi.AtomicUintptr, abi.UnsafePointer)                         `ffi:"SDL_AtomicSetPtr"` // Set an atomic variable to a value.
+	GetPointer            func(*abi.AtomicUintptr) abi.UnsafePointer                          `ffi:"SDL_AtomicGetPtr"` // Get the value of an atomic variable.
 }
