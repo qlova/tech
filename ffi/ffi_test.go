@@ -10,13 +10,11 @@ import (
 )
 
 func init() {
-	if err := ffi.Set(&std.Math, "libm.so.6"); err != nil {
-		panic(err)
-	}
-	if err := ffi.Set(&std.Char, "libc.so.6"); err != nil {
-		panic(err)
-	}
-	if err := ffi.Set(&std.Clock, "libc.so.6"); err != nil {
+	if err := ffi.Link(
+		&std.Math,
+		&std.Char,
+		&std.Clock,
+	); err != nil {
 		panic(err)
 	}
 }

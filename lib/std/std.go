@@ -13,7 +13,7 @@ type (
 )
 
 var Complex struct {
-	ffi.Header `linux:"libm.so.6"`
+	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Real func(abi.ComplexDouble) abi.Double        `cgo:"creal"`
 	Imag func(abi.ComplexDouble) abi.Double        `cgo:"cimag"`
@@ -43,7 +43,7 @@ var Complex struct {
 }
 
 var ComplexFloat struct {
-	ffi.Header `linux:"libm.so.6"`
+	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Real func(abi.ComplexFloat) abi.Float        `cgo:"crealf"`
 	Imag func(abi.ComplexFloat) abi.Float        `cgo:"cimagf"`
@@ -73,7 +73,7 @@ var ComplexFloat struct {
 }
 
 var ComplexDoubleLong struct {
-	ffi.Header `linux:"libm.so.6"`
+	ffi.Header `linux:"libm.so.6" darwin:"libSystem.dylib"`
 
 	Real func(abi.ComplexDoubleLong) abi.DoubleLong        `cgo:"creall"`
 	Imag func(abi.ComplexDoubleLong) abi.DoubleLong        `cgo:"cimagl"`
@@ -103,7 +103,7 @@ var ComplexDoubleLong struct {
 }
 
 var Char struct {
-	ffi.Header `linux:"libc.so.6"`
+	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	IsAlphaNumeric func(abi.Int) abi.Int `cgo:"isalnum"`
 	IsAlpha        func(abi.Int) abi.Int `cgo:"isalpha"`
@@ -123,7 +123,7 @@ var Char struct {
 }
 
 var FloatingPoint struct {
-	ffi.Header `linux:"libc.so.6"`
+	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	ClearExceptions   func(abi.Int) abi.Int                            `cgo:"feclearexcept"`
 	Exceptions        func(abi.Int) abi.Int                            `cgo:"fetestexcept"`
@@ -138,14 +138,14 @@ var FloatingPoint struct {
 }
 
 var Locale struct {
-	ffi.Header `linux:"libc.so.6"`
+	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Set func(abi.Int, abi.Pointer) string `cgo:"setlocale"`
 	Get func() abi.Pointer                `cgo:"localeconv"`
 }
 
 var Program struct {
-	ffi.Header `linux:"libc.so.6"`
+	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Abort              func()        `cgo:"abort"`
 	Exit               func(abi.Int) `cgo:"exit"`
@@ -156,7 +156,7 @@ var Program struct {
 }
 
 var Math struct {
-	ffi.Header `linux:"libm.so.6"`
+	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Acos  func(float64) float64            `cgo:"acos"`
 	Asin  func(float64) float64            `cgo:"asin"`
@@ -185,7 +185,7 @@ type File abi.Pointer
 type FilePos int
 
 var IO struct {
-	ffi.Header `linux:"libc.so.6"`
+	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Close         func(File) Error                                      `cgo:"fclose"`
 	ClearError    func(File)                                            `cgo:"clearerr"`
@@ -228,7 +228,7 @@ var IO struct {
 }
 
 var String struct {
-	ffi.Header `linux:"libc.so.6"`
+	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	ToFloat64    func(string) float64          `cgo:"atof"`
 	ToInt32      func(string) int32            `cgo:"atoi"`
@@ -258,7 +258,7 @@ var String struct {
 }
 
 var Lib struct {
-	ffi.Header `linux:"libc.so.6"`
+	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Calloc  func(uintptr, uintptr) unsafe.Pointer        `cgo:"calloc"`
 	Free    func(unsafe.Pointer)                         `cgo:"free"`
@@ -282,7 +282,7 @@ var Lib struct {
 }
 
 var I32 struct {
-	ffi.Header `linux:"libc.so.6"`
+	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Abs         func(int32) int32             `cgo:"abs"`
 	Div         func(int32, int32) Div[int32] `cgo:"div"`
@@ -291,7 +291,7 @@ var I32 struct {
 }
 
 var Int struct {
-	ffi.Header `linux:"libc.so.6"`
+	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	Abs func(int) int           `cgo:"labs"`
 	Div func(int, int) Div[int] `cgo:"ldiv"`
@@ -301,7 +301,7 @@ type Time int32
 type Ticks int32
 
 var Clock struct {
-	ffi.Header `linux:"libc.so.6"`
+	ffi.Header `linux:"libc.so.6" darwin:"libSystem.dylib"`
 
 	String func(Time) string        `cgo:"asctime"`
 	Local  func(Time) string        `cgo:"ctime"`

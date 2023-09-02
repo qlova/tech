@@ -3,6 +3,7 @@ package ffi
 import (
 	"errors"
 	"reflect"
+	"runtime"
 	"sync"
 	"unsafe"
 
@@ -26,6 +27,15 @@ func init() {
 	vm4096.New = func() any {
 		return dyncall.NewVM(4096)
 	}
+}
+
+func Link(headers ...Header) error {
+	for _, library := range headers {
+		if err := Set(library, reflect.TypeOf(library).Elem().Field(0).Tag.Get(runtime.GOOS)); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func Set(header Header, library string) error {
