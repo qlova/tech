@@ -327,7 +327,6 @@ type (
 	AtomicPtrdiff          atomic.Int64
 	AtomicIntMax           atomic.Int64
 	AtomicUIntMax          atomic.Uint64
-	Pointer             struct{uint64}
 	Size                uint64
 	String              struct{uint64}
 	StringWide          struct{uint64}

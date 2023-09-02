@@ -440,7 +440,6 @@ int main(int argc, char *argv[]) {
     printf("\tAtomicIntMax           atomic.Int%d\n", (unsigned)sizeof(atomic_intmax_t) * CHAR_BIT);
     printf("\tAtomicUIntMax          atomic.Uint%d\n", (unsigned)sizeof(atomic_uintmax_t) * CHAR_BIT);
 
-    printf("\tPointer             struct{uint%d}\n", (unsigned)sizeof(void*) * CHAR_BIT);
     printf("\tSize                uint%d\n", (unsigned)sizeof(size_t) * CHAR_BIT);
     printf("\tString              struct{uint%d}\n", (unsigned)sizeof(char*) * CHAR_BIT);
     printf("\tStringWide          struct{uint%d}\n", (unsigned)sizeof(wchar_t*) * CHAR_BIT);

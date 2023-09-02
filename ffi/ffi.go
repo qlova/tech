@@ -7,6 +7,7 @@ import (
 	"sync"
 	"unsafe"
 
+	"qlova.tech/abi"
 	"qlova.tech/ffi/internal/dyncall"
 )
 
@@ -65,6 +66,8 @@ func Set(header Header, library string) error {
 			return errors.New(dlerror())
 		}
 
+		getErr := rvalue.FieldByName("Error")
+
 		switch fn := value.Addr().Interface().(type) {
 		case *func(float64) float64:
 			*fn = func(a float64) float64 {
@@ -107,6 +110,15 @@ func Set(header Header, library string) error {
 						vm.PushFloat64(value.Float())
 					case reflect.Pointer, reflect.UnsafePointer:
 						vm.PushPointer(value.UnsafePointer())
+					case reflect.String:
+						s := NewString(value.String())
+						vm.PushPointer(unsafe.Pointer(s.ptr))
+					case reflect.Struct:
+						if value.Type().Implements(reflect.TypeOf([0]abi.IsPointer{}).Elem()) {
+							vm.PushPointer(unsafe.Pointer(value.Interface().(abi.IsPointer).Pointer()))
+						} else {
+							panic("unsupported struct " + value.Type().String())
+						}
 					default:
 						panic("unsupported type " + value.Type().String())
 					}
@@ -118,15 +130,22 @@ func Set(header Header, library string) error {
 				for i := 0; i < field.Type.NumOut(); i++ {
 					results[i] = reflect.New(field.Type.Out(i)).Elem()
 				}
+				var returnsError bool
 				switch field.Type.NumOut() {
 				default:
 					if field.Type.NumOut() > 1 {
-						for i := 1; i < field.Type.NumOut(); i++ {
+						length := field.Type.NumOut()
+						if field.Type.Out(length-1) == reflect.TypeOf([0]error{}).Elem() {
+							returnsError = true
+							length--
+						}
+						for i := 1; i < length; i++ {
 							push(results[i].Addr())
 						}
 					}
 					fallthrough
 				case 1:
+					rtype := field.Type.Out(0)
 					switch field.Type.Out(0).Kind() {
 					case reflect.Bool:
 						results[0].SetBool(vm.CallBool(symbol))
@@ -158,10 +177,31 @@ func Set(header Header, library string) error {
 						results[0].SetPointer(vm.CallPointer(symbol))
 					case reflect.Pointer:
 						results[0] = reflect.NewAt(field.Type.Out(0).Elem(), unsafe.Pointer(vm.CallPointer(symbol)))
+					case reflect.Struct:
+						if rtype.Implements(reflect.TypeOf([0]abi.IsPointer{}).Elem()) {
+							*(*unsafe.Pointer)(results[0].Addr().UnsafePointer()) = vm.CallPointer(symbol)
+						} else {
+							panic("unsupported struct " + field.Type.Out(0).String())
+						}
 					default:
 						panic("unsupported type " + field.Type.Out(0).String())
 					}
+				case 0:
+					vm.Call(symbol)
 				}
+
+				if returnsError {
+					if results[0].IsZero() {
+						if !getErr.IsValid() {
+							panic("an error occured")
+						}
+						switch fn := getErr.Interface().(type) {
+						case func() string:
+							results[len(results)-1] = reflect.ValueOf(errors.New(fn()))
+						}
+					}
+				}
+
 				return results
 			}))
 		}

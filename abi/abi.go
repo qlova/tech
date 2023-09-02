@@ -27,6 +27,20 @@ type (
 	TimeType          Int
 )
 
+type Pointer struct {
+	pointer
+}
+
+type pointer uintptr
+
+type IsPointer interface {
+	Pointer() uintptr
+}
+
+func (p pointer) Pointer() uintptr {
+	return uintptr(p)
+}
+
 func (s String) String() string {
 	return C.GoString((*C.char)(unsafe.Pointer(uintptr(s.uint64))))
 }
