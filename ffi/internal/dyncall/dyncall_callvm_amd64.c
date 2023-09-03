@@ -29,7 +29,7 @@
 /* MS Windows x64 calling convention, AMD64 SystemV ABI. */
 
 
-#include "dyncall_callvm_x64.h"
+#include "dyncall_callvm_amd64.h"
 #include "dyncall_alloc.h"
 #include "dyncall_aggregate.h"
 

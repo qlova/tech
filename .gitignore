@@ -5,3 +5,8 @@
 /run/HelloSquare/hello
 /run/HelloSquare/libSDL2.dylib
 /.DS_Store
+/run/HelloTriangle/HelloTriangle
+/tech.code-workspace
+/.travis.yml
+/ffi/internal/autovar/LICENSE.txt
+/ffi/internal/autovar/README.txt

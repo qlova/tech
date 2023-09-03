@@ -28,7 +28,7 @@
 #define DYNCALLBACK_ARGS_X64_H
 
 #include "dyncall_args.h"
-#include "dyncall_callvm_x64.h" /* reuse DCRegCount_x64 and DCRegData_x64_s */
+#include "dyncall_callvm_amd64.h" /* reuse DCRegCount_x64 and DCRegData_x64_s */
 #include "dyncall_aggregate.h"
 
 

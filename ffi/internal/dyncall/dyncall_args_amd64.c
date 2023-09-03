@@ -25,7 +25,7 @@
 
 
 
-#include "dyncall_args_x64.h"
+#include "dyncall_args_amd64.h"
 
 #include <assert.h>
 #include <string.h>

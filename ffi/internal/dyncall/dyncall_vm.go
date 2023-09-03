@@ -4,6 +4,7 @@ package dyncall
 #include <assert.h>
 #include <dyncall.h>
 #include <dyncall_callback.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 extern DCsigchar bridge_callback(DCCallback*, DCArgs*, DCValue*, uintptr_t);

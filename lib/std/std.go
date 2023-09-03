@@ -91,13 +91,13 @@ var Char struct {
 }
 
 var FloatingPoint struct {
-	LibC
+	LibM
 
 	ClearExceptions   func(abi.FloatException) abi.Error                                `ffi:"feclearexcept"`
 	Exceptions        func(abi.FloatException) abi.FloatException                       `ffi:"fetestexcept"`
 	RaiseExceptions   func(abi.FloatException) abi.Error                                `ffi:"feraiseexcept"`
-	GetExceptionFlag  func(*abi.FloatingPointEnvironment, abi.FloatException) abi.Error `ffi:"fgetexceptflag"`
-	SetExceptionFlag  func(*abi.FloatingPointEnvironment, abi.FloatException) abi.Error `ffi:"fsetexceptflag"`
+	GetExceptionFlag  func(*abi.FloatingPointEnvironment, abi.FloatException) abi.Error `ffi:"fegetexceptflag"`
+	SetExceptionFlag  func(*abi.FloatingPointEnvironment, abi.FloatException) abi.Error `ffi:"fesetexceptflag"`
 	SetRoundingMode   func(abi.FloatRoundingMode) abi.Error                             `ffi:"fesetround"`
 	GetRoundingMode   func() abi.FloatRoundingMode                                      `ffi:"fegetround"`
 	GetEnvironment    func(*abi.FloatingPointEnvironment) abi.Error                     `ffi:"fegetenv"`
@@ -120,8 +120,8 @@ var Program struct {
 	Exit               func(abi.Int)                      `ffi:"exit"`
 	ExitFast           func(abi.Int)                      `ffi:"quick_exit"`
 	ExitWithoutCleanup func(abi.Int)                      `ffi:"_Exit"`
-	OnExit             func(func())                       `ffi:"atexit"`
-	OnExitFast         func(func())                       `ffi:"at_quick_exit"`
+	OnExit             func(func())                       `ffi:"atexit,__cxa_atexit"`
+	OnExitFast         func(func())                       `ffi:"at_quick_exit,__cxa_at_quick_exit"`
 	LongJump           func(abi.JumpBuffer, abi.Int)      `ffi:"longjmp"`
 	OnSignal           func(abi.Signal, func(abi.Signal)) `ffi:"signal"`
 	Raise              func(abi.Signal)                   `ffi:"raise"`
@@ -154,10 +154,10 @@ var Files struct {
 	PutStringWide func(abi.StringWide, *abi.File) abi.Int                 `ffi:"fputws"`
 	UngetCharWide func(abi.CharWide, *abi.File) abi.CharWide              `ffi:"ungetwc"`
 
-	Scanf      func(*abi.File, abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"fscanf_s"`
-	Printf     func(*abi.File, abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"fprintf_s"`
-	ScanWidef  func(*abi.File, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"fwscanf_s"`
-	PrintWidef func(*abi.File, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"fwprintf_s"`
+	Scanf      func(*abi.File, abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"fscanf"`
+	Printf     func(*abi.File, abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"fprintf"`
+	ScanWidef  func(*abi.File, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"fwscanf"`
+	PrintWidef func(*abi.File, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"fwprintf"`
 
 	Tell   func(*abi.File) abi.Long                        `ffi:"ftell"`
 	GetPos func(*abi.File, *abi.FilePosition) abi.Int      `ffi:"fgetpos"`
@@ -179,18 +179,18 @@ var Files struct {
 var IO struct {
 	LibC
 
-	GetChar   func() abi.Int                                              `ffi:"getchar"`
-	GetString func(abi.Pointer[abi.Char], abi.Size) abi.Pointer[abi.Char] `ffi:"gets_s"`
-	PutChar   func(abi.Int) abi.Int                                       `ffi:"putchar"`
-	PutString func(abi.String) abi.Int                                    `ffi:"puts"`
+	GetChar   func() abi.Int                                    `ffi:"getchar"`
+	GetString func(abi.Pointer[abi.Char]) abi.Pointer[abi.Char] `ffi:"gets"`
+	PutChar   func(abi.Int) abi.Int                             `ffi:"putchar"`
+	PutString func(abi.String) abi.Int                          `ffi:"puts"`
 
 	GetCharWide func() abi.CharWide             `ffi:"getwchar"`
 	PutCharWide func(abi.CharWide) abi.CharWide `ffi:"putwchar"`
 
-	Scanf      func(abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"scanf_s"`
-	Printf     func(abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"printf_s"`
-	ScanWidef  func(abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"wscanf_s"`
-	PrintWidef func(abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"wprintf_s"`
+	Scanf      func(abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"scanf"`
+	Printf     func(abi.String, ...abi.UnsafePointer) abi.Int     `ffi:"printf"`
+	ScanWidef  func(abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"wscanf"`
+	PrintWidef func(abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"wprintf"`
 }
 
 var String struct {
@@ -198,10 +198,10 @@ var String struct {
 
 	Error func(abi.Error) abi.String `ffi:"strerror"`
 
-	Scanf      func(abi.String, abi.String, ...abi.UnsafePointer) abi.Int         `ffi:"sscanf_s"`
-	Printf     func(abi.String, abi.String, ...abi.UnsafePointer) abi.Int         `ffi:"sprintf_s"`
-	ScanWidef  func(abi.StringWide, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"swscanf_s"`
-	PrintWidef func(abi.StringWide, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"swprintf_s"`
+	Scanf      func(abi.String, abi.String, ...abi.UnsafePointer) abi.Int         `ffi:"sscanf"`
+	Printf     func(abi.String, abi.String, ...abi.UnsafePointer) abi.Int         `ffi:"sprintf"`
+	ScanWidef  func(abi.StringWide, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"swscanf"`
+	PrintWidef func(abi.StringWide, abi.StringWide, ...abi.UnsafePointer) abi.Int `ffi:"swprintf"`
 
 	ToFloat               func(abi.String) abi.Float                                `ffi:"atof"`
 	ToInt                 func(abi.String) abi.Int                                  `ffi:"atoi"`
@@ -217,24 +217,24 @@ var String struct {
 	ParseIntmax           func(abi.String, *abi.Char, abi.Int) abi.IntMax           `ffi:"strtoimax"`
 	ParseUintmax          func(abi.String, *abi.Char, abi.Int) abi.UIntMax          `ffi:"strtoumax"`
 
-	Copy           func(abi.String, abi.Size, abi.String) abi.Error           `ffi:"strcpy_s"`
-	CopyRange      func(abi.String, abi.Size, abi.String, abi.Size) abi.Error `ffi:"strncpy_s"`
-	Append         func(abi.String, abi.Size, abi.String) abi.Error           `ffi:"strcat_s"`
-	AppendRange    func(abi.String, abi.Size, abi.String, abi.Size) abi.Error `ffi:"strncat_s"`
-	Localize       func(abi.String, abi.String, abi.Size) abi.Size            `ffi:"strxfrm"`
-	Duplicate      func(abi.String) abi.String                                `ffi:"strdup"`
-	DuplicateRange func(abi.String, abi.Size) abi.String                      `ffi:"strndup"`
+	Copy           func(abi.String, abi.String) abi.Error          `ffi:"strcpy"`
+	CopyRange      func(abi.String, abi.String) abi.Error          `ffi:"strncpy"`
+	Append         func(abi.String, abi.String) abi.Error          `ffi:"strcat"`
+	AppendRange    func(abi.String, abi.String) abi.Error          `ffi:"strncat"`
+	Localize       func(abi.String, abi.String, abi.Size) abi.Size `ffi:"strxfrm"`
+	Duplicate      func(abi.String) abi.String                     `ffi:"strdup"`
+	DuplicateRange func(abi.String, abi.Size) abi.String           `ffi:"strndup"`
 
-	Length          func(abi.String, abi.Size) abi.Size                        `ffi:"strlen_s"`
-	Compare         func(abi.String, abi.String) abi.Int                       `ffi:"strcmp"`
-	CompareInLocale func(abi.String, abi.String) abi.Int                       `ffi:"strcoll"`
-	FindFirst       func(abi.String, abi.Int) *abi.Char                        `ffi:"strchr"`
-	FindLast        func(abi.String, abi.Int) *abi.Char                        `ffi:"strrchr"`
-	MatchLength     func(abi.String, abi.String) abi.Size                      `ffi:"strspn"`
-	Match           func(abi.String, abi.String) abi.Size                      `ffi:"strcspn"`
-	MatchFirst      func(abi.String, abi.String) *abi.Char                     `ffi:"strpbrk"`
-	Contains        func(abi.String, abi.String) *abi.Char                     `ffi:"strstr"`
-	ScanToken       func(abi.String, abi.Size, abi.String, abi.Size) *abi.Char `ffi:"strtok_s"`
+	Length          func(abi.String) abi.Size              `ffi:"strlen"`
+	Compare         func(abi.String, abi.String) abi.Int   `ffi:"strcmp"`
+	CompareInLocale func(abi.String, abi.String) abi.Int   `ffi:"strcoll"`
+	FindFirst       func(abi.String, abi.Int) *abi.Char    `ffi:"strchr"`
+	FindLast        func(abi.String, abi.Int) *abi.Char    `ffi:"strrchr"`
+	MatchLength     func(abi.String, abi.String) abi.Size  `ffi:"strspn"`
+	Match           func(abi.String, abi.String) abi.Size  `ffi:"strcspn"`
+	MatchFirst      func(abi.String, abi.String) *abi.Char `ffi:"strpbrk"`
+	Contains        func(abi.String, abi.String) *abi.Char `ffi:"strstr"`
+	ScanToken       func(abi.String, abi.String) *abi.Char `ffi:"strtok"`
 }
 
 var Memory struct {
@@ -250,9 +250,9 @@ var Memory struct {
 	Sort func(abi.UnsafePointer, abi.Size, abi.Size, func(abi.UnsafePointer, abi.UnsafePointer) abi.Int) abi.UnsafePointer `ffi:"qsort"`
 
 	Compare func(abi.UnsafePointer, abi.UnsafePointer, abi.Size) abi.Int                     `ffi:"memcmp"`
-	Copy    func(abi.UnsafePointer, abi.Size, abi.UnsafePointer, abi.Size) abi.UnsafePointer `ffi:"memcpy_s"`
-	Move    func(abi.UnsafePointer, abi.Size, abi.UnsafePointer, abi.Size) abi.UnsafePointer `ffi:"memmove_s"`
-	Set     func(abi.UnsafePointer, abi.Size, abi.Int, abi.Size) abi.UnsafePointer           `ffi:"memset_s"`
+	Copy    func(abi.UnsafePointer, abi.Size, abi.UnsafePointer, abi.Size) abi.UnsafePointer `ffi:"memcpy"`
+	Move    func(abi.UnsafePointer, abi.UnsafePointer, abi.Size) abi.UnsafePointer           `ffi:"memmove"`
+	Set     func(abi.UnsafePointer, abi.Int, abi.Size) abi.UnsafePointer                     `ffi:"memset"`
 	Find    func(abi.UnsafePointer, abi.Int, abi.Size) abi.UnsafePointer                     `ffi:"memchr"`
 }
 

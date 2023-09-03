@@ -3,8 +3,10 @@ package ffi
 
 import (
 	"errors"
+	"log"
 	"reflect"
 	"runtime"
+	"strings"
 	"sync"
 	"unsafe"
 
@@ -12,13 +14,8 @@ import (
 	"qlova.tech/ffi/internal/dyncall"
 )
 
-// #include <math.h>
 // #include <internal/dyncall/dyncall.h>
 import "C"
-
-func Sqrt(a float64) float64 {
-	return float64(C.sqrt(C.double(a)))
-}
 
 // Library can be embedded inside of a struct to
 // mark it as a library interface structure. Each
@@ -240,12 +237,18 @@ func Set(library Library, file string) error {
 		if name == "" {
 			name = field.Name
 		}
-
-		symbol := dlsym(lib, name)
+		symbols := strings.Split(name, ",")
+		var symbol unsafe.Pointer
+		for _, name := range symbols {
+			symbol = dlsym(lib, name)
+			if symbol == nil {
+				continue
+			}
+		}
 		if symbol == nil {
+			log.Println(errors.New(dlerror()))
 			continue
 		}
-
 		getErr := rvalue.FieldByName("Error")
 
 		switch fn := value.Addr().Interface().(type) {
